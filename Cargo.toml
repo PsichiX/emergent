@@ -3,5 +3,7 @@ name = "emergent"
 version = "0.1.0"
 authors = ["Patryk 'PsichiX' Budzynski <psichix@gmail.com>"]
 edition = "2018"
+description = "Toolset for producing emergent gameplay for games written in Rust"
+license = "MIT"
 
 [dependencies]
