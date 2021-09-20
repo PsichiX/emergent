@@ -4,6 +4,30 @@ use crate::{
     task::*,
 };
 
+pub struct BehaviorTreeTask<M = ()>(Box<dyn Task<M>>);
+
+impl<M> Task<M> for BehaviorTreeTask<M> {
+    fn is_locked(&self, memory: &M) -> bool {
+        self.0.is_locked(memory)
+    }
+
+    fn on_enter(&mut self, memory: &mut M) {
+        self.0.on_enter(memory);
+    }
+
+    fn on_exit(&mut self, memory: &mut M) {
+        self.0.on_exit(memory);
+    }
+
+    fn on_update(&mut self, memory: &mut M) {
+        self.0.on_update(memory);
+    }
+
+    fn on_process(&mut self, memory: &mut M) -> bool {
+        self.0.on_process(memory)
+    }
+}
+
 pub enum BehaviorTree<M = ()> {
     Sequence {
         condition: Box<dyn Condition<M>>,
@@ -80,11 +104,11 @@ impl<M> BehaviorTree<M> {
         self
     }
 
-    pub fn build(self) -> Box<dyn Task<M>>
+    pub fn build(self) -> BehaviorTreeTask<M>
     where
         M: 'static,
     {
-        self.consume().1
+        BehaviorTreeTask(self.consume().1)
     }
 
     pub fn consume(self) -> (Box<dyn Condition<M>>, Box<dyn Task<M>>)
