@@ -1,10 +1,15 @@
 use crate::{condition::*, decision_makers::selector::*, task::*};
 
+/// Wrapper around memory that holds additional information about current level of details.
 pub struct LodMemory<M = ()> {
     pub lod_level: usize,
     pub memory: M,
 }
 
+/// Allows to run different decision making depending on the level of details.
+///
+/// Useful to optimize AI processing to for example run narow phase logic when agent is near the
+/// player and run broad phase logic when agent runs in the background.
 pub struct Lod<M = ()>(Vec<Box<dyn Task<LodMemory<M>>>>);
 
 impl<M> Default for Lod<M> {

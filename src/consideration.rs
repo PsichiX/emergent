@@ -1,5 +1,40 @@
+//! Considerations are used to tell possibility, how important certain fact about the world is.
+//!
+//! See [`Consideration`] for more info about considerations.
+//!
+//! See [`crate::evaluators`] for more info about evaluators (operations on sets of considerations).
+
 use crate::{condition::*, score_mapping::*, Scalar};
 
+/// Consideration represent the score (also called weight, possibility, likeliness) of certain fact
+/// about the state of the world.
+///
+/// Imagine memory stores information about number of bannanas in the backpack, and you want to know
+/// how important for you is to get new one to not get hungry during the day - the more bannanas you
+/// have, the less likely it is for you to end up hungry and that score is used to decide if you need
+/// to go and get new one or even estimate how many of them you would need.
+///
+/// User should make considerations as lightweight and as small as possible. The reason for that is
+/// to make them reused and combined into bigger sets of considerations using evaluators
+/// ([`crate::evaluators`]).
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// struct Memory { counter: usize }
+///
+/// struct Hunger;
+///
+/// impl Consideration<Memory> for Hunger {
+///     fn score(&self, memory: &Memory) -> Scalar {
+///         1.0 / memory.counter as Scalar
+///     }
+/// }
+///
+/// let mut memory = Memory { counter: 10 };
+/// assert_eq!(Hunger.score(&memory), 0.1);
+/// ```
 pub trait Consideration<M = ()> {
     fn score(&self, memory: &M) -> Scalar;
 }
@@ -16,7 +51,21 @@ impl<M> Consideration<M> for Scalar {
     }
 }
 
-pub struct ClosureConsideration<M>(Box<dyn Fn(&M) -> Scalar>);
+/// Consideration that wraps a closure.
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// struct Memory { counter: usize }
+///
+/// let mut memory = Memory { counter: 10 };
+/// let consideration = ClosureConsideration::new(
+///     |memory: &Memory| 1.0 / memory.counter as Scalar,
+/// );
+/// assert_eq!(consideration.score(&memory), 0.1);
+/// ```
+pub struct ClosureConsideration<M = ()>(pub Box<dyn Fn(&M) -> Scalar>);
 
 impl<M> ClosureConsideration<M> {
     pub fn new<F>(f: F) -> Self
@@ -33,15 +82,27 @@ impl<M> Consideration<M> for ClosureConsideration<M> {
     }
 }
 
-pub struct ConsiderationConstant(pub Scalar);
-
-impl<M> Consideration<M> for ConsiderationConstant {
-    fn score(&self, _: &M) -> Scalar {
-        self.0
-    }
-}
-
-pub struct ConsiderationRemap<M, T = NoScoreMapping>
+/// Consideration uses [`ScoreMapping`] to remap score of wrapped consideration.
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// struct Memory { counter: usize }
+///
+/// struct Hunger;
+///
+/// impl Consideration<Memory> for Hunger {
+///     fn score(&self, memory: &Memory) -> Scalar {
+///         1.0 / memory.counter as Scalar
+///     }
+/// }
+///
+/// let mut memory = Memory { counter: 10 };
+/// let consideration = ConsiderationRemap::new(Hunger, ReverseScoreMapping);
+/// assert_eq!(consideration.score(&memory), 0.9);
+/// ```
+pub struct ConsiderationRemap<M = (), T = NoScoreMapping>
 where
     T: ScoreMapping,
 {
@@ -73,7 +134,26 @@ where
     }
 }
 
-pub struct ConditionConsideration<M> {
+/// Consideration wraps [`Condition`] and converts it into consideration.
+///
+/// If condition returns true, it gives score of [`ConditionConsideration::positive`], if not then
+/// it gives [`ConditionConsideration::negative`].
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// struct Memory { counter: usize }
+///
+/// let mut memory = Memory { counter: 1 };
+/// let consideration = ConditionConsideration::new(
+///     ClosureCondition::new(|memory: &Memory| memory.counter > 0),
+///     1.0,
+///     0.0,
+/// );
+/// assert_eq!(consideration.score(&memory), 1.0);
+/// ```
+pub struct ConditionConsideration<M = ()> {
     pub condition: Box<dyn Condition<M>>,
     pub positive: Scalar,
     pub negative: Scalar,
@@ -88,6 +168,17 @@ impl<M> ConditionConsideration<M> {
             condition: Box::new(condition),
             positive,
             negative,
+        }
+    }
+
+    pub fn unit<C>(condition: C) -> Self
+    where
+        C: Condition<M> + 'static,
+    {
+        Self {
+            condition: Box::new(condition),
+            positive: 1.0,
+            negative: 0.0,
         }
     }
 }

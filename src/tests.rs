@@ -273,7 +273,7 @@ fn test_planner() {
                     ActionCondition::IsDay,
                 ],
                 1.0,
-                ClosureTask::default().on_enter(|m: &mut Memory| m.time = Time::Day),
+                ClosureTask::default().enter(|m: &mut Memory| m.time = Time::Day),
             ),
             Action::Work => PlannerAction::new(
                 set![
@@ -285,7 +285,7 @@ fn test_planner() {
                     ActionCondition::IsNight,
                 ],
                 1.0,
-                ClosureTask::default().on_enter(|m: &mut Memory| m.time = Time::Night),
+                ClosureTask::default().enter(|m: &mut Memory| m.time = Time::Night),
             ),
             Action::DriveCarToHome => PlannerAction::new(
                 set![
@@ -296,7 +296,7 @@ fn test_planner() {
                     ActionCondition::AtHome,
                 ],
                 1.0,
-                ClosureTask::default().on_enter(|m: &mut Memory| m.location = Location::Home),
+                ClosureTask::default().enter(|m: &mut Memory| m.location = Location::Home),
             ),
             Action::DriveCarToWorkplace => PlannerAction::new(
                 set![
@@ -307,7 +307,7 @@ fn test_planner() {
                     ActionCondition::AtWorkplace,
                 ],
                 1.0,
-                ClosureTask::default().on_enter(|m: &mut Memory| m.location = Location::Workplace),
+                ClosureTask::default().enter(|m: &mut Memory| m.location = Location::Workplace),
             ),
             Action::DriveTramToHome => PlannerAction::new(
                 set![
@@ -318,7 +318,7 @@ fn test_planner() {
                     ActionCondition::AtHome,
                 ],
                 1.0,
-                ClosureTask::default().on_enter(|m: &mut Memory| m.location = Location::Home),
+                ClosureTask::default().enter(|m: &mut Memory| m.location = Location::Home),
             ),
             Action::DriveTramToWorkplace => PlannerAction::new(
                 set![
@@ -329,7 +329,7 @@ fn test_planner() {
                     ActionCondition::AtWorkplace,
                 ],
                 1.0,
-                ClosureTask::default().on_enter(|m: &mut Memory| m.location = Location::Workplace),
+                ClosureTask::default().enter(|m: &mut Memory| m.location = Location::Workplace),
             ),
         },
         machinery,
@@ -364,11 +364,11 @@ fn test_sequencer() {
         vec![
             SequencerState::new(
                 ClosureCondition::new(|m| *m),
-                ClosureTask::default().on_enter(|m| *m = false),
+                ClosureTask::default().enter(|m| *m = false),
             ),
             SequencerState::new(
                 ClosureCondition::new(|m| !m),
-                ClosureTask::default().on_enter(|m| *m = true),
+                ClosureTask::default().enter(|m| *m = true),
             ),
         ],
         true,
@@ -393,11 +393,11 @@ fn test_selector() {
             _ :
             true => SelectorState::new(
                 ClosureCondition::new(|m| *m),
-                ClosureTask::default().on_enter(|m| *m = false),
+                ClosureTask::default().enter(|m| *m = false),
             ),
             false => SelectorState::new(
                 ClosureCondition::new(|m| !m),
-                ClosureTask::default().on_enter(|m| *m = true),
+                ClosureTask::default().enter(|m| *m = true),
             ),
         },
     );
@@ -417,11 +417,11 @@ fn test_parallelizer() {
     let mut parallelizer = Parallelizer::new(vec![
         ParallelizerState::new(
             ClosureCondition::new(|m| *m),
-            ClosureTask::default().on_enter(|m| *m = false),
+            ClosureTask::default().enter(|m| *m = false),
         ),
         ParallelizerState::new(
             ClosureCondition::new(|m| !m),
-            ClosureTask::default().on_enter(|m| *m = true),
+            ClosureTask::default().enter(|m| *m = true),
         ),
     ]);
 

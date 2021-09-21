@@ -1,17 +1,82 @@
+//! Tasks are units of work that perform small and concrete actions in time via memory manipulation.
+//!
+//! Tasks are used in decision makers as smaller building bocks that can be bundled together into
+//! more complex behavior.
+//! Each task has a set of life-cycle methods that user apply logic to.
+//!
+//! The mainly used ones are:
+//! - [`Task::on_enter`]
+//! - [`Task::on_exit`]
+//! - [`Task::on_update`]
+//!
+//! By default all life-cycle methods are auto-implemented so user when defining a new task, focuses
+//! only on implementing these methods that are needed.
+//!
+//! Read more about creating custom tasks at [`Task`].
+//!
+//! There are two generic tasks created for the user:
+//! - [`NoTask`]: used as empty task, a task without any work, you can use it in places where AI
+//!   should simply do nothing while that task is active.
+//! - [`ClosureTask`]: a wrapper around closure-based tasks where each life-cycle method is provided
+//!   by the user as separate closures, best for prototyping or making small non-repetitive logic.
+
 use std::marker::PhantomData;
 
+/// Task represent unit of work, an action performed in a time.
+///
+/// Tasks can only manipulate what's in the memory passed to their life-cycle methods so common way
+/// of manipulating the world with tasks is to make memory type that can either command the world
+/// or even better, put triggers in the memory before running decision maker, then after that read
+/// what changed in the memory and apply changes to the world.
+///
+/// Tasks are managed by calling their life-cycle methods by the decision makers so implement these
+/// if you need to do something during that life-cycle phase.
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// struct Memory { counter: usize }
+///
+/// struct Increment;
+///
+/// impl Task<Memory> for Increment {
+///     fn on_enter(&mut self, memory: &mut Memory) {
+///         memory.counter += 1;
+///     }
+/// }
+///
+/// let mut memory = Memory { counter: 1 };
+/// Increment.on_enter(&mut memory);
+/// assert_eq!(memory.counter, 2);
+/// ```
 pub trait Task<M = ()> {
+    /// Tells if task is locked (it's still running). Used by decision makers to tell if one can
+    /// change its state (when current task is not locked).
     fn is_locked(&self, _memory: &M) -> bool {
         false
     }
+
+    /// Action performed when task starts its work.
     fn on_enter(&mut self, _memory: &mut M) {}
+
+    /// Action performed when task stops its work.
     fn on_exit(&mut self, _memory: &mut M) {}
+
+    /// Action performed when task is active and gets updated.
     fn on_update(&mut self, _memory: &mut M) {}
+
+    /// Action performed when task is active but decision maker did not changed its state.
+    /// This one is applicable for making hierarchical decision makers (telling children decision
+    /// makers to decide on new state, because some if not all decision makers are tasks).
+    ///
+    /// Returns `true` if this task decided on new state.
     fn on_process(&mut self, _memory: &mut M) -> bool {
         false
     }
 }
 
+/// Task that represent no work. Use it when AI has to do nothing.
 pub struct NoTask<M = ()>(PhantomData<M>);
 
 impl<M> Default for NoTask<M> {
@@ -28,99 +93,110 @@ impl<M> Task<M> for dyn FnMut(&M) {
     }
 }
 
+/// Task thet wraps closures for each life-cycle method.
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// struct Memory { counter: usize }
+///
+/// let mut memory = Memory { counter: 1 };
+/// let mut task = ClosureTask::default().enter(|memory: &mut Memory| memory.counter += 1);
+/// task.on_enter(&mut memory);
+/// assert_eq!(memory.counter, 2);
+/// ```
 pub struct ClosureTask<M = ()> {
-    is_locked: Option<Box<dyn Fn(&M) -> bool>>,
-    on_enter: Option<Box<dyn FnMut(&mut M)>>,
-    on_exit: Option<Box<dyn FnMut(&mut M)>>,
-    on_update: Option<Box<dyn FnMut(&mut M)>>,
-    on_process: Option<Box<dyn FnMut(&mut M) -> bool>>,
+    locked: Option<Box<dyn Fn(&M) -> bool>>,
+    enter: Option<Box<dyn FnMut(&mut M)>>,
+    exit: Option<Box<dyn FnMut(&mut M)>>,
+    update: Option<Box<dyn FnMut(&mut M)>>,
+    process: Option<Box<dyn FnMut(&mut M) -> bool>>,
 }
 
 impl<M> Default for ClosureTask<M> {
     fn default() -> Self {
         Self {
-            is_locked: None,
-            on_enter: None,
-            on_exit: None,
-            on_update: None,
-            on_process: None,
+            locked: None,
+            enter: None,
+            exit: None,
+            update: None,
+            process: None,
         }
     }
 }
 
 impl<M> ClosureTask<M> {
-    #[allow(clippy::wrong_self_convention)]
-    pub fn is_locked<F>(mut self, f: F) -> Self
+    /// See [`Task::is_locked`]
+    pub fn locked<F>(mut self, f: F) -> Self
     where
         F: Fn(&M) -> bool + 'static,
     {
-        self.is_locked = Some(Box::new(f));
+        self.locked = Some(Box::new(f));
         self
     }
 
-    pub fn on_enter<F>(mut self, f: F) -> Self
+    /// See [`Task::on_enter`]
+    pub fn enter<F>(mut self, f: F) -> Self
     where
         F: FnMut(&mut M) + 'static,
     {
-        self.on_enter = Some(Box::new(f));
+        self.enter = Some(Box::new(f));
         self
     }
 
-    pub fn on_exit<F>(mut self, f: F) -> Self
+    /// See [`Task::on_exit`]
+    pub fn exit<F>(mut self, f: F) -> Self
     where
         F: FnMut(&mut M) + 'static,
     {
-        self.on_exit = Some(Box::new(f));
+        self.exit = Some(Box::new(f));
         self
     }
 
-    pub fn on_update<F>(mut self, f: F) -> Self
+    /// See [`Task::on_update`]
+    pub fn update<F>(mut self, f: F) -> Self
     where
         F: FnMut(&mut M) + 'static,
     {
-        self.on_update = Some(Box::new(f));
+        self.update = Some(Box::new(f));
         self
     }
 
-    pub fn on_process<F>(mut self, f: F) -> Self
+    /// See [`Task::on_process`]
+    pub fn process<F>(mut self, f: F) -> Self
     where
         F: FnMut(&mut M) -> bool + 'static,
     {
-        self.on_process = Some(Box::new(f));
+        self.process = Some(Box::new(f));
         self
     }
 }
 
 impl<M> Task<M> for ClosureTask<M> {
     fn is_locked(&self, memory: &M) -> bool {
-        self.is_locked
-            .as_ref()
-            .map(|f| f(memory))
-            .unwrap_or_default()
+        self.locked.as_ref().map(|f| f(memory)).unwrap_or_default()
     }
 
     fn on_enter(&mut self, memory: &mut M) {
-        if let Some(f) = &mut self.on_enter {
+        if let Some(f) = &mut self.enter {
             f(memory)
         }
     }
 
     fn on_exit(&mut self, memory: &mut M) {
-        if let Some(f) = &mut self.on_exit {
+        if let Some(f) = &mut self.exit {
             f(memory)
         }
     }
 
     fn on_update(&mut self, memory: &mut M) {
-        if let Some(f) = &mut self.on_update {
+        if let Some(f) = &mut self.update {
             f(memory)
         }
     }
 
     fn on_process(&mut self, memory: &mut M) -> bool {
-        self.on_process
-            .as_mut()
-            .map(|f| f(memory))
-            .unwrap_or_default()
+        self.process.as_mut().map(|f| f(memory)).unwrap_or_default()
     }
 }

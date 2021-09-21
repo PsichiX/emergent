@@ -4,7 +4,8 @@ use crate::{
     task::*,
 };
 
-pub struct BehaviorTreeTask<M = ()>(Box<dyn Task<M>>);
+/// Wrapper around task produced by [`BehaviorTree`] builder.
+pub struct BehaviorTreeTask<M = ()>(pub Box<dyn Task<M>>);
 
 impl<M> Task<M> for BehaviorTreeTask<M> {
     fn is_locked(&self, memory: &M) -> bool {
@@ -28,6 +29,7 @@ impl<M> Task<M> for BehaviorTreeTask<M> {
     }
 }
 
+/// Builds hierarchy of decision makers that work together just as behavior tree.
 pub enum BehaviorTree<M = ()> {
     Sequence {
         condition: Box<dyn Condition<M>>,

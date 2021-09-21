@@ -1,6 +1,40 @@
+//! Conditions serve purpose of a boolean query to the memory state.
+//!
+//! See [`Condition`] for more info about conditions.
+//!
+//! See [`crate::combinators`] for more info about combinators (operations on sets of conditions).
+
 use crate::{consideration::*, Scalar};
 
-pub trait Condition<M> {
+/// Condition represent the simplest question about the state of the world via provided memory.
+///
+/// Imagine memory stores information about number of bannanas in the backpack, and you want to know
+/// if there are at least 3 so you can use that information to decide if you need to find more of
+/// them to not get hungry during the day.
+///
+/// User should make conditions as lightweight and as small as possible. The reason for that is to
+/// make them reused and combined into bigger sets of conditions using combinators
+/// ([`crate::combinators`]).
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// struct Memory { counter: usize }
+///
+/// struct AboveThreshold(usize);
+///
+/// impl Condition<Memory> for AboveThreshold {
+///     fn validate(&self, memory: &Memory) -> bool {
+///         memory.counter > self.0
+///     }
+/// }
+///
+/// let mut memory = Memory { counter: 1 };
+/// assert!(AboveThreshold(0).validate(&memory));
+/// ```
+pub trait Condition<M = ()> {
+    /// Tells if given condition is met based on the state of the memory provided.
     fn validate(&self, memory: &M) -> bool;
 }
 
@@ -16,7 +50,19 @@ impl<M> Condition<M> for bool {
     }
 }
 
-pub struct ClosureCondition<M>(Box<dyn Fn(&M) -> bool>);
+/// Condition that wraps a closure.
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// struct Memory { counter: usize }
+///
+/// let mut memory = Memory { counter: 1 };
+/// let condition = ClosureCondition::new(|memory: &Memory| memory.counter > 0);
+/// assert!(condition.validate(&memory));
+/// ```
+pub struct ClosureCondition<M = ()>(pub Box<dyn Fn(&M) -> bool>);
 
 impl<M> ClosureCondition<M> {
     pub fn new<F>(f: F) -> Self
@@ -33,15 +79,21 @@ impl<M> Condition<M> for ClosureCondition<M> {
     }
 }
 
-pub struct ConditionConstant(pub bool);
-
-impl<M> Condition<M> for ConditionConstant {
-    fn validate(&self, _: &M) -> bool {
-        self.0
-    }
-}
-
-pub struct ConditionInvert<M>(pub Box<dyn Condition<M>>);
+/// Condition that wraps another condition and inverts/negates its result.
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// struct Memory { counter: usize }
+///
+/// let mut memory = Memory { counter: 1 };
+/// let condition = ConditionInvert::new(
+///     ClosureCondition::new(|memory: &Memory| memory.counter == 0),
+/// );
+/// assert!(condition.validate(&memory));
+/// ```
+pub struct ConditionInvert<M = ()>(pub Box<dyn Condition<M>>);
 
 impl<M> ConditionInvert<M> {
     pub fn new<C>(condition: C) -> Self
@@ -58,7 +110,24 @@ impl<M> Condition<M> for ConditionInvert<M> {
     }
 }
 
-pub struct ConsiderationCondition<M> {
+/// Condition that wraps [`Consideration`] and converts it into condition.
+///
+/// Returns true if consideration returns score greater than [`ConsiderationCondition::threshold`]
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// struct Memory { value: Scalar }
+///
+/// let mut memory = Memory { value: 1.0 };
+/// let condition = ConsiderationCondition::new(
+///     ClosureConsideration::new(|memory: &Memory| memory.value),
+///     0.5,
+/// );
+/// assert!(condition.validate(&memory));
+/// ```
+pub struct ConsiderationCondition<M = ()> {
     pub consideration: Box<dyn Consideration<M>>,
     pub threshold: Scalar,
 }
