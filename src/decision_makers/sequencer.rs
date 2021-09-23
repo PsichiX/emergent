@@ -1,11 +1,15 @@
+//! Run states one-by one as long as they succeed (boolean AND operation).
+
 use crate::{condition::*, decision_makers::*, task::*};
 
+/// Defines sequencer state with task and condition.
 pub struct SequencerState<M = ()> {
     condition: Box<dyn Condition<M>>,
     task: Box<dyn Task<M>>,
 }
 
 impl<M> SequencerState<M> {
+    /// Constructs new state with condition and state.
     pub fn new<C, T>(condition: C, task: T) -> Self
     where
         C: Condition<M> + 'static,
@@ -17,11 +21,41 @@ impl<M> SequencerState<M> {
         }
     }
 
+    /// Constructs new state with condition and state.
     pub fn new_raw(condition: Box<dyn Condition<M>>, task: Box<dyn Task<M>>) -> Self {
         Self { condition, task }
     }
 }
 
+/// Sequencer runs states one by one.
+///
+/// Sequencer has two properties that change its behavior:
+/// - Looping (see [`Self::is_looped`])
+/// - Continuity (see [`Self::does_continue`])
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// let mut sequencer = Sequencer::new(
+///     vec![
+///         SequencerState::new(true, NoTask::default()),
+///         SequencerState::new(false, NoTask::default()),
+///         SequencerState::new(true, NoTask::default()),
+///         SequencerState::new(false, NoTask::default()),
+///     ],
+///     true,
+///     true,
+/// );
+///
+/// assert_eq!(sequencer.active_index(), None);
+/// assert!(sequencer.process(&mut ()));
+/// assert_eq!(sequencer.active_index(), Some(0));
+/// assert!(sequencer.process(&mut ()));
+/// assert_eq!(sequencer.active_index(), Some(2));
+/// assert!(sequencer.process(&mut ()));
+/// assert_eq!(sequencer.active_index(), Some(0));
+/// ```
 pub struct Sequencer<M = ()> {
     states: Vec<SequencerState<M>>,
     active_index: Option<usize>,
@@ -30,6 +64,10 @@ pub struct Sequencer<M = ()> {
 }
 
 impl<M> Sequencer<M> {
+    /// Constructs new sequencer with states, looping and continuity settings.
+    ///
+    /// See [`Self::is_looped`].
+    /// See [`Self::does_continue`].
     pub fn new(states: Vec<SequencerState<M>>, looped: bool, continuity: bool) -> Self {
         Self {
             states,
@@ -39,18 +77,27 @@ impl<M> Sequencer<M> {
         }
     }
 
-    pub fn is_active(&self) -> bool {
-        self.active_index.is_some()
+    /// Returns currently active state.
+    pub fn active_index(&self) -> Option<usize> {
+        self.active_index
     }
 
+    /// Tells if when reaches end of the sequence, starts back from first state.
     pub fn is_looped(&self) -> bool {
         self.looped
     }
 
+    /// Tells if sequence cannot break.
+    ///
+    /// When continuity is false, it means whenever tries to find next state to change, that state
+    /// has to succeed or else whole sequence stops.
     pub fn does_continue(&self) -> bool {
         self.continuity
     }
 
+    /// Change currently active state.
+    ///
+    /// By default state won't change if active state is locked, but we can force state change.
     pub fn reset(&mut self, memory: &mut M, forced: bool) -> bool {
         if let Some(index) = self.active_index {
             let state = self.states.get_mut(index).unwrap();
@@ -63,6 +110,7 @@ impl<M> Sequencer<M> {
         true
     }
 
+    /// Perform decision making.
     pub fn process(&mut self, memory: &mut M) -> bool {
         if self.states.is_empty() {
             return false;
@@ -145,6 +193,7 @@ impl<M> Sequencer<M> {
         false
     }
 
+    /// Update currently active state.
     pub fn update(&mut self, memory: &mut M) {
         if let Some(index) = self.active_index {
             self.states.get_mut(index).unwrap().task.on_update(memory);
@@ -175,6 +224,7 @@ impl<M> Task<M> for Sequencer<M> {
 
     fn on_enter(&mut self, memory: &mut M) {
         self.reset(memory, true);
+        self.process(memory);
     }
 
     fn on_exit(&mut self, memory: &mut M) {

@@ -1,7 +1,11 @@
+//! Runs one state that succeeds (boolean OR operation).
+
 use crate::{condition::*, decision_makers::*, task::*, DefaultKey};
 use std::{collections::HashMap, hash::Hash};
 
+/// Selector error.
 pub enum SelectorError<K = DefaultKey> {
+    /// Selector doesn't have state with given ID.
     StateDoesNotExists(K),
 }
 
@@ -42,12 +46,14 @@ where
     }
 }
 
+/// Defines selector state with task and condition.
 pub struct SelectorState<M = ()> {
     condition: Box<dyn Condition<M>>,
     task: Box<dyn Task<M>>,
 }
 
 impl<M> SelectorState<M> {
+    /// Constructs new state with condition and task.
     pub fn new<C, T>(condition: C, task: T) -> Self
     where
         C: Condition<M> + 'static,
@@ -59,11 +65,49 @@ impl<M> SelectorState<M> {
         }
     }
 
+    /// Constructs new state with condition and task.
     pub fn new_raw(condition: Box<dyn Condition<M>>, task: Box<dyn Task<M>>) -> Self {
         Self { condition, task }
     }
 }
 
+/// Selector runs at most only one state at any given time.
+///
+/// First selector finds all states that their condition succeed, then uses state picker to decide
+/// what state to choose from the list of successful states.
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+/// use std::{collections::HashMap, hash::Hash};
+///
+/// struct Is(pub bool);
+///
+/// impl Condition<bool> for Is {
+///     fn validate(&self, memory: &bool) -> bool {
+///         *memory == self.0
+///     }
+/// }
+///
+/// struct Set(pub bool);
+///
+/// impl Task<bool> for Set {
+///     fn on_enter(&mut self, memory: &mut bool) {
+///         *memory = self.0
+///     }
+/// }
+///
+/// let mut states = HashMap::new();
+/// states.insert(false, SelectorState::new(Is(true), Set(false)));
+/// states.insert(true, SelectorState::new(Is(false), Set(true)));
+///
+/// let mut selector = Selector::new((), states);
+/// let mut memory = false;
+/// assert!(selector.process(&mut memory));
+/// assert_eq!(memory, true);
+/// assert!(selector.process(&mut memory));
+/// assert_eq!(memory, false);
+/// ```
 pub struct Selector<M = (), K = DefaultKey>
 where
     K: Clone + Hash + Eq,
@@ -77,6 +121,7 @@ impl<M, K> Selector<M, K>
 where
     K: Clone + Hash + Eq,
 {
+    /// Constructs new selector with state picker and states.
     pub fn new<P>(state_picker: P, states: HashMap<K, SelectorState<M>>) -> Self
     where
         P: SelectorStatePicker<M, K> + 'static,
@@ -88,10 +133,14 @@ where
         }
     }
 
+    /// Returns currently active state ID.
     pub fn active_state(&self) -> Option<&K> {
         self.active_state.as_ref()
     }
 
+    /// Change currently active state.
+    ///
+    /// By default state won't change if active state is locked, but we can force state change.
     pub fn change_active_state(
         &mut self,
         id: Option<K>,
@@ -120,6 +169,7 @@ where
         Ok(true)
     }
 
+    /// Perform decision making.
     pub fn process(&mut self, memory: &mut M) -> bool {
         let available = self
             .states
@@ -141,6 +191,7 @@ where
         false
     }
 
+    /// Update currently active state.
     pub fn update(&mut self, memory: &mut M) {
         if let Some(id) = &self.active_state {
             self.states.get_mut(&id).unwrap().task.on_update(memory);
@@ -177,6 +228,7 @@ where
 
     fn on_enter(&mut self, memory: &mut M) {
         let _ = self.change_active_state(None, memory, true);
+        self.process(memory);
     }
 
     fn on_exit(&mut self, memory: &mut M) {
@@ -192,8 +244,35 @@ where
     }
 }
 
+/// Picks single state ID from array of successful states.
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// struct PickMiddleOne;
+///
+/// impl<M, K> SelectorStatePicker<M, K> for PickMiddleOne where K: Clone {
+///     fn pick(&mut self, available: &[&K], memory: &M) -> Option<K> {
+///         available.iter().nth(available.len() / 2).map(|id| (**id).clone())
+///     }
+/// }
+///
+/// let states = vec![&"a", &"b", &"c"];
+/// assert_eq!(PickMiddleOne.pick(&states, &()), Some("b"));
+/// ```
 pub trait SelectorStatePicker<M = (), K = DefaultKey> {
+    /// Pick some or none state that wins.
     fn pick(&mut self, available: &[&K], memory: &M) -> Option<K>;
+}
+
+impl<M, K> SelectorStatePicker<M, K> for ()
+where
+    K: Clone,
+{
+    fn pick(&mut self, available: &[&K], _: &M) -> Option<K> {
+        available.first().map(|id| (*id).clone())
+    }
 }
 
 impl<M, K> SelectorStatePicker<M, K> for dyn FnMut(&[&K], &M) -> Option<K> {
@@ -202,6 +281,18 @@ impl<M, K> SelectorStatePicker<M, K> for dyn FnMut(&[&K], &M) -> Option<K> {
     }
 }
 
+/// Wraps closure in selector state picker.
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// let mut picker = ClosureSelectorStatePicker::<(), &str>::new(
+///     |ids, _| ids.first().map(|id| (**id).clone()),
+/// );
+/// let states = vec![&"a", &"b", &"c"];
+/// assert_eq!(picker.pick(&states, &()), Some("a"));
+/// ```
 pub struct ClosureSelectorStatePicker<M = (), K = DefaultKey>(
     Box<dyn FnMut(&[&K], &M) -> Option<K>>,
 );
@@ -221,6 +312,15 @@ impl<M, K> SelectorStatePicker<M, K> for ClosureSelectorStatePicker<M, K> {
     }
 }
 
+/// Selects first, last or nth available state ID.
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// let states = vec![&"a", &"b", &"c"];
+/// assert_eq!(OrderedSelectorStatePicker::Last.pick(&states, &()), Some("c"));
+/// ```
 pub enum OrderedSelectorStatePicker {
     First,
     Last,

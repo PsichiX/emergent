@@ -1,5 +1,18 @@
+//! Calculates sum of sub-consideratiosn scores.
+
 use crate::{consideration::*, Scalar};
 
+/// Gives sum of all considerations scores.
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// let consideration = EvaluatorSum::default()
+///     .consideration(40.0)
+///     .consideration(2.0);
+/// assert_eq!(consideration.score(&()), 42.0);
+/// ```
 pub struct EvaluatorSum<M> {
     pub considerations: Vec<Box<dyn Consideration<M>>>,
 }
@@ -13,6 +26,12 @@ impl<M> Default for EvaluatorSum<M> {
 }
 
 impl<M> EvaluatorSum<M> {
+    /// Constructs new consideration wih list of sub-considerations.
+    pub fn new(considerations: Vec<Box<dyn Consideration<M>>>) -> Self {
+        Self { considerations }
+    }
+
+    /// Add child consideration.
     pub fn consideration<C>(mut self, consideration: C) -> Self
     where
         C: Consideration<M> + 'static,

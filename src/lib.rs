@@ -7,6 +7,7 @@
 //! - __Condition__- Answers to questions about certain memory states ([`crate::condition`]. [`crate::combinators`])
 //! - __Considerations__ - Scored probabilities of certain memory states ([`crate::consideration`], [`crate::evaluators`])
 //! - __Memory__ - Memory is the state passed to all concepts listed above to be read/write by them.
+//!   In other AI systems memory is also known as blackboard or context.
 
 pub mod builders;
 pub mod combinators;

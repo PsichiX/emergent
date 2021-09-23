@@ -1,5 +1,18 @@
+//! Calculates product of sub-consideratiosn scores.
+
 use crate::{consideration::*, Scalar};
 
+/// Gives product of all considerations scores.
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// let consideration = EvaluatorProduct::default()
+///     .consideration(5.0)
+///     .consideration(4.0);
+/// assert_eq!(consideration.score(&()), 20.0);
+/// ```
 pub struct EvaluatorProduct<M> {
     pub considerations: Vec<Box<dyn Consideration<M>>>,
 }
@@ -13,6 +26,12 @@ impl<M> Default for EvaluatorProduct<M> {
 }
 
 impl<M> EvaluatorProduct<M> {
+    /// Constructs new consideration wih list of sub-considerations.
+    pub fn new(considerations: Vec<Box<dyn Consideration<M>>>) -> Self {
+        Self { considerations }
+    }
+
+    /// Add child consideration.
     pub fn consideration<C>(mut self, consideration: C) -> Self
     where
         C: Consideration<M> + 'static,

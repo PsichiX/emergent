@@ -1,12 +1,18 @@
+//! Planner (a.k.a. Goal Oriented Action Planner) decision maker.
+
 use crate::{condition::*, consideration::*, decision_makers::*, task::*, DefaultKey, Scalar};
 use std::{
     collections::{HashMap, HashSet},
     hash::Hash,
 };
 
+/// Planner action.
 pub enum PlannerError<CK = DefaultKey, AK = DefaultKey> {
+    /// There is no condition with given ID found in planner.
     ConditionDoesNotExists(CK),
+    /// Condition with given ID is never used by the planner.
     ConditionIsNeverUsed(CK),
+    /// There is no action with given ID found in planner.
     ActionDoesNotExists(AK),
 }
 
@@ -66,6 +72,9 @@ where
     }
 }
 
+/// Planner action with preconditions, postconditions, action cost and action task.
+///
+/// TODO: Explain how planner works and provide simple example code.
 pub struct PlannerAction<M = (), K = DefaultKey>
 where
     K: Clone + Hash + Eq,
@@ -80,6 +89,8 @@ impl<M, K> PlannerAction<M, K>
 where
     K: Clone + Hash + Eq,
 {
+    /// Constructs new planner action with set of preconditions, post conditions, cost of the action
+    /// and action task.
     pub fn new<C, T>(
         preconditions: HashSet<K>,
         postconditions: HashSet<K>,
@@ -98,6 +109,8 @@ where
         }
     }
 
+    /// Constructs new planner action with set of preconditions, post conditions, cost of the action
+    /// and action task.
     pub fn new_raw(
         preconditions: HashSet<K>,
         postconditions: HashSet<K>,
@@ -161,6 +174,7 @@ where
     CK: Clone + Hash + Eq,
     AK: Clone + Hash + Eq,
 {
+    /// Constructs new planner with conditions, actions, goal selector and exact conditions match seting.
     pub fn new<DM>(
         conditions: HashMap<CK, Box<dyn Condition<M>>>,
         actions: HashMap<AK, PlannerAction<M, CK>>,
@@ -199,6 +213,8 @@ where
         })
     }
 
+    /// Constructs new planner with conditions, actions, goal selector and exact conditions match seting.
+    ///
     /// # Safety
     /// Make sure IDs in all inputs matches each other (there are no IDs pointing to non-existing objects)
     pub unsafe fn new_unchecked<DM>(
@@ -236,10 +252,12 @@ where
         }
     }
 
+    /// Returns slice of currently running plan action IDs.
     pub fn active_plan(&self) -> Option<&[AK]> {
         self.plan.as_ref().map(|(start, plan)| &plan[(*start)..])
     }
 
+    /// Tells currently running action ID.
     pub fn active_action(&self) -> Option<&AK> {
         match self.active_plan() {
             Some(plan) => plan.first(),
@@ -247,6 +265,7 @@ where
         }
     }
 
+    /// Tells current goal action ID.
     pub fn active_goal(&self) -> Option<&AK> {
         match &self.plan {
             Some((_, plan)) => plan.last(),
@@ -254,6 +273,7 @@ where
         }
     }
 
+    /// Tells transition between two actions in running plan - current and next action IDs.
     pub fn active_transition(&self) -> (Option<&AK>, Option<&AK>) {
         match self.active_plan() {
             Some(plan) => {
@@ -266,6 +286,9 @@ where
         }
     }
 
+    /// Find best possible plan towards goal action.
+    ///
+    /// By default plan won't change if currently running action is locked, unless we force it.
     pub fn find_plan(
         &mut self,
         goal_action: Option<AK>,
@@ -366,6 +389,7 @@ where
         Ok(false)
     }
 
+    /// Perform decision making.
     pub fn process(&mut self, memory: &mut M) -> bool {
         let new_id = self.goal_selector.decide(memory);
         if new_id.as_ref() == self.active_goal() {
@@ -412,6 +436,7 @@ where
         false
     }
 
+    /// Update currently active state.
     pub fn update(&mut self, memory: &mut M) {
         if let Some(id) = self.active_action().cloned() {
             self.actions.get_mut(&id).unwrap().task.on_update(memory);
@@ -458,6 +483,7 @@ where
 
     fn on_enter(&mut self, memory: &mut M) {
         let _ = self.find_plan(None, memory, true);
+        self.process(memory);
     }
 
     fn on_exit(&mut self, memory: &mut M) {

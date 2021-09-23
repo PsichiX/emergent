@@ -1,14 +1,21 @@
+//! Tests if certain number of sub-conditions succeeds.
+
 use crate::condition::*;
 use std::ops::Range;
 
+/// Defines a range bound.
 #[derive(Debug, Copy, Clone)]
 pub enum CombinatorCountBound {
+    /// None bound means infinity.
     None,
+    /// Exclusive bound (less/greater than N).
     Exclusive(usize),
+    /// Inclusive bound (less/greater than or equal to N).
     Inclusive(usize),
 }
 
 impl CombinatorCountBound {
+    /// Tests if value passes when `self` used as lower bound.
     pub fn validate_lower(self, count: usize) -> bool {
         match self {
             Self::None => true,
@@ -17,6 +24,7 @@ impl CombinatorCountBound {
         }
     }
 
+    /// Tests if value passes when `self` used as upper bound.
     pub fn validate_upper(self, count: usize) -> bool {
         match self {
             Self::None => true,
@@ -26,19 +34,37 @@ impl CombinatorCountBound {
     }
 }
 
+/// Returns `true` if number of passing conditions is in bounds range.
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// let condition = CombinatorCount::new(CombinatorCountBound::None..CombinatorCountBound::None)
+///     .condition(false)
+///     .condition(true);
+/// assert_eq!(condition.validate(&()), true);
+///
+/// let condition = CombinatorCount::new(CombinatorCountBound::None..CombinatorCountBound::Inclusive(2))
+///     .condition(true)
+///     .condition(true);
+/// assert_eq!(condition.validate(&()), true);
+/// ```
 pub struct CombinatorCount<M> {
     pub conditions: Vec<Box<dyn Condition<M>>>,
-    pub expectation: Range<CombinatorCountBound>,
+    pub bounds: Range<CombinatorCountBound>,
 }
 
 impl<M> CombinatorCount<M> {
-    pub fn new(expectation: Range<CombinatorCountBound>) -> Self {
+    /// Constructs new condition with bounds.
+    pub fn new(bounds: Range<CombinatorCountBound>) -> Self {
         Self {
             conditions: vec![],
-            expectation,
+            bounds,
         }
     }
 
+    /// Adds sub-condition.
     pub fn condition<C>(mut self, condition: C) -> Self
     where
         C: Condition<M> + 'static,
@@ -55,6 +81,6 @@ impl<M> Condition<M> for CombinatorCount<M> {
             .iter()
             .filter(|condition| condition.validate(memory))
             .count();
-        self.expectation.start.validate_lower(count) && self.expectation.end.validate_upper(count)
+        self.bounds.start.validate_lower(count) && self.bounds.end.validate_upper(count)
     }
 }

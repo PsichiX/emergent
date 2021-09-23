@@ -1,7 +1,11 @@
+//! Reasoner (a.k.a. Utility) decision maker.
+
 use crate::{consideration::*, decision_makers::*, task::*, DefaultKey};
 use std::{collections::HashMap, hash::Hash};
 
+/// Reasoner error.
 pub enum ReasonerError<K = DefaultKey> {
+    /// There is no state with given ID found in reasoner.
     StateDoesNotExists(K),
 }
 
@@ -42,12 +46,14 @@ where
     }
 }
 
+/// Defines machinery state with task to run and consideration to score.
 pub struct ReasonerState<M = ()> {
     consideration: Box<dyn Consideration<M>>,
     task: Box<dyn Task<M>>,
 }
 
 impl<M> ReasonerState<M> {
+    /// Constructs new state with task and consideration.
     pub fn new<C, T>(consideration: C, task: T) -> Self
     where
         C: Consideration<M> + 'static,
@@ -59,6 +65,7 @@ impl<M> ReasonerState<M> {
         }
     }
 
+    /// Constructs new state with task and consideration.
     pub fn new_raw(consideration: Box<dyn Consideration<M>>, task: Box<dyn Task<M>>) -> Self {
         Self {
             consideration,
@@ -67,6 +74,42 @@ impl<M> ReasonerState<M> {
     }
 }
 
+/// Reasoner (a.k.a. Utility AI).
+///
+/// Reasoner contains list of states with considerations that will score probability of given state
+/// to happen. When states get scored, then it picks one with the higher score and change into it.
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+/// use std::hash::Hash;
+///
+/// #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+/// enum Mode {
+///     Low,
+///     High,
+/// }
+///
+/// struct Distance(pub Scalar);
+///
+/// impl Consideration<Scalar> for Distance {
+///     fn score(&self, memory: &Scalar) -> Scalar {
+///         1.0 - (self.0 - *memory).abs().min(1.0)
+///     }
+/// }
+///
+/// let mut reasoner = ReasonerBuilder::default()
+///     .state(Mode::Low, ReasonerState::new(Distance(0.0), NoTask::default()))
+///     .state(Mode::High, ReasonerState::new(Distance(1.0), NoTask::default()))
+///     .build();
+///
+/// let mut memory = 0.0;
+/// assert!(reasoner.process(&mut memory));
+/// assert_eq!(reasoner.active_state(), Some(&Mode::Low));
+/// memory = 1.0;
+/// assert!(reasoner.process(&mut memory));
+/// assert_eq!(reasoner.active_state(), Some(&Mode::High));
+/// ```
 pub struct Reasoner<M = (), K = DefaultKey>
 where
     K: Clone + Hash + Eq,
@@ -79,6 +122,7 @@ impl<M, K> Reasoner<M, K>
 where
     K: Clone + Hash + Eq,
 {
+    /// Construct new reasoner with states.
     pub fn new(states: HashMap<K, ReasonerState<M>>) -> Self {
         Self {
             states,
@@ -86,10 +130,14 @@ where
         }
     }
 
+    /// Returns currently active state ID.
     pub fn active_state(&self) -> Option<&K> {
         self.active_state.as_ref()
     }
 
+    /// Change active state.
+    ///
+    /// If currently active state is locked then state change will fail, unless we force it to change.
     pub fn change_active_state(
         &mut self,
         id: Option<K>,
@@ -118,6 +166,7 @@ where
         Ok(true)
     }
 
+    ///Performs decision making.
     pub fn process(&mut self, memory: &mut M) -> bool {
         let new_id = self
             .states
@@ -136,6 +185,7 @@ where
         false
     }
 
+    /// Update currently active state.
     pub fn update(&mut self, memory: &mut M) {
         if let Some(id) = &self.active_state {
             self.states.get_mut(&id).unwrap().task.on_update(memory);
@@ -172,6 +222,7 @@ where
 
     fn on_enter(&mut self, memory: &mut M) {
         let _ = self.change_active_state(None, memory, true);
+        self.process(memory);
     }
 
     fn on_exit(&mut self, memory: &mut M) {
@@ -184,5 +235,35 @@ where
 
     fn on_process(&mut self, memory: &mut M) -> bool {
         self.process(memory)
+    }
+}
+
+/// Reasoner builder.
+///
+/// See [`Reasoner`].
+pub struct ReasonerBuilder<M = (), K = DefaultKey>(HashMap<K, ReasonerState<M>>);
+
+impl<M, K> Default for ReasonerBuilder<M, K> {
+    fn default() -> Self {
+        Self(Default::default())
+    }
+}
+
+impl<M, K> ReasonerBuilder<M, K>
+where
+    K: Clone + Hash + Eq,
+{
+    /// Add new state.
+    pub fn state(mut self, id: K, state: ReasonerState<M>) -> Self {
+        self.0.insert(id, state);
+        self
+    }
+
+    /// Consume builder and build new reasoner.
+    pub fn build(self) -> Reasoner<M, K>
+    where
+        K: Clone + Hash + Eq,
+    {
+        Reasoner::new(self.0)
     }
 }

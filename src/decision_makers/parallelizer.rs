@@ -1,11 +1,15 @@
+//! Run states in parallel.
+
 use crate::{condition::*, decision_makers::*, task::*};
 
+/// Defines parallelizer state with condition to succeed and task to run.
 pub struct ParallelizerState<M = ()> {
     condition: Box<dyn Condition<M>>,
     task: Box<dyn Task<M>>,
 }
 
 impl<M> ParallelizerState<M> {
+    /// Constructs new state with condition and task.
     pub fn new<C, T>(condition: C, task: T) -> Self
     where
         C: Condition<M> + 'static,
@@ -17,26 +21,57 @@ impl<M> ParallelizerState<M> {
         }
     }
 
+    /// Constructs new state with condition and task.
     pub fn new_raw(condition: Box<dyn Condition<M>>, task: Box<dyn Task<M>>) -> Self {
         Self { condition, task }
     }
 }
 
+/// Parallelizer runs all its states at the same time.
+///
+/// Note that at any time you ask it to make a decision it goes through non-active states and tries
+/// to run them so instead of starting all possible states at once, it will ensure that at any time
+/// of decision making all possible states will run.
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// struct Memory {
+///     a: bool,
+///     b: bool,
+/// }
+///
+/// let mut parallelizer = Parallelizer::new(vec![
+///     ParallelizerState::new(true, ClosureTask::default().enter(|m: &mut Memory| m.a = true)),
+///     ParallelizerState::new(true, ClosureTask::default().enter(|m: &mut Memory| m.b = true)),
+/// ]);
+///
+/// let mut memory = Memory { a: false, b: false };
+/// assert!(parallelizer.process(&mut memory));
+/// assert_eq!(memory.a, true);
+/// assert_eq!(memory.b, true);
+/// ```
 pub struct Parallelizer<M = ()> {
     states: Vec<(ParallelizerState<M>, bool)>,
 }
 
 impl<M> Parallelizer<M> {
+    /// Constructs new parallelizer with states.
     pub fn new(states: Vec<ParallelizerState<M>>) -> Self {
         Self {
             states: states.into_iter().map(|state| (state, false)).collect(),
         }
     }
 
+    /// Tells if any of states is active/running.
     pub fn is_active(&self) -> bool {
         self.states.iter().any(|(_, active)| *active)
     }
 
+    /// Stops all active/running states.
+    ///
+    /// By default states that are locked won't stop, but we can force stop them.
     pub fn reset(&mut self, memory: &mut M, forced: bool) -> bool {
         let mut result = false;
         for (state, active) in &mut self.states {
@@ -49,6 +84,7 @@ impl<M> Parallelizer<M> {
         result
     }
 
+    /// Perform decision making.
     pub fn process(&mut self, memory: &mut M) -> bool {
         let mut result = false;
         for (state, active) in &mut self.states {
@@ -71,6 +107,7 @@ impl<M> Parallelizer<M> {
         result
     }
 
+    /// Update active/running states.
     pub fn update(&mut self, memory: &mut M) {
         for (state, active) in &mut self.states {
             if *active {
@@ -100,6 +137,7 @@ impl<M> Task<M> for Parallelizer<M> {
 
     fn on_enter(&mut self, memory: &mut M) {
         self.reset(memory, true);
+        self.process(memory);
     }
 
     fn on_exit(&mut self, memory: &mut M) {

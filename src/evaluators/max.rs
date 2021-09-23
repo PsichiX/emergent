@@ -1,5 +1,18 @@
+//! Calculates maximum of sub-consideratiosn scores.
+
 use crate::{consideration::*, Scalar};
 
+/// Gives maximum of all considerations scores.
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+///
+/// let consideration = EvaluatorMax::default()
+///     .consideration(1.0)
+///     .consideration(2.0);
+/// assert_eq!(consideration.score(&()), 2.0);
+/// ```
 pub struct EvaluatorMax<M> {
     pub considerations: Vec<Box<dyn Consideration<M>>>,
 }
@@ -13,6 +26,12 @@ impl<M> Default for EvaluatorMax<M> {
 }
 
 impl<M> EvaluatorMax<M> {
+    /// Constructs new consideration wih list of sub-considerations.
+    pub fn new(considerations: Vec<Box<dyn Consideration<M>>>) -> Self {
+        Self { considerations }
+    }
+
+    /// Add child consideration.
     pub fn consideration<C>(mut self, consideration: C) -> Self
     where
         C: Consideration<M> + 'static,
