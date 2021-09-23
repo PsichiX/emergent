@@ -12,7 +12,8 @@
 //!   into this planner).
 //! - [`Sequencer`](struct@self::sequencer::Sequencer) - Goes through states (ones that are possible
 //!   to run) in a sequence.
-//! - [`Selector`](struct@self::selector::Selector) - Selects first state that is possible to run.
+//! - [`Selector`](struct@self::selector::Selector) - Selects only one state from list of possible
+//!   states to run.
 //! - [`Parallelizer`](struct@self::parallelizer::Parallelizer) - Runs all states (that are possible
 //!   to run) at the same time.
 //!
@@ -154,6 +155,54 @@ impl<M, K> DecisionMaker<M, K> for NoDecisionMaker<M, K> {
     }
 
     fn change_mind(&mut self, _: Option<K>, _: &mut M) -> bool {
+        false
+    }
+}
+
+/// Single choice decision maker (it always takes single specified decision).
+pub struct SingleDecisionMaker<K = DefaultKey> {
+    id: K,
+    active: bool,
+}
+
+impl<K> SingleDecisionMaker<K>
+where
+    K: Clone + Eq,
+{
+    /// Constructs new single choice decision maker.
+    pub fn new(id: K) -> Self {
+        Self { id, active: false }
+    }
+
+    /// Returns active state ID.
+    pub fn active_state(&self) -> Option<&K> {
+        if self.active {
+            Some(&self.id)
+        } else {
+            None
+        }
+    }
+}
+
+impl<M, K> DecisionMaker<M, K> for SingleDecisionMaker<K>
+where
+    K: Clone + Eq,
+{
+    fn decide(&mut self, _: &mut M) -> Option<K> {
+        self.active = true;
+        Some(self.id.clone())
+    }
+
+    fn change_mind(&mut self, id: Option<K>, _: &mut M) -> bool {
+        if let Some(id) = id {
+            if !self.active && self.id == id {
+                self.active = true;
+                return true;
+            }
+        } else if self.active {
+            self.active = false;
+            return true;
+        }
         false
     }
 }

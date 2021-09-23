@@ -241,7 +241,7 @@ where
 /// Reasoner builder.
 ///
 /// See [`Reasoner`].
-pub struct ReasonerBuilder<M = (), K = DefaultKey>(HashMap<K, ReasonerState<M>>);
+pub struct ReasonerBuilder<M = (), K = DefaultKey>(pub HashMap<K, ReasonerState<M>>);
 
 impl<M, K> Default for ReasonerBuilder<M, K> {
     fn default() -> Self {

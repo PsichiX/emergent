@@ -357,7 +357,7 @@ where
 /// Machinery builder.
 ///
 /// See [`Machinery`].
-pub struct MachineryBuilder<M = (), K = DefaultKey>(HashMap<K, MachineryState<M, K>>);
+pub struct MachineryBuilder<M = (), K = DefaultKey>(pub HashMap<K, MachineryState<M, K>>);
 
 impl<M, K> Default for MachineryBuilder<M, K> {
     fn default() -> Self {

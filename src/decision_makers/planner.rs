@@ -73,8 +73,6 @@ where
 }
 
 /// Planner action with preconditions, postconditions, action cost and action task.
-///
-/// TODO: Explain how planner works and provide simple example code.
 pub struct PlannerAction<M = (), K = DefaultKey>
 where
     K: Clone + Hash + Eq,
@@ -89,6 +87,42 @@ impl<M, K> PlannerAction<M, K>
 where
     K: Clone + Hash + Eq,
 {
+    /// Constructs new planner action with cost of the action and action task.
+    pub fn task<C, T>(cost: C, task: T) -> Self
+    where
+        C: Consideration<M> + 'static,
+        T: Task<M> + 'static,
+    {
+        Self {
+            preconditions: Default::default(),
+            postconditions: Default::default(),
+            cost: Box::new(cost),
+            task: Box::new(task),
+        }
+    }
+
+    /// Constructs new planner action with cost of the action and action task.
+    pub fn task_raw(cost: Box<dyn Consideration<M>>, task: Box<dyn Task<M>>) -> Self {
+        Self {
+            preconditions: Default::default(),
+            postconditions: Default::default(),
+            cost,
+            task,
+        }
+    }
+
+    /// Add precondition.
+    pub fn precondition(mut self, id: K) -> Self {
+        self.preconditions.insert(id);
+        self
+    }
+
+    /// Add postcondition.
+    pub fn postcondition(mut self, id: K) -> Self {
+        self.postconditions.insert(id);
+        self
+    }
+
     /// Constructs new planner action with set of preconditions, post conditions, cost of the action
     /// and action task.
     pub fn new<C, T>(
@@ -157,6 +191,111 @@ where
     }
 }
 
+/// Planner (a.k.a. Goal Oriented Action Planner)
+///
+/// Planners are used to plan long term lists of actions that will lead to desired end goal.
+/// They contain set of actions that have sets of preconditions and postconditions that tell what
+/// certain aspects of the state are desired before and expected after running the state.
+/// Planner also contains another decision making engine that will select goal actions that has to
+/// be achieved.
+///
+/// How it works
+/// ---
+/// Goal selector contains only a list of actions that are end goals that agent might want to achieve
+/// in the future. Whenever goal selector changes its mind (selects new goal action to pursue),
+/// planner will try to plan all the actions, smaller steps, that are needed to perform to achieve
+/// new goal. Planning process is basically a pathfinding performed on actions where at first planner
+/// tries to find starting action that best describes current state of the agent. Then it tries to
+/// find the shortest path through all possible actions that leads towards desired goal action.
+///
+/// When we construct new planner, it first builds a graph with possible connections between other
+/// actions and for that it uses preconditions and postconditions - it tries to match postconditions
+/// of one action with preconditions of another action and their similarities are weighted (the more
+/// preconditions and postconditions match with one another, the more score given connection gets).
+///
+/// Each action has ha consideration attached that is used to calculate cost score of given action.
+/// When planner tries to find a path between actions, it uses both cost of given action and
+/// connection weights and prioritizes these connections with less cost and more weight to find the
+/// less costly path towards achieving the goal.
+///
+/// __So to sum things up: planner is just a pathfinding performed on set of actions connected by
+/// facts about the state of the world.__
+///
+/// _It's worth noting that one disadvantage of a planner is that when new plan gets calculated it
+/// won't change until either goal selector don't change its mind or user forces to find new plan.
+/// That means plan can't change during already running plan execution, it can change only when
+/// goal changes._
+///
+/// # Example
+/// ```
+/// use emergent::prelude::*;
+/// use std::hash::Hash;
+///
+/// #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+/// enum Action {
+///     FindFood,
+///     Eat,
+/// }
+///
+/// #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+/// enum Fact {
+///     HasFood,
+///     NeedsFood,
+/// }
+///
+/// struct Memory {
+///     has_food: bool,
+/// }
+///
+/// struct SetFood(pub bool);
+///
+/// impl Task<Memory> for SetFood {
+///     fn on_enter(&mut self, memory: &mut Memory) {
+///         memory.has_food = self.0;
+///     }
+/// }
+///
+/// struct HasFood(pub bool);
+///
+/// impl Condition<Memory> for HasFood {
+///     fn validate(&self, memory: &Memory) -> bool {
+///         memory.has_food == self.0
+///     }
+/// }
+///
+/// let mut planner = PlannerBuilder::new(SingleDecisionMaker::new(Action::Eat))
+///     .action(
+///         Action::FindFood,
+///         PlannerAction::task(1.0, SetFood(true))
+///             .precondition(Fact::NeedsFood)
+///             .postcondition(Fact::HasFood),
+///     )
+///     .action(
+///         Action::Eat,
+///         PlannerAction::task(1.0, SetFood(false))
+///             .precondition(Fact::HasFood)
+///             .postcondition(Fact::NeedsFood),
+///     )
+///     .condition(Fact::NeedsFood, HasFood(false))
+///     .condition(Fact::HasFood, HasFood(true))
+///     .build()
+///     .unwrap();
+///
+/// let mut memory = Memory { has_food: false };
+/// assert_eq!(planner.process(&mut memory), true);
+/// assert_eq!(planner.active_plan(), Some(vec![Action::FindFood, Action::Eat].as_slice()));
+/// assert_eq!(planner.active_goal(), Some(&Action::Eat));
+/// assert_eq!(planner.active_action(), Some(&Action::FindFood));
+/// assert_eq!(planner.process(&mut memory), false);
+/// assert_eq!(planner.active_action(), Some(&Action::Eat));
+///
+/// planner.change_mind(None, &mut memory);
+/// memory.has_food = true;
+/// assert_eq!(planner.process(&mut memory), true);
+/// assert_eq!(planner.active_plan(), Some(vec![Action::Eat].as_slice()));
+/// assert_eq!(planner.active_goal(), Some(&Action::Eat));
+/// assert_eq!(planner.active_action(), Some(&Action::Eat));
+/// ```
 pub struct Planner<M = (), CK = DefaultKey, AK = DefaultKey>
 where
     CK: Clone + Hash + Eq,
@@ -184,6 +323,21 @@ where
     where
         DM: DecisionMaker<M, AK> + 'static,
     {
+        Self::new_raw(
+            conditions,
+            actions,
+            Box::new(goal_selector),
+            exact_conditions_match,
+        )
+    }
+
+    /// Constructs new planner with conditions, actions, goal selector and exact conditions match seting.
+    pub fn new_raw(
+        conditions: HashMap<CK, Box<dyn Condition<M>>>,
+        actions: HashMap<AK, PlannerAction<M, CK>>,
+        goal_selector: Box<dyn DecisionMaker<M, AK>>,
+        exact_conditions_match: bool,
+    ) -> Result<Self, PlannerError<CK, AK>> {
         for id in actions.values().flat_map(|action| {
             action
                 .preconditions
@@ -209,7 +363,7 @@ where
             }
         }
         Ok(unsafe {
-            Self::new_unchecked(conditions, actions, goal_selector, exact_conditions_match)
+            Self::new_unchecked_raw(conditions, actions, goal_selector, exact_conditions_match)
         })
     }
 
@@ -226,6 +380,24 @@ where
     where
         DM: DecisionMaker<M, AK> + 'static,
     {
+        Self::new_unchecked_raw(
+            conditions,
+            actions,
+            Box::new(goal_selector),
+            exact_conditions_match,
+        )
+    }
+
+    /// Constructs new planner with conditions, actions, goal selector and exact conditions match seting.
+    ///
+    /// # Safety
+    /// Make sure IDs in all inputs matches each other (there are no IDs pointing to non-existing objects)
+    pub unsafe fn new_unchecked_raw(
+        conditions: HashMap<CK, Box<dyn Condition<M>>>,
+        actions: HashMap<AK, PlannerAction<M, CK>>,
+        goal_selector: Box<dyn DecisionMaker<M, AK>>,
+        exact_conditions_match: bool,
+    ) -> Self {
         let connections = actions
             .iter()
             .flat_map(|(ak, av)| {
@@ -247,7 +419,7 @@ where
             conditions,
             actions,
             connections,
-            goal_selector: Box::new(goal_selector),
+            goal_selector,
             plan: None,
         }
     }
@@ -322,9 +494,6 @@ where
             Some(id) => id,
             None => return Ok(false),
         };
-        if start_action == goal_action {
-            return Ok(false);
-        }
         if let Some(id) = &active_action {
             self.actions.get_mut(id).unwrap().task.on_exit(memory);
             self.plan = None;
@@ -496,5 +665,70 @@ where
 
     fn on_process(&mut self, memory: &mut M) -> bool {
         self.process(memory)
+    }
+}
+
+/// Planner builder.
+///
+/// See [`Planner`].
+pub struct PlannerBuilder<M = (), CK = DefaultKey, AK = DefaultKey>
+where
+    CK: Clone + Hash + Eq,
+    AK: Clone + Hash + Eq,
+{
+    pub conditions: HashMap<CK, Box<dyn Condition<M>>>,
+    pub actions: HashMap<AK, PlannerAction<M, CK>>,
+    pub goal_selector: Box<dyn DecisionMaker<M, AK>>,
+    pub exact_conditions_match: bool,
+}
+
+impl<M, CK, AK> PlannerBuilder<M, CK, AK>
+where
+    CK: Clone + Hash + Eq,
+    AK: Clone + Hash + Eq,
+{
+    /// Constructs new planner builder.
+    pub fn new<DM>(goal_selector: DM) -> Self
+    where
+        DM: DecisionMaker<M, AK> + 'static,
+    {
+        Self {
+            conditions: Default::default(),
+            actions: Default::default(),
+            goal_selector: Box::new(goal_selector),
+            exact_conditions_match: false,
+        }
+    }
+
+    /// Tells if connections between actions are made only if preconditions and postcondition are
+    /// exactly the same.
+    pub fn exact_conditions_match(mut self, mode: bool) -> Self {
+        self.exact_conditions_match = mode;
+        self
+    }
+
+    /// Add condition (fact about the world state).
+    pub fn condition<C>(mut self, id: CK, condition: C) -> Self
+    where
+        C: Condition<M> + 'static,
+    {
+        self.conditions.insert(id, Box::new(condition));
+        self
+    }
+
+    /// Add planner action.
+    pub fn action(mut self, id: AK, action: PlannerAction<M, CK>) -> Self {
+        self.actions.insert(id, action);
+        self
+    }
+
+    /// Consumes and builds planner.
+    pub fn build(self) -> Result<Planner<M, CK, AK>, PlannerError<CK, AK>> {
+        Planner::new_raw(
+            self.conditions,
+            self.actions,
+            self.goal_selector,
+            self.exact_conditions_match,
+        )
     }
 }

@@ -8,6 +8,11 @@
 //! - __Considerations__ - Scored probabilities of certain memory states ([`crate::consideration`], [`crate::evaluators`])
 //! - __Memory__ - Memory is the state passed to all concepts listed above to be read/write by them.
 //!   In other AI systems memory is also known as blackboard or context.
+//!
+//! Note that AI techniques provided by this library are usable not only for agent behaviors but
+//! also for building emergent storytelling when used for smart world events generation. In fact AI
+//! can be used for automation and modularization of many aspects of game logic, not only agents
+//! and events - consider your creativity being the only limit of what AI techniques can be used for.
 
 pub mod builders;
 pub mod combinators;
