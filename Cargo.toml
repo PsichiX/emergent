@@ -1,6 +1,6 @@
 [package]
 name = "emergent"
-version = "1.2.0"
+version = "1.2.1"
 authors = ["Patryk 'PsichiX' Budzynski <psichix@gmail.com>"]
 edition = "2018"
 description = "Toolset for producing emergent gameplay for games written in Rust"
@@ -10,7 +10,7 @@ repository = "https://github.com/PsichiX/emergent"
 documentation = "https://docs.rs/emergent"
 readme = "README.md"
 keywords = ["emergent", "ai", "gamedev"]
-categories = ["simulation", "game-development::ai"]
+categories = ["simulation", "game-development"]
 
 [features]
 scalar64 = []
