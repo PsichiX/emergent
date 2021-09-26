@@ -8,6 +8,18 @@ pub struct LodMemory<M = ()> {
     pub memory: M,
 }
 
+impl<M> std::fmt::Debug for LodMemory<M>
+where
+    M: std::fmt::Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("LodMemory")
+            .field("lod_level", &self.lod_level)
+            .field("memory", &self.memory)
+            .finish()
+    }
+}
+
 /// Allows to run different decision making depending on the level of details set in memory.
 ///
 /// Useful to optimize AI processing to for example run narow phase logic when agent is near the
@@ -108,5 +120,11 @@ impl<M> Lod<M> {
             })
             .collect();
         Selector::new(OrderedSelectorStatePicker::First, states)
+    }
+}
+
+impl<M> std::fmt::Debug for Lod<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Lod").finish()
     }
 }

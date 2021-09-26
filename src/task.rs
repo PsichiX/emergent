@@ -87,6 +87,12 @@ impl<M> Default for NoTask<M> {
 
 impl<M> Task<M> for NoTask<M> {}
 
+impl<M> std::fmt::Debug for NoTask<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("NoTask").finish()
+    }
+}
+
 impl<M> Task<M> for dyn FnMut(&M) {
     fn on_enter(&mut self, memory: &mut M) {
         self(memory);
@@ -198,5 +204,11 @@ impl<M> Task<M> for ClosureTask<M> {
 
     fn on_process(&mut self, memory: &mut M) -> bool {
         self.process.as_mut().map(|f| f(memory)).unwrap_or_default()
+    }
+}
+
+impl<M> std::fmt::Debug for ClosureTask<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ClosureTask").finish()
     }
 }

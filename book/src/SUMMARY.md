@@ -1,0 +1,16 @@
+# Summary
+
+- [Introduction](./introduction.md)
+- [First steps](./first_steps.md)
+- [Decision makers](./decision_makers/index.md)
+  - [Finite State Machine](./decision_makers/finite_state_machine.md)
+  - [Hierarchical Finite State Machine]()
+  - [Behavior Tree]()
+  - [Utility AI]()
+  - [Goal Oriented Action Planning]()
+- [Common AI problems and solutions]()
+  - [NPC day cycle]()
+  - [Steering]()
+  - [Crowd movement]()
+  - [Crowds shared behavior]()
+  - [More...]()

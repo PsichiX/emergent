@@ -59,6 +59,7 @@ impl ScoreMapping for dyn Fn(Scalar) -> Scalar {
 /// );
 /// assert_eq!(consideration.score(&()), 0.5);
 /// ```
+#[derive(Debug, Copy, Clone)]
 pub struct NoScoreMapping;
 
 impl ScoreMapping for NoScoreMapping {
@@ -93,6 +94,12 @@ impl ClosureScoreMapping {
 impl ScoreMapping for ClosureScoreMapping {
     fn remap(&self, score: Scalar) -> Scalar {
         (self.0)(score)
+    }
+}
+
+impl std::fmt::Debug for ClosureScoreMapping {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ClosureScoreMapping").finish()
     }
 }
 
@@ -138,6 +145,19 @@ where
     }
 }
 
+impl<A, B> std::fmt::Debug for ChainedScoreMapping<A, B>
+where
+    A: ScoreMapping + std::fmt::Debug,
+    B: ScoreMapping + std::fmt::Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ChainedScoreMapping")
+            .field("first", &self.first)
+            .field("second", &self.second)
+            .finish()
+    }
+}
+
 /// Remaps score from source range ([`Self::from`]) to target range ([`Self::to`]).
 ///
 /// # Example
@@ -168,6 +188,15 @@ impl ScoreMapping for ScoreRemap {
     }
 }
 
+impl std::fmt::Debug for ScoreRemap {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ScoreRemap")
+            .field("from", &self.from)
+            .field("to", &self.to)
+            .finish()
+    }
+}
+
 /// Applies `1.0 - score`.
 ///
 /// # Example
@@ -185,6 +214,12 @@ pub struct ReverseScoreMapping;
 impl ScoreMapping for ReverseScoreMapping {
     fn remap(&self, score: Scalar) -> Scalar {
         1.0 - score
+    }
+}
+
+impl std::fmt::Debug for ReverseScoreMapping {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ReverseScoreMapping").finish()
     }
 }
 
@@ -208,6 +243,12 @@ impl ScoreMapping for InverseScoreMapping {
     }
 }
 
+impl std::fmt::Debug for InverseScoreMapping {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("InverseScoreMapping").finish()
+    }
+}
+
 /// Applies fast sigmoid function.
 /// See [WolframAlpha](https://www.wolframalpha.com/input/?i2d=true&i=f%5C%2840%29x%5C%2841%29%3D+Divide%5Bx%2C1+%2B+Abs%5Bx%5D%5D).
 pub struct FastSigmoidScoreMapping;
@@ -218,6 +259,12 @@ impl ScoreMapping for FastSigmoidScoreMapping {
     }
 }
 
+impl std::fmt::Debug for FastSigmoidScoreMapping {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("FastSigmoidScoreMapping").finish()
+    }
+}
+
 /// Applies approximated sigmoid function.
 /// See [WolframAlpha](https://www.wolframalpha.com/input/?i2d=true&i=f%5C%2840%29x%5C%2841%29%3D+Divide%5Bx%2CSqrt%5B1+%2B+Power%5Bx%2C2%5D%5D%5D).
 pub struct ApproxSigmoidScoreMapping;
@@ -225,5 +272,11 @@ pub struct ApproxSigmoidScoreMapping;
 impl ScoreMapping for ApproxSigmoidScoreMapping {
     fn remap(&self, score: Scalar) -> Scalar {
         score / (1.0 + (score * score).sqrt())
+    }
+}
+
+impl std::fmt::Debug for ApproxSigmoidScoreMapping {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ApproxSigmoidScoreMapping").finish()
     }
 }

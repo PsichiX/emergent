@@ -27,6 +27,12 @@ impl<M> SequencerState<M> {
     }
 }
 
+impl<M> std::fmt::Debug for SequencerState<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("SequencerState").finish()
+    }
+}
+
 /// Sequencer runs states one by one.
 ///
 /// Sequencer has two properties that change its behavior:
@@ -237,5 +243,16 @@ impl<M> Task<M> for Sequencer<M> {
 
     fn on_process(&mut self, memory: &mut M) -> bool {
         self.process(memory)
+    }
+}
+
+impl<M> std::fmt::Debug for Sequencer<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Sequencer")
+            .field("states", &self.states)
+            .field("active_index", &self.active_index)
+            .field("looped", &self.looped)
+            .field("continuity", &self.continuity)
+            .finish()
     }
 }

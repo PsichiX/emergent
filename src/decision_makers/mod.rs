@@ -159,6 +159,12 @@ impl<M, K> DecisionMaker<M, K> for NoDecisionMaker<M, K> {
     }
 }
 
+impl<M, K> std::fmt::Debug for NoDecisionMaker<M, K> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("NoDecisionMaker").finish()
+    }
+}
+
 /// Single choice decision maker (it always takes single specified decision).
 pub struct SingleDecisionMaker<K = DefaultKey> {
     id: K,
@@ -204,5 +210,17 @@ where
             return true;
         }
         false
+    }
+}
+
+impl<K> std::fmt::Debug for SingleDecisionMaker<K>
+where
+    K: std::fmt::Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("SingleDecisionMaker")
+            .field("id", &self.id)
+            .field("active", &self.active)
+            .finish()
     }
 }

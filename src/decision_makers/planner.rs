@@ -191,6 +191,18 @@ where
     }
 }
 
+impl<M, K> std::fmt::Debug for PlannerAction<M, K>
+where
+    K: Clone + Hash + Eq + std::fmt::Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("PlannerAction")
+            .field("precondition", &self.preconditions)
+            .field("postconditions", &self.postconditions)
+            .finish()
+    }
+}
+
 /// Planner (a.k.a. Goal Oriented Action Planner)
 ///
 /// Planners are used to plan long term lists of actions that will lead to desired end goal.
@@ -213,7 +225,7 @@ where
 /// of one action with preconditions of another action and their similarities are weighted (the more
 /// preconditions and postconditions match with one another, the more score given connection gets).
 ///
-/// Each action has ha consideration attached that is used to calculate cost score of given action.
+/// Each action has a consideration attached that is used to calculate cost score of given action.
 /// When planner tries to find a path between actions, it uses both cost of given action and
 /// connection weights and prioritizes these connections with less cost and more weight to find the
 /// less costly path towards achieving the goal.
@@ -668,6 +680,21 @@ where
     }
 }
 
+impl<M, CK, AK> std::fmt::Debug for Planner<M, CK, AK>
+where
+    CK: Clone + Hash + Eq + std::fmt::Debug,
+    AK: Clone + Hash + Eq + std::fmt::Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Planner")
+            .field("conditions", &self.conditions.keys().collect::<Vec<_>>())
+            .field("actions", &self.actions)
+            .field("connections", &self.connections)
+            .field("plan", &self.plan)
+            .finish()
+    }
+}
+
 /// Planner builder.
 ///
 /// See [`Planner`].
@@ -730,5 +757,19 @@ where
             self.goal_selector,
             self.exact_conditions_match,
         )
+    }
+}
+
+impl<M, CK, AK> std::fmt::Debug for PlannerBuilder<M, CK, AK>
+where
+    CK: Clone + Hash + Eq + std::fmt::Debug,
+    AK: Clone + Hash + Eq + std::fmt::Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("PlannerBuilder")
+            .field("conditions", &self.conditions.keys().collect::<Vec<_>>())
+            .field("actions", &self.actions)
+            .field("exact_conditions_match", &self.exact_conditions_match)
+            .finish()
     }
 }

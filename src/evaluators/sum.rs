@@ -49,3 +49,9 @@ impl<M> Consideration<M> for EvaluatorSum<M> {
             .sum()
     }
 }
+
+impl<M> std::fmt::Debug for EvaluatorSum<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("EvaluatorSum").finish()
+    }
+}

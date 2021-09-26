@@ -31,6 +31,12 @@ impl<M> Task<M> for BehaviorTreeTask<M> {
     }
 }
 
+impl<M> std::fmt::Debug for BehaviorTreeTask<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("BehaviorTreeTask").finish()
+    }
+}
+
 /// Builds hierarchy of decision makers that work together just as behavior tree.
 ///
 /// Behavior trees are commonly used AI technique that alows to organize AI choices and sequences
@@ -360,6 +366,23 @@ impl<M> BehaviorTree<M> {
                 (condition, Box::new(selector))
             }
             Self::State { condition, task } => (condition, task),
+        }
+    }
+}
+
+impl<M> std::fmt::Debug for BehaviorTree<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Sequence { nodes, .. } => {
+                f.debug_struct("Sequence").field("nodes", &nodes).finish()
+            }
+            Self::Selector { nodes, .. } => {
+                f.debug_struct("Selector").field("nodes", &nodes).finish()
+            }
+            Self::Parallel { nodes, .. } => {
+                f.debug_struct("Parallel").field("nodes", &nodes).finish()
+            }
+            Self::State { .. } => f.debug_struct("State").finish(),
         }
     }
 }

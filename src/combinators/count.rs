@@ -84,3 +84,11 @@ impl<M> Condition<M> for CombinatorCount<M> {
         self.bounds.start.validate_lower(count) && self.bounds.end.validate_upper(count)
     }
 }
+
+impl<M> std::fmt::Debug for CombinatorCount<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("CombinatorCount")
+            .field("bounds", &self.bounds)
+            .finish()
+    }
+}

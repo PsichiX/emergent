@@ -77,6 +77,17 @@ impl<M, K> MachineryChange<M, K> {
     }
 }
 
+impl<M, K> std::fmt::Debug for MachineryChange<M, K>
+where
+    K: std::fmt::Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("MachineryChange")
+            .field("to", &self.to)
+            .finish()
+    }
+}
+
 /// Defines machinery state with task to run and changes that can happen for this state.
 pub struct MachineryState<M = (), K = DefaultKey> {
     task: Box<dyn Task<M>>,
@@ -123,6 +134,17 @@ impl<M, K> MachineryState<M, K> {
     pub fn change(mut self, change: MachineryChange<M, K>) -> Self {
         self.changes.push(change);
         self
+    }
+}
+
+impl<M, K> std::fmt::Debug for MachineryState<M, K>
+where
+    K: std::fmt::Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("MachineryState")
+            .field("changes", &self.changes)
+            .finish()
     }
 }
 
@@ -354,6 +376,18 @@ where
     }
 }
 
+impl<M, K> std::fmt::Debug for Machinery<M, K>
+where
+    K: Clone + Hash + Eq + std::fmt::Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Machinery")
+            .field("states", &self.states)
+            .field("active_state", &self.active_state)
+            .finish()
+    }
+}
+
 /// Machinery builder.
 ///
 /// See [`Machinery`].
@@ -381,5 +415,16 @@ where
         K: Clone + Hash + Eq,
     {
         Machinery::new(self.0)
+    }
+}
+
+impl<M, K> std::fmt::Debug for MachineryBuilder<M, K>
+where
+    K: Clone + Hash + Eq + std::fmt::Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("MachineryBuilder")
+            .field("states", &self.0)
+            .finish()
     }
 }

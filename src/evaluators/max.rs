@@ -50,3 +50,9 @@ impl<M> Consideration<M> for EvaluatorMax<M> {
             .unwrap_or_default()
     }
 }
+
+impl<M> std::fmt::Debug for EvaluatorMax<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("EvaluatorMax").finish()
+    }
+}

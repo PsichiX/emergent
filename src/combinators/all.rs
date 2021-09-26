@@ -51,3 +51,9 @@ impl<M> Condition<M> for CombinatorAll<M> {
             .all(|condition| condition.validate(memory))
     }
 }
+
+impl<M> std::fmt::Debug for CombinatorAll<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("CombinatorAll").finish()
+    }
+}

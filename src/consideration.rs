@@ -82,6 +82,12 @@ impl<M> Consideration<M> for ClosureConsideration<M> {
     }
 }
 
+impl<M> std::fmt::Debug for ClosureConsideration<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ClosureConsideration").finish()
+    }
+}
+
 /// Consideration uses [`ScoreMapping`] to remap score of wrapped consideration.
 ///
 /// # Example
@@ -131,6 +137,17 @@ where
 {
     fn score(&self, memory: &M) -> Scalar {
         self.mapping.remap(self.consideration.score(memory))
+    }
+}
+
+impl<M, T> std::fmt::Debug for ConsiderationRemap<M, T>
+where
+    T: ScoreMapping + std::fmt::Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ConsiderationRemap")
+            .field("mapping", &self.mapping)
+            .finish()
     }
 }
 
@@ -190,5 +207,14 @@ impl<M> Consideration<M> for ConditionConsideration<M> {
         } else {
             self.negative
         }
+    }
+}
+
+impl<M> std::fmt::Debug for ConditionConsideration<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ConditionConsideration")
+            .field("positive", &self.positive)
+            .field("negative", &self.negative)
+            .finish()
     }
 }

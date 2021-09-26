@@ -20,6 +20,7 @@ pub mod condition;
 pub mod consideration;
 pub mod decision_makers;
 pub mod evaluators;
+pub mod memory;
 pub mod score_mapping;
 pub mod task;
 
@@ -33,6 +34,7 @@ pub type Scalar = f64;
 
 pub type DefaultKey = String;
 
+#[doc(hidden)]
 pub mod prelude {
     pub use crate::{
         builders::{behavior_tree::*, lod::*, *},
@@ -43,6 +45,7 @@ pub mod prelude {
             machinery::*, parallelizer::*, planner::*, reasoner::*, selector::*, sequencer::*, *,
         },
         evaluators::{max::*, min::*, product::*, sum::*, *},
+        memory::{blackboard::*, datatable::*, *},
         score_mapping::*,
         task::*,
         DefaultKey, Scalar,

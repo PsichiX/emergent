@@ -71,6 +71,12 @@ impl<M> SelectorState<M> {
     }
 }
 
+impl<M> std::fmt::Debug for SelectorState<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("SelectorState").finish()
+    }
+}
+
 /// Selector runs at most only one state at any given time.
 ///
 /// First selector finds all states that their condition succeed, then uses state picker to decide
@@ -241,6 +247,18 @@ where
 
     fn on_process(&mut self, memory: &mut M) -> bool {
         self.process(memory)
+    }
+}
+
+impl<M, K> std::fmt::Debug for Selector<M, K>
+where
+    K: Clone + Hash + Eq + std::fmt::Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Selector")
+            .field("states", &self.states)
+            .field("active_state", &self.active_state)
+            .finish()
     }
 }
 

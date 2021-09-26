@@ -27,6 +27,12 @@ impl<M> ParallelizerState<M> {
     }
 }
 
+impl<M> std::fmt::Debug for ParallelizerState<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ParallelizerState").finish()
+    }
+}
+
 /// Parallelizer runs all its states at the same time.
 ///
 /// Note that at any time you ask it to make a decision it goes through non-active states and tries
@@ -150,5 +156,13 @@ impl<M> Task<M> for Parallelizer<M> {
 
     fn on_process(&mut self, memory: &mut M) -> bool {
         self.process(memory)
+    }
+}
+
+impl<M> std::fmt::Debug for Parallelizer<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Parallelizer")
+            .field("states", &self.states)
+            .finish()
     }
 }

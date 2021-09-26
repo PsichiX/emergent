@@ -74,6 +74,12 @@ impl<M> ReasonerState<M> {
     }
 }
 
+impl<M> std::fmt::Debug for ReasonerState<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ReasonerState").finish()
+    }
+}
+
 /// Reasoner (a.k.a. Utility AI).
 ///
 /// Reasoner contains list of states with considerations that will score probability of given state
@@ -238,6 +244,18 @@ where
     }
 }
 
+impl<M, K> std::fmt::Debug for Reasoner<M, K>
+where
+    K: Clone + Hash + Eq + std::fmt::Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Reasoner")
+            .field("states", &self.states)
+            .field("active_state", &self.active_state)
+            .finish()
+    }
+}
+
 /// Reasoner builder.
 ///
 /// See [`Reasoner`].
@@ -265,5 +283,16 @@ where
         K: Clone + Hash + Eq,
     {
         Reasoner::new(self.0)
+    }
+}
+
+impl<M, K> std::fmt::Debug for ReasonerBuilder<M, K>
+where
+    K: Clone + Hash + Eq + std::fmt::Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ReasonerBuilder")
+            .field("states", &self.0)
+            .finish()
     }
 }

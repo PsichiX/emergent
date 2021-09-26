@@ -79,6 +79,12 @@ impl<M> Condition<M> for ClosureCondition<M> {
     }
 }
 
+impl<M> std::fmt::Debug for ClosureCondition<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ClosureCondition").finish()
+    }
+}
+
 /// Condition that wraps another condition and inverts/negates its result.
 ///
 /// # Example
@@ -107,6 +113,12 @@ impl<M> ConditionInvert<M> {
 impl<M> Condition<M> for ConditionInvert<M> {
     fn validate(&self, memory: &M) -> bool {
         !self.0.validate(memory)
+    }
+}
+
+impl<M> std::fmt::Debug for ConditionInvert<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ConditionInvert").finish()
     }
 }
 
@@ -147,5 +159,13 @@ impl<M> ConsiderationCondition<M> {
 impl<M> Condition<M> for ConsiderationCondition<M> {
     fn validate(&self, memory: &M) -> bool {
         self.consideration.score(memory) > self.threshold
+    }
+}
+
+impl<M> std::fmt::Debug for ConsiderationCondition<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ConsiderationCondition")
+            .field("threshold", &self.threshold)
+            .finish()
     }
 }

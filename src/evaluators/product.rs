@@ -49,3 +49,9 @@ impl<M> Consideration<M> for EvaluatorProduct<M> {
             .product()
     }
 }
+
+impl<M> std::fmt::Debug for EvaluatorProduct<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("EvaluatorProduct").finish()
+    }
+}
