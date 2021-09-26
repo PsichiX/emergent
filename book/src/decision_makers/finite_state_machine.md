@@ -74,8 +74,8 @@ I'll show you two ways that FSM are implemented: dummy way and better way.
 Dummy way of implementing FSM works like this: There is a `State` trait that will
 be implemented for all states. This state has `update` method with context to
 read from / write to and it returns optional state ID. We do this bc we want
-states to do their work and if it happen that state tells FSM to change into new
-state after FSM updates this state.
+states to do their work and that state might tells FSM to change into new state
+after FSM updates this state.
 
 ```rust
 # use std::{collections::HashMap, hash::Hash};
@@ -92,8 +92,7 @@ struct FSM<K, T> {
   active_state: K,
 }
 
-impl<K: Hash + Eq, T> FSM<K, T>
-{
+impl<K: Hash + Eq, T> FSM<K, T> {
   fn new(active_state: K) -> Self {
     Self {
       states: Default::default(),
@@ -127,7 +126,7 @@ form of states as trait objects. Yes, you're right, so what's the goal of that?
 The goal is that with this approach we are able to "easly" iterate on states,
 quickly add new ones or remove ones we do not need anymore and all that FSM setup
 stay in one place and we have _almost completely_ decoupled states one from
-eachother. Why did i said "almost completely decoupled"? Well, we still have
+another. Why did i said "almost completely decoupled"? Well, we still have
 hardcoded states IDs of transitions in state logic, that's not ok, we will fix
 that when we will do _the better way_ of implementing FSM later, for now let's
 see how do we use FSM system we have created.
@@ -231,8 +230,8 @@ impl State<EnemyState, EnemyData> for EnemyChangeDirectionState {
 Although code size has grown comparing to implementation used in [First steps],
 we have modularized states. That would get useful when for example we would have
 many different NPC types using same context type to store their data and by that
-we would share same states across multiple many AI agent types - we would reduce
-duplicaiton of the logic and would allow for quick adding/removing possible
+we would share same states across multiple AI agent types - we would reduce
+duplication of the logic and would allow for quick adding/removing possible
 states for certain types of NPCs, sadly we don't show that here.
 
 Now let's take a look at our enemy type setup:
@@ -379,10 +378,7 @@ impl Enemy {
       .state(EnemyState::ChangeDirection, EnemyChangeDirectionState)
       .state(EnemyState::Move, EnemyMoveState(2));
 
-    Self {
-      data,
-      fsm,
-    }
+    Self { data, fsm }
   }
 
   fn update(&mut self) {
@@ -541,10 +537,7 @@ changes after every `update` method call):
 #       .state(EnemyState::ChangeDirection, EnemyChangeDirectionState)
 #       .state(EnemyState::Move, EnemyMoveState(2));
 #
-#     Self {
-#       data,
-#       fsm,
-#     }
+#     Self { data, fsm }
 #   }
 #
 #   fn update(&mut self) {
@@ -851,9 +844,10 @@ active state.
 We could still keep them together but it's good to make methods do only the job
 they describe - that will allow user to for example run decision making at lower
 frequency than the states update (for the sake of this tutorial we will call
-them together in enemy `tick` just for the smplification).
+them together in enemy `tick` method just for the sake of smplification).
 
-When it comes to the enemy code itself, not much have changed except FSM setup:
+When it comes to the enemy code itself, not much have changed except FSM setup
+and enemy data type:
 
 ```rust
 # use std::{collections::HashMap, hash::Hash};
@@ -1463,7 +1457,7 @@ What we have achieved by making FSM the better way:
 - if we want to add new transition or remove existing one, the only place that
   we have to adapt is the FSM setup, no state logic itself.
 
-All of that modularization reduced development time and complexity of iterations
+All of that modularization has reduced development time and complexity of iterations
 over AI behaviors, but it's important to warn you that __FSM main downside is
 that usually number of transitions grows exponentially with number of states__
 and you should consider using other decision making engines when you find yourself

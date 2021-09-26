@@ -85,7 +85,7 @@ You can notice `update` function - this is what controls this enemy simple AI.
 You might not have noticed it but you have used Finite State Machine for this
 problem, hardcore way thought.
 
-Btw. That snippet was really hard do read, right? Yeah, that's how our naive
+Btw. That snippet was really hard to read, right? Yeah, that's how our naive
 "simple" AI implementations usually end up growing in complexity.
 
 We can do better, let me refactor it to prove it to you:

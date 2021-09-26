@@ -5,7 +5,7 @@ State Machines). FSM is just one of many AI engines called decision makers
 (a.k.a. AI systems).
 
 Decision makers only job is to do what their name suggest - make a decision about
-what agent should do. The usually contain a set of states/actions with rules to
+what agent should do. They usually contain a set of states/actions with rules to
 possible transitions, what differentiate one from another is how these transitions
 are resolved.
 
