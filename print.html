@@ -1,0 +1,2063 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js ayu">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Emergent AI - Smart agents and events for games</title>
+                <meta name="robots" content="noindex" />
+                
+
+        <!-- Custom HTML head -->
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+                <link rel="icon" href="favicon.svg">
+                        <link rel="shortcut icon" href="favicon.png">
+                <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+                <link rel="stylesheet" href="css/print.css" media="print">
+        
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+                <link rel="stylesheet" href="fonts/fonts.css">
+        
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+            </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "ayu";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="first_steps.html"><strong aria-hidden="true">2.</strong> First steps</a></li><li class="chapter-item expanded "><a href="decision_makers/index.html"><strong aria-hidden="true">3.</strong> Decision makers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="decision_makers/finite_state_machine.html"><strong aria-hidden="true">3.1.</strong> Finite State Machine</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.2.</strong> Hierarchical Finite State Machine</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.3.</strong> Behavior Tree</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.4.</strong> Utility AI</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.5.</strong> Goal Oriented Action Planning</div></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Common AI problems and solutions</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">4.1.</strong> NPC day cycle</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.2.</strong> Steering</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.3.</strong> Crowd movement</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.4.</strong> Crowds shared behavior</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.5.</strong> More...</div></li></ol></li></ol>            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu (default)</button></li>
+                        </ul>
+                                                <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                                            </div>
+
+                    <h1 class="menu-title">Emergent AI - Smart agents and events for games</h1>
+
+                    <div class="right-buttons">
+                                                <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                                                                        
+                    </div>
+                </div>
+
+                                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>The goal of this book is to introduce readers to wonders of game AI development,
+explaining how certain AI techniques work, which of them are best suited for what
+usecases and more than everything: to show that AI for games only sounds
+intimidating and in reality we all have born with intuition on how to build AI
+systems for games.</p>
+<p>Although we will cover many AI techniques used in industry, we will be focusing
+mostly on ones that lead to producing emergent gameplay, a branch of games AI
+that is getting more and more popular.</p>
+<p>Also note that while this book is gonna explain AI techniques for games, all
+examples and demos will be written in Rust programming language, and sometimes
+they will be using <a href="https://github.com/PsichiX/emergent"><strong>emergent</strong></a> crate.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="first-steps"><a class="header" href="#first-steps">First steps</a></h1>
+<h2 id="first-of-all-what-do-we-mean-by-the-term-ai"><a class="header" href="#first-of-all-what-do-we-mean-by-the-term-ai">First of all: what do we mean by the term AI?</a></h2>
+<p>When we talk about AI for games, we are in fact talking about all decision making
+units of logic.</p>
+<p>It's improtant to understand that decision making, or AI, isn't suited only for
+agents in the game - it can be and already is widely used for animation systems,
+events happening in game world, or even to control sounds and music.</p>
+<h2 id="you-are-probably-already-making-an-ai-system-without-even-noticing-it-right-now"><a class="header" href="#you-are-probably-already-making-an-ai-system-without-even-noticing-it-right-now">You are probably already making an AI system without even noticing it right now!</a></h2>
+<p>For a moment let's try to write a simple enemy wandering code the way we usually do.</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum Direction {
+  Up,
+  Down,
+  Left,
+  Right,
+}
+
+impl Direction {
+  fn horizontal(&amp;self) -&gt; isize {
+    match self {
+      Self::Left =&gt; -1,
+      Self::Right =&gt; 1,
+      _ =&gt; 0,
+    }
+  }
+
+  fn vertical(&amp;self) -&gt; isize {
+    match self {
+      Self::Up =&gt; -1,
+      Self::Down =&gt; 1,
+      _ =&gt; 0,
+    }
+  }
+
+  fn next(&amp;self) -&gt; Self {
+    match self {
+      Self::Up =&gt; Self::Right,
+      Self::Down =&gt; Self::Left,
+      Self::Left =&gt; Self::Up,
+      Self::Right =&gt; Self::Down,
+    }
+  }
+}
+
+struct Enemy {
+  position: (isize, isize),
+  direction: Direction,
+  change_direction_turns: usize,
+  wait_turns: usize,
+}
+
+impl Enemy {
+  fn new(x: isize, y: isize) -&gt; Self {
+    Self {
+      position: (x, y),
+      direction: Direction::Up,
+      change_direction_turns: 0,
+      wait_turns: 0,
+    }
+  }
+
+  fn update(&amp;mut self) {
+    if self.wait_turns &gt; 0 {
+      self.wait_turns -= 1;
+    } else if self.change_direction_turns &gt; 0 {
+      self.change_direction_turns -= 1;
+      self.position.0 += self.direction.horizontal();
+      self.position.1 += self.direction.vertical();
+    } else {
+      self.direction = self.direction.next();
+      self.change_direction_turns = 4;
+      self.wait_turns = 2;
+    }
+  }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>You can notice <code>update</code> function - this is what controls this enemy simple AI.
+You might not have noticed it but you have used Finite State Machine for this
+problem, hardcore way thought.</p>
+<p>Btw. That snippet was really hard do read, right? Yeah, that's how our naive
+&quot;simple&quot; AI implementations usually end up growing in complexity.</p>
+<p>We can do better, let me refactor it to prove it to you:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">enum Direction {
+</span><span class="boring">  Up,
+</span><span class="boring">  Down,
+</span><span class="boring">  Left,
+</span><span class="boring">  Right,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Direction {
+</span><span class="boring">  fn horizontal(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Left =&gt; -1,
+</span><span class="boring">      Self::Right =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn vertical(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; -1,
+</span><span class="boring">      Self::Down =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn next(&amp;self) -&gt; Self {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; Self::Right,
+</span><span class="boring">      Self::Down =&gt; Self::Left,
+</span><span class="boring">      Self::Left =&gt; Self::Up,
+</span><span class="boring">      Self::Right =&gt; Self::Down,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span>enum State {
+  Wait(usize),
+  ChangeDirection,
+  Move(usize),
+}
+
+struct Enemy {
+  position: (isize, isize),
+  direction: Direction,
+  state: State,
+}
+
+impl Enemy {
+  fn new(x: isize, y: isize) -&gt; Self {
+    Self {
+      position: (x, y),
+      direction: Direction::Up,
+      state: State::ChangeDirection,
+    }
+  }
+
+  fn update(&amp;mut self) {
+    match &amp;mut self.state {
+      State::Wait(turns) =&gt; {
+        if *turns &gt; 0 {
+          *turns -= 1;
+        } else {
+          self.state = State::ChangeDirection;
+        }
+      },
+      State::ChangeDirection =&gt; {
+        self.direction = self.direction.next();
+        self.state = State::Move(4);
+      },
+      State::Move(turns) =&gt; {
+        if *turns &gt; 0 {
+          *turns -= 1;
+          self.position.0 += self.direction.horizontal();
+          self.position.1 += self.direction.vertical();
+        } else {
+          self.state = State::Wait(2);
+        }
+      },
+    }
+  }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Now we can clearly see what is the actual behavior of this AI:</p>
+<ul>
+<li>wait few turns</li>
+<li>change direction</li>
+<li>move forward for few turns</li>
+</ul>
+<p>And we have got rid of a bug where our previous magic didn't actually do what we
+aimed for the way we wanted it to do. This is the simplest state machine we have
+learned to make, most likely at this point you're already making them this way.</p>
+<p>Now imagine we get more states to handle, like shooting, taking cover when on
+low health, finding ammo when it ends - number of state changes and branching
+grows exponentially with number of states and our code starts to look more like
+a spaghetti than code with clear and easily understandable intent. Have you
+encountered that frustration yet?</p>
+<p>This is the exact reason why AI systems have been invented in first place - to
+simplify readability of and iteration over AI logic.</p>
+<p>In next chapters we will learn about AI systems and gradually work our way out
+from naive AI logic to more managable solutions.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="decision-makers"><a class="header" href="#decision-makers">Decision makers</a></h1>
+<p>In <a href="decision_makers/../first_steps.html">previous chapter</a> we have seen use of the <strong>FSM</strong> (Finite
+State Machines). FSM is just one of many AI engines called decision makers
+(a.k.a. AI systems).</p>
+<p>Decision makers only job is to do what their name suggest - make a decision about
+what agent should do. The usually contain a set of states/actions with rules to
+possible transitions, what differentiate one from another is how these transitions
+are resolved.</p>
+<p>In next chapters we will take a look at decision makers used in the industry and
+explain how they work, what are their pros and cons and what to use them for.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="finite-state-machine"><a class="header" href="#finite-state-machine">Finite State Machine</a></h1>
+<p>When starting the journey with AI systems, Finite State Machines (FSM in short
+from now on) are always the first choice for AI system for a reason - they are
+the simplest to implement and the most intuitive decision making engines ever
+invented.</p>
+<p>Here, take a look at the states and transitions of our simple enemy behavior:</p>
+<p><img src="decision_makers/../images/fsm.svg" alt="FSM" /></p>
+<p>Each block is a state that enemy can be in and every arrow is a transition with
+condition that has to be met to allow for transition to happen.
+Here in our case there are simple, single transitions pointing from one state to
+another, but in more complex behaviors there can be <em>infinite</em> number of
+transitions.</p>
+<p>Decision making for FSM has a really simple rule applied to it:</p>
+<blockquote>
+<p>When decision about state change has to be made, FSM goes through all transitions
+that starts from active state and validates their conditions, first one that
+succeeds triggers change from active state to one that transition points to.</p>
+</blockquote>
+<h2 id="table-of-contents"><a class="header" href="#table-of-contents">Table of contents:</a></h2>
+<ul>
+<li><a href="decision_makers/finite_state_machine.html#how-it-works">How it works</a></li>
+<li><a href="decision_makers/finite_state_machine.html#how-to-implement-fsm">How to implement FSM</a>
+<ul>
+<li><a href="decision_makers/finite_state_machine.html#the-dummy-way">The dummy way</a></li>
+<li><a href="decision_makers/finite_state_machine.html#the-better-way">The better way</a></li>
+</ul>
+</li>
+<li><a href="decision_makers/finite_state_machine.html#use-of-machinery-decision-maker-from-emergent-crate">Use of Machinery decision maker from emergent crate</a></li>
+<li><a href="decision_makers/finite_state_machine.html#typical-use-cases-for-fsm">Typical use cases for FSM</a></li>
+</ul>
+<h2 id="how-it-works"><a class="header" href="#how-it-works">How it works</a></h2>
+<p>Imagine we start from <strong>Change Direction</strong> state and we tell FSM to make a
+decision, it looks at transitions pointing from this state, here there is only
+one: <strong>Move</strong> wit condition: <strong>Just Do It</strong> (which here it means: it always
+succeeds). Since this tansition condition succeeded, FMS changes its active state
+to <strong>Move</strong> state and enemy moves forward for few turns in the direction previously
+set by <strong>Change Direction</strong> state.</p>
+<p>In the mean time we run decision making from time to time (can be each frame,
+can be each second - usually decision making runs at slower fewquency than game
+frames, or sometimes it is triggered only when decision making engine receives
+an event that tells that important change in game state happened and FSM should
+make a decision about its new state).</p>
+<p>At some point when FSM runs its decision making, goes through <strong>Move</strong> state
+transitions and finds out that condition of a transition pointing to <strong>Wait</strong>
+state reports no more move turns, so FSM changes its active state to <strong>Wait</strong>
+which will wait few turns doing nothing.</p>
+<p>When there is no more waiting turns left, FSM switches back to <strong>Change Direction</strong>
+state, which all of it makes &quot;Change Direction, Move, Wait&quot; behavior of our Enemy.
+Really simple, right?</p>
+<h2 id="how-to-implement-fsm"><a class="header" href="#how-to-implement-fsm">How to implement FSM</a></h2>
+<p>In chapter <a href="decision_makers/../first_steps.html">First steps</a> we have shown the easiest FSM implementation using enums
+but the downside of that approach is that when number of states gets bigger, and
+number of possible state changes grow with them, we will eventually end up with
+spaghetti of state changes put all over the place with no clear way to see all
+the states and their transitions in one place. That slows down understanding of
+states and relations between them, but we can simplify that even further by
+making an easy, modular FSM engine.</p>
+<p>I'll show you two ways that FSM are implemented: dummy way and better way.</p>
+<h3 id="the-dummy-way"><a class="header" href="#the-dummy-way">The dummy way</a></h3>
+<p>Dummy way of implementing FSM works like this: There is a <code>State</code> trait that will
+be implemented for all states. This state has <code>update</code> method with context to
+read from / write to and it returns optional state ID. We do this bc we want
+states to do their work and if it happen that state tells FSM to change into new
+state after FSM updates this state.</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use std::{collections::HashMap, hash::Hash};
+</span><span class="boring">
+</span>trait State&lt;K, T&gt; {
+  // FSM runs this method only on curently active state, and after the update it
+  // tries to change active state to whatever state ID we return here (None means
+  // no change expected).
+  fn update(&amp;mut self, context: &amp;mut T) -&gt; Option&lt;K&gt;;
+}
+
+struct FSM&lt;K, T&gt; {
+  states: HashMap&lt;K, Box&lt;dyn State&lt;K, T&gt;&gt;&gt;,
+  active_state: K,
+}
+
+impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt;
+{
+  fn new(active_state: K) -&gt; Self {
+    Self {
+      states: Default::default(),
+      active_state,
+    }
+  }
+
+  fn state&lt;S: State&lt;K, T&gt; + 'static&gt;(mut self, id: K, state: S) -&gt; Self {
+    self.states.insert(id, Box::new(state));
+    self
+  }
+
+  fn set_active_state(&amp;mut self, id: K) {
+    if self.states.contains_key(&amp;id) {
+      self.active_state = id;
+    }
+  }
+
+  fn update(&amp;mut self, context: &amp;mut T) {
+    if let Some(state) = self.states.get_mut(&amp;self.active_state) {
+      if let Some(id) = state.update(context) {
+        self.set_active_state(id);
+      }
+    }
+  }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>This might looks like the solution used in <a href="decision_makers/../first_steps.html">First steps</a> but with extra steps in
+form of states as trait objects. Yes, you're right, so what's the goal of that?
+The goal is that with this approach we are able to &quot;easly&quot; iterate on states,
+quickly add new ones or remove ones we do not need anymore and all that FSM setup
+stay in one place and we have <em>almost completely</em> decoupled states one from
+eachother. Why did i said &quot;almost completely decoupled&quot;? Well, we still have
+hardcoded states IDs of transitions in state logic, that's not ok, we will fix
+that when we will do <em>the better way</em> of implementing FSM later, for now let's
+see how do we use FSM system we have created.</p>
+<p>Let's start with implementing enemy states:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">trait State&lt;K, T&gt; {
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) -&gt; Option&lt;K&gt;;
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">enum Direction {
+</span><span class="boring">  Up,
+</span><span class="boring">  Down,
+</span><span class="boring">  Left,
+</span><span class="boring">  Right,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Direction {
+</span><span class="boring">  fn horizontal(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Left =&gt; -1,
+</span><span class="boring">      Self::Right =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn vertical(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; -1,
+</span><span class="boring">      Self::Down =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn next(&amp;self) -&gt; Self {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; Self::Right,
+</span><span class="boring">      Self::Down =&gt; Self::Left,
+</span><span class="boring">      Self::Left =&gt; Self::Up,
+</span><span class="boring">      Self::Right =&gt; Self::Down,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span>// This enum will be used as key for states.
+#[derive(Hash, PartialEq, Eq)]
+enum EnemyState {
+  Wait,
+  Move,
+  ChangeDirection,
+}
+
+// And this struct will hold all enemy data used by the states.
+// It will be passed to FSM as context.
+struct EnemyData {
+  position: (isize, isize),
+  direction: Direction,
+}
+
+// It holds number of waiting turns.
+struct EnemyWaitState(pub usize);
+
+impl State&lt;EnemyState, EnemyData&gt; for EnemyWaitState {
+  fn update(&amp;mut self, context: &amp;mut EnemyData) -&gt; Option&lt;EnemyState&gt; {
+    if self.0 &gt; 0 {
+      self.0 -= 1;
+      None
+    } else {
+      Some(EnemyState::ChangeDirection)
+    }
+  }
+}
+
+// It holds number of moving turns.
+struct EnemyMoveState(pub usize);
+
+impl State&lt;EnemyState, EnemyData&gt; for EnemyMoveState {
+  fn update(&amp;mut self, context: &amp;mut EnemyData) -&gt; Option&lt;EnemyState&gt; {
+    if self.0 &gt; 0 {
+      self.0 -= 1;
+      context.position.0 += context.direction.horizontal();
+      context.position.1 += context.direction.vertical();
+      None
+    } else {
+      Some(EnemyState::Wait)
+    }
+  }
+}
+
+struct EnemyChangeDirectionState;
+
+impl State&lt;EnemyState, EnemyData&gt; for EnemyChangeDirectionState {
+  fn update(&amp;mut self, context: &amp;mut EnemyData) -&gt; Option&lt;EnemyState&gt; {
+    context.direction = context.direction.next();
+    Some(EnemyState::Move)
+  }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Although code size has grown comparing to implementation used in <a href="decision_makers/../first_steps.html">First steps</a>,
+we have modularized states. That would get useful when for example we would have
+many different NPC types using same context type to store their data and by that
+we would share same states across multiple many AI agent types - we would reduce
+duplicaiton of the logic and would allow for quick adding/removing possible
+states for certain types of NPCs, sadly we don't show that here.</p>
+<p>Now let's take a look at our enemy type setup:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use std::{collections::HashMap, hash::Hash};
+</span><span class="boring">
+</span><span class="boring">trait State&lt;K, T&gt; {
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) -&gt; Option&lt;K&gt;;
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSM&lt;K, T&gt; {
+</span><span class="boring">  states: HashMap&lt;K, Box&lt;dyn State&lt;K, T&gt;&gt;&gt;,
+</span><span class="boring">  active_state: K,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
+</span><span class="boring">  fn new(active_state: K) -&gt; Self {
+</span><span class="boring">    Self {
+</span><span class="boring">      states: Default::default(),
+</span><span class="boring">      active_state,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn state&lt;S: State&lt;K, T&gt; + 'static&gt;(mut self, id: K, state: S) -&gt; Self {
+</span><span class="boring">    self.states.insert(id, Box::new(state));
+</span><span class="boring">    self
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn set_active_state(&amp;mut self, id: K) {
+</span><span class="boring">    if self.states.contains_key(&amp;id) {
+</span><span class="boring">      self.active_state = id;
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) {
+</span><span class="boring">    if let Some(state) = self.states.get_mut(&amp;self.active_state) {
+</span><span class="boring">      if let Some(id) = state.update(context) {
+</span><span class="boring">        self.set_active_state(id);
+</span><span class="boring">      }
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, PartialEq, Eq)]
+</span><span class="boring">enum Direction {
+</span><span class="boring">  Up,
+</span><span class="boring">  Down,
+</span><span class="boring">  Left,
+</span><span class="boring">  Right,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Direction {
+</span><span class="boring">  fn horizontal(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Left =&gt; -1,
+</span><span class="boring">      Self::Right =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn vertical(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; -1,
+</span><span class="boring">      Self::Down =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn next(&amp;self) -&gt; Self {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; Self::Right,
+</span><span class="boring">      Self::Down =&gt; Self::Left,
+</span><span class="boring">      Self::Left =&gt; Self::Up,
+</span><span class="boring">      Self::Right =&gt; Self::Down,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, Hash, PartialEq, Eq)]
+</span><span class="boring">enum EnemyState {
+</span><span class="boring">  Wait,
+</span><span class="boring">  Move,
+</span><span class="boring">  ChangeDirection,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyData {
+</span><span class="boring">  position: (isize, isize),
+</span><span class="boring">  direction: Direction,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyWaitState(pub usize);
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyState, EnemyData&gt; for EnemyWaitState {
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut EnemyData) -&gt; Option&lt;EnemyState&gt; {
+</span><span class="boring">    if self.0 &gt; 0 {
+</span><span class="boring">      self.0 -= 1;
+</span><span class="boring">      None
+</span><span class="boring">    } else {
+</span><span class="boring">      Some(EnemyState::ChangeDirection)
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyMoveState(pub usize);
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyState, EnemyData&gt; for EnemyMoveState {
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut EnemyData) -&gt; Option&lt;EnemyState&gt; {
+</span><span class="boring">    if self.0 &gt; 0 {
+</span><span class="boring">      self.0 -= 1;
+</span><span class="boring">      context.position.0 += context.direction.horizontal();
+</span><span class="boring">      context.position.1 += context.direction.vertical();
+</span><span class="boring">      None
+</span><span class="boring">    } else {
+</span><span class="boring">      Some(EnemyState::Wait)
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyChangeDirectionState;
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyState, EnemyData&gt; for EnemyChangeDirectionState {
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut EnemyData) -&gt; Option&lt;EnemyState&gt; {
+</span><span class="boring">    context.direction = context.direction.next();
+</span><span class="boring">    Some(EnemyState::Move)
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span>// We are using composition of FSM and enemy data to please the borrow checker
+// and allow FSM to mutate enemy data on update.
+struct Enemy {
+  data: EnemyData,
+  fsm: FSM&lt;EnemyState, EnemyData&gt;,
+}
+
+impl Enemy {
+  fn new(x: isize, y: isize, direction: Direction) -&gt; Self {
+    let mut data = EnemyData {
+      position: (x, y),
+      direction,
+    };
+    let mut fsm = FSM::new(EnemyState::ChangeDirection)
+      .state(EnemyState::Wait, EnemyWaitState(1))
+      .state(EnemyState::ChangeDirection, EnemyChangeDirectionState)
+      .state(EnemyState::Move, EnemyMoveState(2));
+
+    Self {
+      data,
+      fsm,
+    }
+  }
+
+  fn update(&amp;mut self) {
+    self.fsm.update(&amp;mut self.data);
+  }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>You can see now that because we have modularized states, whenever we would want
+to create new state we create a state object then apply it to whatever FSM engine
+we want without digging through all the code to adapt AI agent to use of new
+state - we have simplified behavior development and reduced the time needed for
+implementing changes to the AI. Modularity is the key to easier development when
+complexity of the AI scales up.</p>
+<p>And here are tests that show how enemy state changes in time (look how state
+changes after every <code>update</code> method call):</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use std::{collections::HashMap, hash::Hash};
+</span><span class="boring">
+</span><span class="boring">trait State&lt;K, T&gt; {
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) -&gt; Option&lt;K&gt;;
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSM&lt;K, T&gt; {
+</span><span class="boring">  states: HashMap&lt;K, Box&lt;dyn State&lt;K, T&gt;&gt;&gt;,
+</span><span class="boring">  active_state: K,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
+</span><span class="boring">  fn new(active_state: K) -&gt; Self {
+</span><span class="boring">    Self {
+</span><span class="boring">      states: Default::default(),
+</span><span class="boring">      active_state,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn state&lt;S: State&lt;K, T&gt; + 'static&gt;(mut self, id: K, state: S) -&gt; Self {
+</span><span class="boring">    self.states.insert(id, Box::new(state));
+</span><span class="boring">    self
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn set_active_state(&amp;mut self, id: K) {
+</span><span class="boring">    if self.states.contains_key(&amp;id) {
+</span><span class="boring">      self.active_state = id;
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) {
+</span><span class="boring">    if let Some(state) = self.states.get_mut(&amp;self.active_state) {
+</span><span class="boring">      if let Some(id) = state.update(context) {
+</span><span class="boring">        self.set_active_state(id);
+</span><span class="boring">      }
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, PartialEq, Eq)]
+</span><span class="boring">enum Direction {
+</span><span class="boring">  Up,
+</span><span class="boring">  Down,
+</span><span class="boring">  Left,
+</span><span class="boring">  Right,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Direction {
+</span><span class="boring">  fn horizontal(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Left =&gt; -1,
+</span><span class="boring">      Self::Right =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn vertical(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; -1,
+</span><span class="boring">      Self::Down =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn next(&amp;self) -&gt; Self {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; Self::Right,
+</span><span class="boring">      Self::Down =&gt; Self::Left,
+</span><span class="boring">      Self::Left =&gt; Self::Up,
+</span><span class="boring">      Self::Right =&gt; Self::Down,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, Hash, PartialEq, Eq)]
+</span><span class="boring">enum EnemyState {
+</span><span class="boring">  Wait,
+</span><span class="boring">  Move,
+</span><span class="boring">  ChangeDirection,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyData {
+</span><span class="boring">  position: (isize, isize),
+</span><span class="boring">  direction: Direction,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyWaitState(pub usize);
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyState, EnemyData&gt; for EnemyWaitState {
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut EnemyData) -&gt; Option&lt;EnemyState&gt; {
+</span><span class="boring">    if self.0 &gt; 0 {
+</span><span class="boring">      self.0 -= 1;
+</span><span class="boring">      None
+</span><span class="boring">    } else {
+</span><span class="boring">      Some(EnemyState::ChangeDirection)
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyMoveState(pub usize);
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyState, EnemyData&gt; for EnemyMoveState {
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut EnemyData) -&gt; Option&lt;EnemyState&gt; {
+</span><span class="boring">    if self.0 &gt; 0 {
+</span><span class="boring">      self.0 -= 1;
+</span><span class="boring">      context.position.0 += context.direction.horizontal();
+</span><span class="boring">      context.position.1 += context.direction.vertical();
+</span><span class="boring">      None
+</span><span class="boring">    } else {
+</span><span class="boring">      Some(EnemyState::Wait)
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyChangeDirectionState;
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyState, EnemyData&gt; for EnemyChangeDirectionState {
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut EnemyData) -&gt; Option&lt;EnemyState&gt; {
+</span><span class="boring">    context.direction = context.direction.next();
+</span><span class="boring">    Some(EnemyState::Move)
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Enemy {
+</span><span class="boring">  data: EnemyData,
+</span><span class="boring">  fsm: FSM&lt;EnemyState, EnemyData&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Enemy {
+</span><span class="boring">  fn new(x: isize, y: isize, direction: Direction) -&gt; Self {
+</span><span class="boring">    let mut data = EnemyData {
+</span><span class="boring">      position: (x, y),
+</span><span class="boring">      direction,
+</span><span class="boring">    };
+</span><span class="boring">    let mut fsm = FSM::new(EnemyState::ChangeDirection)
+</span><span class="boring">      .state(EnemyState::Wait, EnemyWaitState(1))
+</span><span class="boring">      .state(EnemyState::ChangeDirection, EnemyChangeDirectionState)
+</span><span class="boring">      .state(EnemyState::Move, EnemyMoveState(2));
+</span><span class="boring">
+</span><span class="boring">    Self {
+</span><span class="boring">      data,
+</span><span class="boring">      fsm,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn update(&amp;mut self) {
+</span><span class="boring">    self.fsm.update(&amp;mut self.data);
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span>let mut enemy = Enemy::new(0, 0, Direction::Up);
+assert_eq!(enemy.fsm.active_state, EnemyState::ChangeDirection);
+assert_eq!(enemy.data.position.0, 0);
+assert_eq!(enemy.data.position.1, 0);
+assert_eq!(enemy.data.direction, Direction::Up);
+
+for i in 0..3 {
+  enemy.update();
+  assert_eq!(enemy.fsm.active_state, EnemyState::Move);
+  assert_eq!(enemy.data.position.0, i);
+  assert_eq!(enemy.data.position.1, 0);
+  assert_eq!(enemy.data.direction, Direction::Right);
+}
+for _ in 0..2 {
+  enemy.update();
+  assert_eq!(enemy.fsm.active_state, EnemyState::Wait);
+  assert_eq!(enemy.data.position.0, 2);
+  assert_eq!(enemy.data.position.1, 0);
+  assert_eq!(enemy.data.direction, Direction::Right);
+}
+enemy.update();
+assert_eq!(enemy.fsm.active_state, EnemyState::ChangeDirection);
+assert_eq!(enemy.data.position.0, 2);
+assert_eq!(enemy.data.position.1, 0);
+assert_eq!(enemy.data.direction, Direction::Right);
+<span class="boring">}
+</span></code></pre></pre>
+<p>Now, do you remember we have been talking about &quot;almost completely decoupled
+states&quot;? While the downside of this approach to decision making by returning the
+ID of state to change into, we can avoid that and actually completely decouple
+states from one another if we implement FSM the better way.</p>
+<h3 id="the-better-way"><a class="header" href="#the-better-way">The better way</a></h3>
+<p>Our goal is to decouple states from one another completely, to do that we have
+to find out how states are coupled right now - let's take a look at some state
+logic:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">trait State&lt;K, T&gt; {
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) -&gt; Option&lt;K&gt;;
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, PartialEq, Eq)]
+</span><span class="boring">enum Direction {
+</span><span class="boring">  Up,
+</span><span class="boring">  Down,
+</span><span class="boring">  Left,
+</span><span class="boring">  Right,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Direction {
+</span><span class="boring">  fn horizontal(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Left =&gt; -1,
+</span><span class="boring">      Self::Right =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn vertical(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; -1,
+</span><span class="boring">      Self::Down =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn next(&amp;self) -&gt; Self {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; Self::Right,
+</span><span class="boring">      Self::Down =&gt; Self::Left,
+</span><span class="boring">      Self::Left =&gt; Self::Up,
+</span><span class="boring">      Self::Right =&gt; Self::Down,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, Hash, PartialEq, Eq)]
+</span><span class="boring">enum EnemyState {
+</span><span class="boring">  Wait,
+</span><span class="boring">  Move,
+</span><span class="boring">  ChangeDirection,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyData {
+</span><span class="boring">  position: (isize, isize),
+</span><span class="boring">  direction: Direction,
+</span><span class="boring">}
+</span><span class="boring">
+</span>struct EnemyMoveState(pub usize);
+
+impl State&lt;EnemyState, EnemyData&gt; for EnemyMoveState {
+  fn update(&amp;mut self, context: &amp;mut EnemyData) -&gt; Option&lt;EnemyState&gt; {
+    if self.0 &gt; 0 {
+      self.0 -= 1;
+      context.position.0 += context.direction.horizontal();
+      context.position.1 += context.direction.vertical();
+      None
+    } else {
+      Some(EnemyState::Wait)
+    }
+  }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>You can see that state update method contains conditions that tell if we should
+change into new state and state logic itself (enemy movement).</p>
+<p>What we can do with it is we can abstract conditions and state changes into
+separate code units and let states only perform their actual logic on update,
+also we add a state method to be called when state gets activated so it can setup
+context for that state updates:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>type Condition&lt;T&gt; = fn(&amp;T) -&gt; bool;
+
+trait State&lt;T&gt; {
+  fn activated(&amp;mut self, context: &amp;mut T) {}
+  fn update(&amp;mut self, context: &amp;mut T) {}
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Since we did that we also have to introduce new FSM transition and state types.
+FSM state will now hold the actual state object and list of all possible
+transitions, it will also be able to decide if FSM should change into new state
+by testing each transition condition and first one that passes, its state ID gets
+returned and FSM will then activate that state:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">type Condition&lt;T&gt; = fn(&amp;T) -&gt; bool;
+</span><span class="boring">
+</span><span class="boring">trait State&lt;T&gt; {
+</span><span class="boring">  fn activated(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">}
+</span><span class="boring">
+</span>struct FSMTransition&lt;K, T&gt; {
+  to: K,
+  condition: Condition&lt;T&gt;,
+}
+
+struct FSMState&lt;K, T&gt; {
+  state: Box&lt;dyn State&lt;T&gt;&gt;,
+  transitions: Vec&lt;FSMTransition&lt;K, T&gt;&gt;,
+}
+
+impl&lt;K, T&gt; FSMState&lt;K, T&gt; {
+  fn new&lt;S: State&lt;T&gt; + 'static&gt;(state: S) -&gt; Self {
+    Self {
+      state: Box::new(state),
+      transitions: vec![],
+    }
+  }
+
+  fn transition(mut self, to: K, condition: Condition&lt;T&gt;) -&gt; Self {
+    self.transitions.push(FSMTransition {to, condition});
+    self
+  }
+
+  fn decide(&amp;self, context: &amp;T) -&gt; Option&lt;K&gt; where K: Clone {
+    for transition in &amp;self.transitions {
+      if (transition.condition)(context) {
+        return Some(transition.to.clone());
+      }
+    }
+    None
+  }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Now what's left is to adapt FSM to work with new states and transitions:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use std::{collections::HashMap, hash::Hash};
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+</span><span class="boring">enum Direction {
+</span><span class="boring">  Up,
+</span><span class="boring">  Down,
+</span><span class="boring">  Left,
+</span><span class="boring">  Right,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Direction {
+</span><span class="boring">  fn horizontal(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Left =&gt; -1,
+</span><span class="boring">      Self::Right =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn vertical(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; -1,
+</span><span class="boring">      Self::Down =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn next(&amp;self) -&gt; Self {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; Self::Right,
+</span><span class="boring">      Self::Down =&gt; Self::Left,
+</span><span class="boring">      Self::Left =&gt; Self::Up,
+</span><span class="boring">      Self::Right =&gt; Self::Down,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">type Condition&lt;T&gt; = fn(&amp;T) -&gt; bool;
+</span><span class="boring">
+</span><span class="boring">trait State&lt;T&gt; {
+</span><span class="boring">  fn activated(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSMTransition&lt;K, T&gt; {
+</span><span class="boring">  to: K,
+</span><span class="boring">  condition: Condition&lt;T&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSMState&lt;K, T&gt; {
+</span><span class="boring">  state: Box&lt;dyn State&lt;T&gt;&gt;,
+</span><span class="boring">  transitions: Vec&lt;FSMTransition&lt;K, T&gt;&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;K, T&gt; FSMState&lt;K, T&gt; {
+</span><span class="boring">  fn new&lt;S: State&lt;T&gt; + 'static&gt;(state: S) -&gt; Self {
+</span><span class="boring">    Self {
+</span><span class="boring">      state: Box::new(state),
+</span><span class="boring">      transitions: vec![],
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn transition(mut self, to: K, condition: Condition&lt;T&gt;) -&gt; Self {
+</span><span class="boring">    self.transitions.push(FSMTransition {to, condition});
+</span><span class="boring">    self
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn decide(&amp;self, context: &amp;T) -&gt; Option&lt;K&gt; where K: Clone {
+</span><span class="boring">    for transition in &amp;self.transitions {
+</span><span class="boring">      if (transition.condition)(context) {
+</span><span class="boring">        return Some(transition.to.clone());
+</span><span class="boring">      }
+</span><span class="boring">    }
+</span><span class="boring">    None
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span>struct FSM&lt;K, T&gt; {
+  states: HashMap&lt;K, FSMState&lt;K, T&gt;&gt;,
+  active_state: K,
+}
+
+impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
+  fn new(active_state: K) -&gt; Self {
+    Self {
+      states: Default::default(),
+      active_state,
+    }
+  }
+
+  fn state(mut self, id: K, state: FSMState&lt;K, T&gt;) -&gt; Self {
+    self.states.insert(id, state);
+    self
+  }
+
+  fn set_active_state(&amp;mut self, id: K, context: &amp;mut T) {
+    if let Some(state) = self.states.get_mut(&amp;id) {
+      state.state.activated(context);
+      self.active_state = id;
+    }
+  }
+
+  fn decide(&amp;mut self, context: &amp;mut T) where K: Clone {
+    if let Some(state) = self.states.get(&amp;self.active_state) {
+      if let Some(id) = state.decide(context) {
+        self.set_active_state(id, context);
+      }
+    }
+  }
+
+  fn update(&amp;mut self, context: &amp;mut T) {
+    if let Some(state) = self.states.get_mut(&amp;self.active_state) {
+      state.state.update(context);
+    }
+  }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>We have separated previous version of <code>update</code> method into two methods, one for
+deciding on what state FSM should change into, and another to actually update
+active state.</p>
+<p>We could still keep them together but it's good to make methods do only the job
+they describe - that will allow user to for example run decision making at lower
+frequency than the states update (for the sake of this tutorial we will call
+them together in enemy <code>tick</code> just for the smplification).</p>
+<p>When it comes to the enemy code itself, not much have changed except FSM setup:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use std::{collections::HashMap, hash::Hash};
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+</span><span class="boring">enum Direction {
+</span><span class="boring">  Up,
+</span><span class="boring">  Down,
+</span><span class="boring">  Left,
+</span><span class="boring">  Right,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Direction {
+</span><span class="boring">  fn horizontal(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Left =&gt; -1,
+</span><span class="boring">      Self::Right =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn vertical(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; -1,
+</span><span class="boring">      Self::Down =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn next(&amp;self) -&gt; Self {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; Self::Right,
+</span><span class="boring">      Self::Down =&gt; Self::Left,
+</span><span class="boring">      Self::Left =&gt; Self::Up,
+</span><span class="boring">      Self::Right =&gt; Self::Down,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">type Condition&lt;T&gt; = fn(&amp;T) -&gt; bool;
+</span><span class="boring">
+</span><span class="boring">trait State&lt;T&gt; {
+</span><span class="boring">  fn activated(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSMTransition&lt;K, T&gt; {
+</span><span class="boring">  to: K,
+</span><span class="boring">  condition: Condition&lt;T&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSMState&lt;K, T&gt; {
+</span><span class="boring">  state: Box&lt;dyn State&lt;T&gt;&gt;,
+</span><span class="boring">  transitions: Vec&lt;FSMTransition&lt;K, T&gt;&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;K, T&gt; FSMState&lt;K, T&gt; {
+</span><span class="boring">  fn new&lt;S: State&lt;T&gt; + 'static&gt;(state: S) -&gt; Self {
+</span><span class="boring">    Self {
+</span><span class="boring">      state: Box::new(state),
+</span><span class="boring">      transitions: vec![],
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn transition(mut self, to: K, condition: Condition&lt;T&gt;) -&gt; Self {
+</span><span class="boring">    self.transitions.push(FSMTransition {to, condition});
+</span><span class="boring">    self
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn decide(&amp;self, context: &amp;T) -&gt; Option&lt;K&gt; where K: Clone {
+</span><span class="boring">    for transition in &amp;self.transitions {
+</span><span class="boring">      if (transition.condition)(context) {
+</span><span class="boring">        return Some(transition.to.clone());
+</span><span class="boring">      }
+</span><span class="boring">    }
+</span><span class="boring">    None
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSM&lt;K, T&gt; {
+</span><span class="boring">  states: HashMap&lt;K, FSMState&lt;K, T&gt;&gt;,
+</span><span class="boring">  active_state: K,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
+</span><span class="boring">  fn new(active_state: K) -&gt; Self {
+</span><span class="boring">    Self {
+</span><span class="boring">      states: Default::default(),
+</span><span class="boring">      active_state,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn state(mut self, id: K, state: FSMState&lt;K, T&gt;) -&gt; Self {
+</span><span class="boring">    self.states.insert(id, state);
+</span><span class="boring">    self
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn set_active_state(&amp;mut self, id: K, context: &amp;mut T) {
+</span><span class="boring">    if let Some(state) = self.states.get_mut(&amp;id) {
+</span><span class="boring">      state.state.activated(context);
+</span><span class="boring">      self.active_state = id;
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn decide(&amp;mut self, context: &amp;mut T) where K: Clone {
+</span><span class="boring">    if let Some(state) = self.states.get(&amp;self.active_state) {
+</span><span class="boring">      if let Some(id) = state.decide(context) {
+</span><span class="boring">        self.set_active_state(id, context);
+</span><span class="boring">      }
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) {
+</span><span class="boring">    if let Some(state) = self.states.get_mut(&amp;self.active_state) {
+</span><span class="boring">      state.state.update(context);
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+</span><span class="boring">enum EnemyState {
+</span><span class="boring">  Wait,
+</span><span class="boring">  Move,
+</span><span class="boring">  ChangeDirection,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyWaitState(pub usize);
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyData&gt; for EnemyWaitState {}
+</span><span class="boring">
+</span><span class="boring">struct EnemyMoveState(pub usize);
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyData&gt; for EnemyMoveState {}
+</span><span class="boring">
+</span><span class="boring">struct EnemyChangeDirectionState;
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyData&gt; for EnemyChangeDirectionState {}
+</span><span class="boring">
+</span>struct EnemyData {
+  position: (isize, isize),
+  direction: Direction,
+  // From not on we will keep track of remainding turns in the enemy data.
+  // The reason for that is that all states that performs as long as there are
+  // turns left, also you might have noticed that in previous versions of states,
+  // as long as first cycle ends, all states doesn't wait for any turn because
+  // we have zeroed their turn counters, which wasn't what we aimed for in the
+  // first place. Now whenever state gets activated, it will set this counter
+  // with value from its definition.
+  turns: usize,
+}
+
+struct Enemy {
+  data: EnemyData,
+  fsm: FSM&lt;EnemyState, EnemyData&gt;,
+}
+
+impl Enemy {
+  fn new(x: isize, y: isize, direction: Direction) -&gt; Self {
+    let mut data = EnemyData {
+      position: (x, y),
+      direction,
+      turns: 0,
+    };
+    let fsm = FSM::new(EnemyState::ChangeDirection)
+      .state(
+        EnemyState::Wait,
+        FSMState::new(EnemyWaitState(1))
+          .transition(EnemyState::ChangeDirection, |data| data.turns == 0),
+      )
+      .state(
+        EnemyState::Move,
+        FSMState::new(EnemyMoveState(2))
+          .transition(EnemyState::Wait, |data| data.turns == 0),
+      )
+      .state(
+        EnemyState::ChangeDirection,
+        FSMState::new(EnemyChangeDirectionState)
+          .transition(EnemyState::Move, |_| true),
+      );
+
+    Self { data, fsm }
+  }
+
+  fn tick(&amp;mut self) {
+    // For the simplicity we just perform decision making and update at once,
+    // but you should be encouraged to call decision making only when it's needed,
+    // or at least at lower frequency than update, because most of the times, if
+    // not always, state changes are rare.
+    self.fsm.decide(&amp;mut self.data);
+    self.fsm.update(&amp;mut self.data);
+  }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>And now our states are completely decoupled from one another, they only do their
+job and don't care about any state transitions, making it super easy to just
+setup and modify all states and changes at the time when we create FSM:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use std::{collections::HashMap, hash::Hash};
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+</span><span class="boring">enum Direction {
+</span><span class="boring">  Up,
+</span><span class="boring">  Down,
+</span><span class="boring">  Left,
+</span><span class="boring">  Right,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Direction {
+</span><span class="boring">  fn horizontal(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Left =&gt; -1,
+</span><span class="boring">      Self::Right =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn vertical(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; -1,
+</span><span class="boring">      Self::Down =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn next(&amp;self) -&gt; Self {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; Self::Right,
+</span><span class="boring">      Self::Down =&gt; Self::Left,
+</span><span class="boring">      Self::Left =&gt; Self::Up,
+</span><span class="boring">      Self::Right =&gt; Self::Down,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">type Condition&lt;T&gt; = fn(&amp;T) -&gt; bool;
+</span><span class="boring">
+</span><span class="boring">trait State&lt;T&gt; {
+</span><span class="boring">  fn activated(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSMTransition&lt;K, T&gt; {
+</span><span class="boring">  to: K,
+</span><span class="boring">  condition: Condition&lt;T&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSMState&lt;K, T&gt; {
+</span><span class="boring">  state: Box&lt;dyn State&lt;T&gt;&gt;,
+</span><span class="boring">  transitions: Vec&lt;FSMTransition&lt;K, T&gt;&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;K, T&gt; FSMState&lt;K, T&gt; {
+</span><span class="boring">  fn new&lt;S: State&lt;T&gt; + 'static&gt;(state: S) -&gt; Self {
+</span><span class="boring">    Self {
+</span><span class="boring">      state: Box::new(state),
+</span><span class="boring">      transitions: vec![],
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn transition(mut self, to: K, condition: Condition&lt;T&gt;) -&gt; Self {
+</span><span class="boring">    self.transitions.push(FSMTransition {to, condition});
+</span><span class="boring">    self
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn decide(&amp;self, context: &amp;T) -&gt; Option&lt;K&gt; where K: Clone {
+</span><span class="boring">    for transition in &amp;self.transitions {
+</span><span class="boring">      if (transition.condition)(context) {
+</span><span class="boring">        return Some(transition.to.clone());
+</span><span class="boring">      }
+</span><span class="boring">    }
+</span><span class="boring">    None
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSM&lt;K, T&gt; {
+</span><span class="boring">  states: HashMap&lt;K, FSMState&lt;K, T&gt;&gt;,
+</span><span class="boring">  active_state: K,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
+</span><span class="boring">  fn new(active_state: K) -&gt; Self {
+</span><span class="boring">    Self {
+</span><span class="boring">      states: Default::default(),
+</span><span class="boring">      active_state,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn state(mut self, id: K, state: FSMState&lt;K, T&gt;) -&gt; Self {
+</span><span class="boring">    self.states.insert(id, state);
+</span><span class="boring">    self
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn set_active_state(&amp;mut self, id: K, context: &amp;mut T) {
+</span><span class="boring">    if let Some(state) = self.states.get_mut(&amp;id) {
+</span><span class="boring">      state.state.activated(context);
+</span><span class="boring">      self.active_state = id;
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn decide(&amp;mut self, context: &amp;mut T) where K: Clone {
+</span><span class="boring">    if let Some(state) = self.states.get(&amp;self.active_state) {
+</span><span class="boring">      if let Some(id) = state.decide(context) {
+</span><span class="boring">        self.set_active_state(id, context);
+</span><span class="boring">      }
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) {
+</span><span class="boring">    if let Some(state) = self.states.get_mut(&amp;self.active_state) {
+</span><span class="boring">      state.state.update(context);
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+</span><span class="boring">enum EnemyState {
+</span><span class="boring">  Wait,
+</span><span class="boring">  Move,
+</span><span class="boring">  ChangeDirection,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyData {
+</span><span class="boring">  position: (isize, isize),
+</span><span class="boring">  direction: Direction,
+</span><span class="boring">  turns: usize,
+</span><span class="boring">}
+</span><span class="boring">
+</span>struct EnemyWaitState(pub usize);
+
+impl State&lt;EnemyData&gt; for EnemyWaitState {
+  fn activated(&amp;mut self, context: &amp;mut EnemyData) {
+    context.turns = self.0;
+  }
+
+  fn update(&amp;mut self, context: &amp;mut EnemyData) {
+    context.turns = context.turns.max(1) - 1;
+  }
+}
+
+struct EnemyMoveState(pub usize);
+
+impl State&lt;EnemyData&gt; for EnemyMoveState {
+  fn activated(&amp;mut self, context: &amp;mut EnemyData) {
+    context.turns = self.0;
+  }
+
+  fn update(&amp;mut self, context: &amp;mut EnemyData) {
+    if context.turns &gt; 0 {
+      context.turns -= 1;
+      context.position.0 += context.direction.horizontal();
+      context.position.1 += context.direction.vertical();
+    }
+  }
+}
+
+struct EnemyChangeDirectionState;
+
+impl State&lt;EnemyData&gt; for EnemyChangeDirectionState {
+  fn activated(&amp;mut self, context: &amp;mut EnemyData) {
+    context.direction = context.direction.next();
+  }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>What's left is to look at how our new better FSM mutates its enemy data in time:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use std::{collections::HashMap, hash::Hash};
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+</span><span class="boring">enum Direction {
+</span><span class="boring">  Up,
+</span><span class="boring">  Down,
+</span><span class="boring">  Left,
+</span><span class="boring">  Right,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Direction {
+</span><span class="boring">  fn horizontal(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Left =&gt; -1,
+</span><span class="boring">      Self::Right =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn vertical(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; -1,
+</span><span class="boring">      Self::Down =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn next(&amp;self) -&gt; Self {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; Self::Right,
+</span><span class="boring">      Self::Down =&gt; Self::Left,
+</span><span class="boring">      Self::Left =&gt; Self::Up,
+</span><span class="boring">      Self::Right =&gt; Self::Down,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">type Condition&lt;T&gt; = fn(&amp;T) -&gt; bool;
+</span><span class="boring">
+</span><span class="boring">trait State&lt;T&gt; {
+</span><span class="boring">  fn activated(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSMTransition&lt;K, T&gt; {
+</span><span class="boring">  to: K,
+</span><span class="boring">  condition: Condition&lt;T&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSMState&lt;K, T&gt; {
+</span><span class="boring">  state: Box&lt;dyn State&lt;T&gt;&gt;,
+</span><span class="boring">  transitions: Vec&lt;FSMTransition&lt;K, T&gt;&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;K, T&gt; FSMState&lt;K, T&gt; {
+</span><span class="boring">  fn new&lt;S: State&lt;T&gt; + 'static&gt;(state: S) -&gt; Self {
+</span><span class="boring">    Self {
+</span><span class="boring">      state: Box::new(state),
+</span><span class="boring">      transitions: vec![],
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn transition(mut self, to: K, condition: Condition&lt;T&gt;) -&gt; Self {
+</span><span class="boring">    self.transitions.push(FSMTransition {to, condition});
+</span><span class="boring">    self
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn decide(&amp;self, context: &amp;T) -&gt; Option&lt;K&gt; where K: Clone {
+</span><span class="boring">    for transition in &amp;self.transitions {
+</span><span class="boring">      if (transition.condition)(context) {
+</span><span class="boring">        return Some(transition.to.clone());
+</span><span class="boring">      }
+</span><span class="boring">    }
+</span><span class="boring">    None
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSM&lt;K, T&gt; {
+</span><span class="boring">  states: HashMap&lt;K, FSMState&lt;K, T&gt;&gt;,
+</span><span class="boring">  active_state: K,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
+</span><span class="boring">  fn new(active_state: K) -&gt; Self {
+</span><span class="boring">    Self {
+</span><span class="boring">      states: Default::default(),
+</span><span class="boring">      active_state,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn state(mut self, id: K, state: FSMState&lt;K, T&gt;) -&gt; Self {
+</span><span class="boring">    self.states.insert(id, state);
+</span><span class="boring">    self
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn set_active_state(&amp;mut self, id: K, context: &amp;mut T) {
+</span><span class="boring">    if let Some(state) = self.states.get_mut(&amp;id) {
+</span><span class="boring">      state.state.activated(context);
+</span><span class="boring">      self.active_state = id;
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn decide(&amp;mut self, context: &amp;mut T) where K: Clone {
+</span><span class="boring">    if let Some(state) = self.states.get(&amp;self.active_state) {
+</span><span class="boring">      if let Some(id) = state.decide(context) {
+</span><span class="boring">        self.set_active_state(id, context);
+</span><span class="boring">      }
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) {
+</span><span class="boring">    if let Some(state) = self.states.get_mut(&amp;self.active_state) {
+</span><span class="boring">      state.state.update(context);
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+</span><span class="boring">enum EnemyState {
+</span><span class="boring">  Wait,
+</span><span class="boring">  Move,
+</span><span class="boring">  ChangeDirection,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyData {
+</span><span class="boring">  position: (isize, isize),
+</span><span class="boring">  direction: Direction,
+</span><span class="boring">  turns: usize,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Enemy {
+</span><span class="boring">  data: EnemyData,
+</span><span class="boring">  fsm: FSM&lt;EnemyState, EnemyData&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Enemy {
+</span><span class="boring">  fn new(x: isize, y: isize, direction: Direction) -&gt; Self {
+</span><span class="boring">    let mut data = EnemyData {
+</span><span class="boring">      position: (x, y),
+</span><span class="boring">      direction,
+</span><span class="boring">      turns: 0,
+</span><span class="boring">    };
+</span><span class="boring">    let fsm = FSM::new(EnemyState::ChangeDirection)
+</span><span class="boring">      .state(
+</span><span class="boring">        EnemyState::Wait,
+</span><span class="boring">        FSMState::new(EnemyWaitState(1))
+</span><span class="boring">          .transition(EnemyState::ChangeDirection, |data| data.turns == 0),
+</span><span class="boring">      )
+</span><span class="boring">      .state(
+</span><span class="boring">        EnemyState::Move,
+</span><span class="boring">        FSMState::new(EnemyMoveState(2))
+</span><span class="boring">          .transition(EnemyState::Wait, |data| data.turns == 0),
+</span><span class="boring">      )
+</span><span class="boring">      .state(
+</span><span class="boring">        EnemyState::ChangeDirection,
+</span><span class="boring">        FSMState::new(EnemyChangeDirectionState)
+</span><span class="boring">          .transition(EnemyState::Move, |_| true),
+</span><span class="boring">      );
+</span><span class="boring">
+</span><span class="boring">    Self { data, fsm }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn tick(&amp;mut self) {
+</span><span class="boring">    self.fsm.decide(&amp;mut self.data);
+</span><span class="boring">    self.fsm.update(&amp;mut self.data);
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyWaitState(pub usize);
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyData&gt; for EnemyWaitState {
+</span><span class="boring">  fn activated(&amp;mut self, context: &amp;mut EnemyData) {
+</span><span class="boring">    context.turns = self.0;
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut EnemyData) {
+</span><span class="boring">    context.turns = context.turns.max(1) - 1;
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyMoveState(pub usize);
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyData&gt; for EnemyMoveState {
+</span><span class="boring">  fn activated(&amp;mut self, context: &amp;mut EnemyData) {
+</span><span class="boring">    context.turns = self.0;
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut EnemyData) {
+</span><span class="boring">    if context.turns &gt; 0 {
+</span><span class="boring">      context.turns -= 1;
+</span><span class="boring">      context.position.0 += context.direction.horizontal();
+</span><span class="boring">      context.position.1 += context.direction.vertical();
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyChangeDirectionState;
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyData&gt; for EnemyChangeDirectionState {
+</span><span class="boring">  fn activated(&amp;mut self, context: &amp;mut EnemyData) {
+</span><span class="boring">    context.direction = context.direction.next();
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span>let mut enemy = Enemy::new(0, 0, Direction::Up);
+
+enemy.tick();
+assert_eq!(enemy.fsm.active_state, EnemyState::Move);
+assert_eq!(enemy.data.position.0, 0);
+assert_eq!(enemy.data.position.1, -1);
+assert_eq!(enemy.data.direction, Direction::Up);
+assert_eq!(enemy.data.turns, 1);
+enemy.tick();
+assert_eq!(enemy.fsm.active_state, EnemyState::Move);
+assert_eq!(enemy.data.position.0, 0);
+assert_eq!(enemy.data.position.1, -2);
+assert_eq!(enemy.data.direction, Direction::Up);
+assert_eq!(enemy.data.turns, 0);
+enemy.tick();
+assert_eq!(enemy.fsm.active_state, EnemyState::Wait);
+assert_eq!(enemy.data.position.0, 0);
+assert_eq!(enemy.data.position.1, -2);
+assert_eq!(enemy.data.direction, Direction::Up);
+assert_eq!(enemy.data.turns, 0);
+enemy.tick();
+assert_eq!(enemy.fsm.active_state, EnemyState::ChangeDirection);
+assert_eq!(enemy.data.position.0, 0);
+assert_eq!(enemy.data.position.1, -2);
+assert_eq!(enemy.data.direction, Direction::Right);
+assert_eq!(enemy.data.turns, 0);
+<span class="boring">}
+</span></code></pre></pre>
+<p>What we have achieved by making FSM the better way:</p>
+<ul>
+<li>states are now units that do only their actual work.</li>
+<li>we have achieved complete decoupling of states by making FSM fully modular.</li>
+<li>if we want to create new state or remove existing one, the only place that we
+have to adapt is the FSM setup.</li>
+<li>if we want to add new transition or remove existing one, the only place that
+we have to adapt is the FSM setup, no state logic itself.</li>
+</ul>
+<p>All of that modularization reduced development time and complexity of iterations
+over AI behaviors, but it's important to warn you that <strong>FSM main downside is
+that usually number of transitions grows exponentially with number of states</strong>
+and you should consider using other decision making engines when you find yourself
+struggling with states and transitions when your FSM gets big enough.</p>
+<h2 id="use-of-machinery-decision-maker-from-emergent-crate"><a class="header" href="#use-of-machinery-decision-maker-from-emergent-crate">Use of <code>Machinery</code> decision maker from <code>emergent</code> crate</a></h2>
+<p>If you would like to just use existing solution for FSM, consider trying
+<a href="https://crates.io/emergent"><code>emergent</code></a> crate and its <a href="https://docs.rs/emergent/1.3.0/emergent/decision_makers/machinery/struct.Machinery.html"><code>Machinery</code></a> decision making engine:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate emergent;
+</span><span class="boring">use emergent::prelude::*;
+</span><span class="boring">use std::hash::Hash;
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+</span><span class="boring">enum Direction {
+</span><span class="boring">  Up,
+</span><span class="boring">  Down,
+</span><span class="boring">  Left,
+</span><span class="boring">  Right,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Direction {
+</span><span class="boring">  fn horizontal(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Left =&gt; -1,
+</span><span class="boring">      Self::Right =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn vertical(&amp;self) -&gt; isize {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; -1,
+</span><span class="boring">      Self::Down =&gt; 1,
+</span><span class="boring">      _ =&gt; 0,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn next(&amp;self) -&gt; Self {
+</span><span class="boring">    match self {
+</span><span class="boring">      Self::Up =&gt; Self::Right,
+</span><span class="boring">      Self::Down =&gt; Self::Left,
+</span><span class="boring">      Self::Left =&gt; Self::Up,
+</span><span class="boring">      Self::Right =&gt; Self::Down,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+</span><span class="boring">enum EnemyState {
+</span><span class="boring">  Wait,
+</span><span class="boring">  Move,
+</span><span class="boring">  ChangeDirection,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyData {
+</span><span class="boring">  position: (isize, isize),
+</span><span class="boring">  direction: Direction,
+</span><span class="boring">  turns: usize,
+</span><span class="boring">}
+</span><span class="boring">
+</span>struct WaitTask(pub usize);
+
+// Tasks are units that do the actual work of the state.
+impl Task&lt;EnemyData&gt; for WaitTask {
+  // While task is locked, FSM won't change to another state even if it can.
+  // We lock this task for the time there are turns left.
+  fn is_locked(&amp;self, memory: &amp;EnemyData) -&gt; bool {
+    memory.turns &gt; 0
+  }
+
+  fn on_enter(&amp;mut self, memory: &amp;mut EnemyData) {
+    memory.turns = self.0;
+  }
+
+  fn on_update(&amp;mut self, memory: &amp;mut EnemyData) {
+    memory.turns = memory.turns.max(1) - 1;
+  }
+}
+
+struct MoveTask(pub usize);
+
+impl Task&lt;EnemyData&gt; for MoveTask {
+  fn is_locked(&amp;self, memory: &amp;EnemyData) -&gt; bool {
+    memory.turns &gt; 0
+  }
+
+  fn on_enter(&amp;mut self, memory: &amp;mut EnemyData) {
+    memory.turns = self.0;
+  }
+
+  fn on_update(&amp;mut self, memory: &amp;mut EnemyData) {
+    if memory.turns &gt; 0 {
+      memory.turns -= 1;
+      memory.position.0 += memory.direction.horizontal();
+      memory.position.1 += memory.direction.vertical();
+    }
+  }
+}
+
+struct ChangeDirectionTask;
+
+impl Task&lt;EnemyData&gt; for ChangeDirectionTask {
+  fn on_enter(&amp;mut self, memory: &amp;mut EnemyData) {
+    memory.direction = memory.direction.next();
+  }
+}
+
+struct Enemy {
+  data: EnemyData,
+  machinery: Machinery&lt;EnemyData, EnemyState&gt;,
+}
+
+impl Enemy {
+  fn new(x: isize, y: isize, direction: Direction) -&gt; Self {
+    let mut data = EnemyData {
+      position: (x, y),
+      direction,
+      turns: 0,
+    };
+    let mut machinery = MachineryBuilder::default()
+      .state(
+        EnemyState::Wait,
+        MachineryState::task(WaitTask(1))
+          // In `emergent` Conditions are traits that are implemented also for
+          // booleans, which means we can just use constants as conditions so
+          // here we make this transition always passing and the state locking
+          // controls how long task will run.
+          .change(MachineryChange::new(EnemyState::ChangeDirection, true)),
+      )
+      .state(
+        EnemyState::Move,
+        MachineryState::task(MoveTask(2))
+          .change(MachineryChange::new(EnemyState::Wait, true)),
+      )
+      .state(
+        EnemyState::ChangeDirection,
+        MachineryState::task(ChangeDirectionTask)
+          .change(MachineryChange::new(EnemyState::Move, true)),
+      )
+      .build();
+    // Newly created decision makers doesn't have any state activated and since
+    // FSM can change its states starting from active state, we need to activate
+    // first state by ourself.
+    machinery.change_active_state(
+      Some(EnemyState::ChangeDirection),
+      &amp;mut data,
+      true,
+    );
+
+    Self { data, machinery }
+  }
+
+  fn tick(&amp;mut self) {
+    // `process` method performs decision making.
+    self.machinery.process(&amp;mut self.data);
+    self.machinery.update(&amp;mut self.data);
+  }
+}
+
+let mut enemy = Enemy::new(0, 0, Direction::Up);
+
+assert_eq!(enemy.machinery.active_state(), Some(&amp;EnemyState::ChangeDirection));
+assert_eq!(enemy.data.position.0, 0);
+assert_eq!(enemy.data.position.1, 0);
+assert_eq!(enemy.data.direction, Direction::Right);
+for i in 1..3 {
+  enemy.tick();
+  assert_eq!(enemy.machinery.active_state(), Some(&amp;EnemyState::Move));
+  assert_eq!(enemy.data.position.0, i);
+  assert_eq!(enemy.data.position.1, 0);
+  assert_eq!(enemy.data.direction, Direction::Right);
+}
+enemy.tick();
+assert_eq!(enemy.machinery.active_state(), Some(&amp;EnemyState::Wait));
+assert_eq!(enemy.data.position.0, 2);
+assert_eq!(enemy.data.position.1, 0);
+assert_eq!(enemy.data.direction, Direction::Right);
+enemy.tick();
+assert_eq!(enemy.machinery.active_state(), Some(&amp;EnemyState::ChangeDirection));
+assert_eq!(enemy.data.position.0, 2);
+assert_eq!(enemy.data.position.1, 0);
+assert_eq!(enemy.data.direction, Direction::Down);
+<span class="boring">}
+</span></code></pre></pre>
+<h2 id="typical-use-cases-for-fsm"><a class="header" href="#typical-use-cases-for-fsm">Typical use cases for FSM</a></h2>
+<ul>
+<li>
+<p>AI behavior</p>
+<p>Indie games with small number of AI agent states, usually platformers or
+fast-paced games like shooters or bullet hells - in general games that doesn't
+need long-term or strategic planning and they have to make decision fast to
+adapt to quickly changed environment.</p>
+</li>
+<li>
+<p>Animations</p>
+<p>All modern game engines use FSM to manage animations, transition between them
+also contains information about blending between states to not make states snap
+from one to another instantly.</p>
+</li>
+<li>
+<p>Game states / game modes</p>
+<p>Imagine you have a game session with several states: Overworld, Battle, Shop,
+Crafting. You might use FSM to manage changes between these different game modes.</p>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                        
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                            </nav>
+
+        </div>
+
+        
+        
+        
+                <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+        
+                <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+                        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+                
+    </body>
+</html>
