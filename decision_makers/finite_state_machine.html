@@ -205,8 +205,8 @@ making an easy, modular FSM engine.</p>
 <p>Dummy way of implementing FSM works like this: There is a <code>State</code> trait that will
 be implemented for all states. This state has <code>update</code> method with context to
 read from / write to and it returns optional state ID. We do this bc we want
-states to do their work and if it happen that state tells FSM to change into new
-state after FSM updates this state.</p>
+states to do their work and that state might tells FSM to change into new state
+after FSM updates this state.</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -224,8 +224,7 @@ struct FSM&lt;K, T&gt; {
   active_state: K,
 }
 
-impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt;
-{
+impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
   fn new(active_state: K) -&gt; Self {
     Self {
       states: Default::default(),
@@ -259,7 +258,7 @@ form of states as trait objects. Yes, you're right, so what's the goal of that?
 The goal is that with this approach we are able to &quot;easly&quot; iterate on states,
 quickly add new ones or remove ones we do not need anymore and all that FSM setup
 stay in one place and we have <em>almost completely</em> decoupled states one from
-eachother. Why did i said &quot;almost completely decoupled&quot;? Well, we still have
+another. Why did i said &quot;almost completely decoupled&quot;? Well, we still have
 hardcoded states IDs of transitions in state logic, that's not ok, we will fix
 that when we will do <em>the better way</em> of implementing FSM later, for now let's
 see how do we use FSM system we have created.</p>
@@ -363,8 +362,8 @@ impl State&lt;EnemyState, EnemyData&gt; for EnemyChangeDirectionState {
 <p>Although code size has grown comparing to implementation used in <a href="../first_steps.html">First steps</a>,
 we have modularized states. That would get useful when for example we would have
 many different NPC types using same context type to store their data and by that
-we would share same states across multiple many AI agent types - we would reduce
-duplicaiton of the logic and would allow for quick adding/removing possible
+we would share same states across multiple AI agent types - we would reduce
+duplication of the logic and would allow for quick adding/removing possible
 states for certain types of NPCs, sadly we don't show that here.</p>
 <p>Now let's take a look at our enemy type setup:</p>
 <pre><pre class="playground"><code class="language-rust">
@@ -511,10 +510,7 @@ impl Enemy {
       .state(EnemyState::ChangeDirection, EnemyChangeDirectionState)
       .state(EnemyState::Move, EnemyMoveState(2));
 
-    Self {
-      data,
-      fsm,
-    }
+    Self { data, fsm }
   }
 
   fn update(&amp;mut self) {
@@ -673,10 +669,7 @@ changes after every <code>update</code> method call):</p>
 </span><span class="boring">      .state(EnemyState::ChangeDirection, EnemyChangeDirectionState)
 </span><span class="boring">      .state(EnemyState::Move, EnemyMoveState(2));
 </span><span class="boring">
-</span><span class="boring">    Self {
-</span><span class="boring">      data,
-</span><span class="boring">      fsm,
-</span><span class="boring">    }
+</span><span class="boring">    Self { data, fsm }
 </span><span class="boring">  }
 </span><span class="boring">
 </span><span class="boring">  fn update(&amp;mut self) {
@@ -983,8 +976,9 @@ active state.</p>
 <p>We could still keep them together but it's good to make methods do only the job
 they describe - that will allow user to for example run decision making at lower
 frequency than the states update (for the sake of this tutorial we will call
-them together in enemy <code>tick</code> just for the smplification).</p>
-<p>When it comes to the enemy code itself, not much have changed except FSM setup:</p>
+them together in enemy <code>tick</code> method just for the sake of smplification).</p>
+<p>When it comes to the enemy code itself, not much have changed except FSM setup
+and enemy data type:</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -1598,7 +1592,7 @@ have to adapt is the FSM setup.</li>
 <li>if we want to add new transition or remove existing one, the only place that
 we have to adapt is the FSM setup, no state logic itself.</li>
 </ul>
-<p>All of that modularization reduced development time and complexity of iterations
+<p>All of that modularization has reduced development time and complexity of iterations
 over AI behaviors, but it's important to warn you that <strong>FSM main downside is
 that usually number of transitions grows exponentially with number of states</strong>
 and you should consider using other decision making engines when you find yourself
