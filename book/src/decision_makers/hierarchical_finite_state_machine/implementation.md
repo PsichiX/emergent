@@ -2,7 +2,7 @@
 
 Happily there is not much work to do to turn FSM into HFSM - what we need to do
 is to add `decide` method to `State` and implement `State` for `FSM` type so we
-can just use it as states, also adapt existing code to process these network as
+can just use it as states, also adapt existing code to process these networks as
 states correctly.
 
 Let's start with `State`:
@@ -88,7 +88,7 @@ impl<K: Hash + Eq, T> FSM<K, T> {
 #
   // We have added `forced` argument to be able to force change because from now
   // on state won't be activated if it's the same as currently active state.
-  // User would call this method with `forced` set to true after FSM ceration to
+  // User would call this method with `forced` set to true after FSM creation to
   // initialize newly created FSM.
   fn set_active_state(&mut self, id: K, context: &mut T, forced: bool) {
     if forced || id != self.active_state {
@@ -105,8 +105,8 @@ impl<K: Hash + Eq, T> FSM<K, T> {
         self.set_active_state(id, context, false);
       } else {
         // From now on in case of FSM not having to change its state, we can tell
-        // active state to optionally handle its decision making (this si useful
-        // for nested FSM).
+        // active state to optionally handle its decision making (this is useful
+        // for nested FSMs).
         state.state.decide(context);
       }
     }
@@ -120,9 +120,9 @@ impl<K: Hash + Eq, T> FSM<K, T> {
 }
 ```
 
-What's left is to setup FSM within enemy type.
+What's left to do is to setup FSM within enemy type.
 
-First for the sake of the tutorial we create a simplified data types that will
+First, for the sake of the tutorial, we create a simplified data types that will
 describe enemy state:
 
 ```rust

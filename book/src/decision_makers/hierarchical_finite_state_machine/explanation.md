@@ -20,8 +20,9 @@ to __Walk Towards Waypoint__ state. Notice that while we are executing __Patrol_
 network we are still executing root network too, which means at any time we can
 get player in range condition succeed and we switch at root level to __Combat__
 network, then there it starts at __Walk Towards Player__, it reaches the player,
-switches to __Attack Player__, makes player dead and rot network switches back
-to __Patrol__ network and its __Find Next Waypoint__ and goes on like that.
+switches to __Attack Player__, makes player dead and root network switches back
+to __Patrol__ network, its __Find Next Waypoint__ gets activated it cycles between
+two states of __Patrol__ super-state.
 
 The key information is:
 

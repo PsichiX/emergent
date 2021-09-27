@@ -65,7 +65,9 @@ impl Enemy {
       .build()
       // We assign initial state decision maker if we want to make sure that
       // whenever machinery gets activated it will start at some state (useful
-      // when building hierarchies).
+      // when building hierarchies, by default machineries start with no active
+      // state hence we assign initialization decision maker to automate setting
+      // initial state).
       .initial_state_decision_maker(
         SingleDecisionMaker::new(EnemyState::FindWaypoint),
       );
@@ -114,7 +116,7 @@ impl Enemy {
         SingleDecisionMaker::new(EnemyState::Patrol),
       );
 
-    // since we have assigned initial state decision maker we can activate root
+    // Since we have assigned initial state decision maker we can activate root
     // machinery to activate its initial state.
     machinery.on_enter(&mut data);
     Self { data, machinery }
@@ -214,4 +216,4 @@ assert_eq!(enemy.data.player, Target::None);
 ```
 
 [`emergent`]: https://crates.io/emergent
-[`Machinery`]: https://docs.rs/emergent/1.3.0/emergent/decision_makers/machinery/struct.Machinery.html
+[`Machinery`]: https://docs.rs/emergent/1.5.0/emergent/decision_makers/machinery/struct.Machinery.html
