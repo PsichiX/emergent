@@ -39,12 +39,6 @@ pub trait Consideration<M = ()> {
     fn score(&self, memory: &M) -> Scalar;
 }
 
-impl<M> Consideration<M> for dyn Fn(&M) -> Scalar {
-    fn score(&self, memory: &M) -> Scalar {
-        self(memory)
-    }
-}
-
 impl<M> Consideration<M> for Scalar {
     fn score(&self, _: &M) -> Scalar {
         *self

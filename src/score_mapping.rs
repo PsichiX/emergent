@@ -41,12 +41,6 @@ pub trait ScoreMapping {
     }
 }
 
-impl ScoreMapping for dyn Fn(Scalar) -> Scalar {
-    fn remap(&self, score: Scalar) -> Scalar {
-        self(score)
-    }
-}
-
 /// Does nothing - returns score got as input.
 ///
 /// # Example

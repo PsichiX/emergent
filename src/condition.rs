@@ -38,12 +38,6 @@ pub trait Condition<M = ()> {
     fn validate(&self, memory: &M) -> bool;
 }
 
-impl<M> Condition<M> for dyn Fn(&M) -> bool {
-    fn validate(&self, memory: &M) -> bool {
-        self(memory)
-    }
-}
-
 impl<M> Condition<M> for bool {
     fn validate(&self, _: &M) -> bool {
         *self

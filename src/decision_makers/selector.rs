@@ -293,12 +293,6 @@ where
     }
 }
 
-impl<M, K> SelectorStatePicker<M, K> for dyn FnMut(&[&K], &M) -> Option<K> {
-    fn pick(&mut self, available: &[&K], memory: &M) -> Option<K> {
-        self(available, memory)
-    }
-}
-
 /// Wraps closure in selector state picker.
 ///
 /// # Example

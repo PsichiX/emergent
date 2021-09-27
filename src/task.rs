@@ -93,12 +93,6 @@ impl<M> std::fmt::Debug for NoTask<M> {
     }
 }
 
-impl<M> Task<M> for dyn FnMut(&M) {
-    fn on_enter(&mut self, memory: &mut M) {
-        self(memory);
-    }
-}
-
 /// Task thet wraps closures for each life-cycle method.
 ///
 /// # Example

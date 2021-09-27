@@ -245,6 +245,7 @@ where
 {
     states: HashMap<K, MachineryState<M, K>>,
     active_state: Option<K>,
+    initial_state_decision_maker: Option<Box<dyn DecisionMaker<M, K>>>,
 }
 
 impl<M, K> Machinery<M, K>
@@ -256,7 +257,30 @@ where
         Self {
             states,
             active_state: None,
+            initial_state_decision_maker: None,
         }
+    }
+
+    /// Assigns decision maker that will set initial state when machinery gets activated.
+    ///
+    /// This is useful when we want to use machinery in hierarchy.
+    pub fn initial_state_decision_maker<DM>(mut self, decision_maker: DM) -> Self
+    where
+        DM: DecisionMaker<M, K> + 'static,
+    {
+        self.initial_state_decision_maker = Some(Box::new(decision_maker));
+        self
+    }
+
+    /// Assigns decision maker that will set initial state when machinery gets activated.
+    ///
+    /// This is useful when we want to use machinery in hierarchy.
+    pub fn initial_state_decision_maker_raw(
+        mut self,
+        decision_maker: Box<dyn DecisionMaker<M, K>>,
+    ) -> Self {
+        self.initial_state_decision_maker = Some(decision_maker);
+        self
     }
 
     /// Returns currently active state ID.
@@ -359,8 +383,11 @@ where
     }
 
     fn on_enter(&mut self, memory: &mut M) {
-        let _ = self.change_active_state(None, memory, true);
-        self.process(memory);
+        let id = match &mut self.initial_state_decision_maker {
+            Some(decision_maker) => decision_maker.decide(memory),
+            None => None,
+        };
+        let _ = self.change_active_state(id, memory, true);
     }
 
     fn on_exit(&mut self, memory: &mut M) {
