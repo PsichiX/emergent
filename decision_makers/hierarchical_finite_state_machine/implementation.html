@@ -146,7 +146,7 @@
                         <h1 id="how-to-implement"><a class="header" href="#how-to-implement">How to implement</a></h1>
 <p>Happily there is not much work to do to turn FSM into HFSM - what we need to do
 is to add <code>decide</code> method to <code>State</code> and implement <code>State</code> for <code>FSM</code> type so we
-can just use it as states, also adapt existing code to process these network as
+can just use it as states, also adapt existing code to process these networks as
 states correctly.</p>
 <p>Let's start with <code>State</code>:</p>
 <pre><pre class="playground"><code class="language-rust">
@@ -233,7 +233,7 @@ impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
 </span><span class="boring">
 </span>  // We have added `forced` argument to be able to force change because from now
   // on state won't be activated if it's the same as currently active state.
-  // User would call this method with `forced` set to true after FSM ceration to
+  // User would call this method with `forced` set to true after FSM creation to
   // initialize newly created FSM.
   fn set_active_state(&amp;mut self, id: K, context: &amp;mut T, forced: bool) {
     if forced || id != self.active_state {
@@ -250,8 +250,8 @@ impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
         self.set_active_state(id, context, false);
       } else {
         // From now on in case of FSM not having to change its state, we can tell
-        // active state to optionally handle its decision making (this si useful
-        // for nested FSM).
+        // active state to optionally handle its decision making (this is useful
+        // for nested FSMs).
         state.state.decide(context);
       }
     }
@@ -265,8 +265,8 @@ impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
 </span>}
 <span class="boring">}
 </span></code></pre></pre>
-<p>What's left is to setup FSM within enemy type.</p>
-<p>First for the sake of the tutorial we create a simplified data types that will
+<p>What's left to do is to setup FSM within enemy type.</p>
+<p>First, for the sake of the tutorial, we create a simplified data types that will
 describe enemy state:</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]

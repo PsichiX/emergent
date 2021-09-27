@@ -1797,7 +1797,7 @@ and you should consider using other decision making engines when you find yourse
 struggling with states and transitions when your FSM gets big enough.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="use-of-machinery-decision-maker-from-emergent-crate"><a class="header" href="#use-of-machinery-decision-maker-from-emergent-crate">Use of Machinery decision maker from emergent crate</a></h1>
 <p>If you would like to just use existing solution for FSM, consider trying
-<a href="https://crates.io/emergent"><code>emergent</code></a> crate and its <a href="https://docs.rs/emergent/1.3.0/emergent/decision_makers/machinery/struct.Machinery.html"><code>Machinery</code></a> decision making engine:</p>
+<a href="https://crates.io/emergent"><code>emergent</code></a> crate and its <a href="https://docs.rs/emergent/1.5.0/emergent/decision_makers/machinery/struct.Machinery.html"><code>Machinery</code></a> decision making engine:</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -2047,8 +2047,9 @@ to <strong>Walk Towards Waypoint</strong> state. Notice that while we are execut
 network we are still executing root network too, which means at any time we can
 get player in range condition succeed and we switch at root level to <strong>Combat</strong>
 network, then there it starts at <strong>Walk Towards Player</strong>, it reaches the player,
-switches to <strong>Attack Player</strong>, makes player dead and rot network switches back
-to <strong>Patrol</strong> network and its <strong>Find Next Waypoint</strong> and goes on like that.</p>
+switches to <strong>Attack Player</strong>, makes player dead and root network switches back
+to <strong>Patrol</strong> network, its <strong>Find Next Waypoint</strong> gets activated it cycles between
+two states of <strong>Patrol</strong> super-state.</p>
 <p>The key information is:</p>
 <blockquote>
 <p>In HFSM, FSM networks are equivalent to states so as long as network is active,
@@ -2062,7 +2063,7 @@ there - think of it as nested prefabs for behaviors.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="how-to-implement-1"><a class="header" href="#how-to-implement-1">How to implement</a></h1>
 <p>Happily there is not much work to do to turn FSM into HFSM - what we need to do
 is to add <code>decide</code> method to <code>State</code> and implement <code>State</code> for <code>FSM</code> type so we
-can just use it as states, also adapt existing code to process these network as
+can just use it as states, also adapt existing code to process these networks as
 states correctly.</p>
 <p>Let's start with <code>State</code>:</p>
 <pre><pre class="playground"><code class="language-rust">
@@ -2149,7 +2150,7 @@ impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
 </span><span class="boring">
 </span>  // We have added `forced` argument to be able to force change because from now
   // on state won't be activated if it's the same as currently active state.
-  // User would call this method with `forced` set to true after FSM ceration to
+  // User would call this method with `forced` set to true after FSM creation to
   // initialize newly created FSM.
   fn set_active_state(&amp;mut self, id: K, context: &amp;mut T, forced: bool) {
     if forced || id != self.active_state {
@@ -2166,8 +2167,8 @@ impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
         self.set_active_state(id, context, false);
       } else {
         // From now on in case of FSM not having to change its state, we can tell
-        // active state to optionally handle its decision making (this si useful
-        // for nested FSM).
+        // active state to optionally handle its decision making (this is useful
+        // for nested FSMs).
         state.state.decide(context);
       }
     }
@@ -2181,8 +2182,8 @@ impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
 </span>}
 <span class="boring">}
 </span></code></pre></pre>
-<p>What's left is to setup FSM within enemy type.</p>
-<p>First for the sake of the tutorial we create a simplified data types that will
+<p>What's left to do is to setup FSM within enemy type.</p>
+<p>First, for the sake of the tutorial, we create a simplified data types that will
 describe enemy state:</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
@@ -2722,7 +2723,7 @@ assert_eq!(enemy.data.player, Target::None);
 </span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="hierarchical-use-of-machinery-decision-maker-from-emergent-crate"><a class="header" href="#hierarchical-use-of-machinery-decision-maker-from-emergent-crate">Hierarchical use of Machinery decision maker from emergent crate</a></h1>
 <p>By default all <a href="https://crates.io/emergent"><code>emergent</code></a> decision makers are designed to be used in hierarchies
-so building HFSM is really simple - you just put one <a href="https://docs.rs/emergent/1.3.0/emergent/decision_makers/machinery/struct.Machinery.html"><code>Machinery</code></a> as a state in
+so building HFSM is really simple - you just put one <a href="https://docs.rs/emergent/1.5.0/emergent/decision_makers/machinery/struct.Machinery.html"><code>Machinery</code></a> as a state in
 another. What's new comparing to the flat Machinery setup is we have to assign
 initial state decision maker that whenever Machinery gets activated, it will
 activate some starting state for that Machinery.</p>
@@ -2787,7 +2788,9 @@ activate some starting state for that Machinery.</p>
       .build()
       // We assign initial state decision maker if we want to make sure that
       // whenever machinery gets activated it will start at some state (useful
-      // when building hierarchies).
+      // when building hierarchies, by default machineries start with no active
+      // state hence we assign initialization decision maker to automate setting
+      // initial state).
       .initial_state_decision_maker(
         SingleDecisionMaker::new(EnemyState::FindWaypoint),
       );
@@ -2836,7 +2839,7 @@ activate some starting state for that Machinery.</p>
         SingleDecisionMaker::new(EnemyState::Patrol),
       );
 
-    // since we have assigned initial state decision maker we can activate root
+    // Since we have assigned initial state decision maker we can activate root
     // machinery to activate its initial state.
     machinery.on_enter(&amp;mut data);
     Self { data, machinery }

@@ -170,8 +170,9 @@ to <strong>Walk Towards Waypoint</strong> state. Notice that while we are execut
 network we are still executing root network too, which means at any time we can
 get player in range condition succeed and we switch at root level to <strong>Combat</strong>
 network, then there it starts at <strong>Walk Towards Player</strong>, it reaches the player,
-switches to <strong>Attack Player</strong>, makes player dead and rot network switches back
-to <strong>Patrol</strong> network and its <strong>Find Next Waypoint</strong> and goes on like that.</p>
+switches to <strong>Attack Player</strong>, makes player dead and root network switches back
+to <strong>Patrol</strong> network, its <strong>Find Next Waypoint</strong> gets activated it cycles between
+two states of <strong>Patrol</strong> super-state.</p>
 <p>The key information is:</p>
 <blockquote>
 <p>In HFSM, FSM networks are equivalent to states so as long as network is active,
