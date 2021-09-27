@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="first_steps.html"><strong aria-hidden="true">2.</strong> First steps</a></li><li class="chapter-item expanded "><a href="decision_makers/index.html"><strong aria-hidden="true">3.</strong> Decision makers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="decision_makers/finite_state_machine.html"><strong aria-hidden="true">3.1.</strong> Finite State Machine</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.2.</strong> Hierarchical Finite State Machine</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.3.</strong> Behavior Tree</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.4.</strong> Utility AI</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.5.</strong> Goal Oriented Action Planning</div></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Common AI problems and solutions</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">4.1.</strong> NPC day cycle</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.2.</strong> Steering</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.3.</strong> Crowd movement</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.4.</strong> Crowds shared behavior</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.5.</strong> More...</div></li></ol></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="first_steps.html"><strong aria-hidden="true">2.</strong> First steps</a></li><li class="chapter-item expanded "><a href="decision_makers/introduction.html"><strong aria-hidden="true">3.</strong> Decision makers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="decision_makers/finite_state_machine/introduction.html"><strong aria-hidden="true">3.1.</strong> Finite State Machine</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="decision_makers/finite_state_machine/explanation.html"><strong aria-hidden="true">3.1.1.</strong> How it works</a></li><li class="chapter-item expanded "><a href="decision_makers/finite_state_machine/implementation.html"><strong aria-hidden="true">3.1.2.</strong> How to implement</a></li><li class="chapter-item expanded "><a href="decision_makers/finite_state_machine/use_of_machinery.html"><strong aria-hidden="true">3.1.3.</strong> Use of Machinery decision maker from emergent crate</a></li><li class="chapter-item expanded "><a href="decision_makers/finite_state_machine/usecases.html"><strong aria-hidden="true">3.1.4.</strong> Typical use cases</a></li></ol></li><li class="chapter-item expanded "><a href="decision_makers/hierarchical_finite_state_machine/introduction.html"><strong aria-hidden="true">3.2.</strong> Hierarchical Finite State Machine</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="decision_makers/hierarchical_finite_state_machine/explanation.html"><strong aria-hidden="true">3.2.1.</strong> How it works</a></li><li class="chapter-item expanded "><a href="decision_makers/hierarchical_finite_state_machine/implementation.html"><strong aria-hidden="true">3.2.2.</strong> How to implement</a></li><li class="chapter-item expanded "><a href="decision_makers/hierarchical_finite_state_machine/use_of_machinery.html"><strong aria-hidden="true">3.2.3.</strong> Hierarchical use of Machinery decision maker from emergent crate</a></li><li class="chapter-item expanded "><a href="decision_makers/hierarchical_finite_state_machine/usecases.html"><strong aria-hidden="true">3.2.4.</strong> Typical use cases</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.3.</strong> Utility AI</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.4.</strong> Behavior Tree</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.5.</strong> Goal Oriented Action Planning</div></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Common AI problems and solutions</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">4.1.</strong> NPC day cycle</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.2.</strong> Steering</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.3.</strong> Crowd movement</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.4.</strong> Crowds shared behavior</div></li></ol></li><li class="chapter-item expanded "><a href="more.html"><strong aria-hidden="true">5.</strong> More...</a></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -345,9 +345,8 @@ simplify readability of and iteration over AI logic.</p>
 <p>In next chapters we will learn about AI systems and gradually work our way out
 from naive AI logic to more managable solutions.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="decision-makers"><a class="header" href="#decision-makers">Decision makers</a></h1>
-<p>In <a href="decision_makers/../first_steps.html">previous chapter</a> we have seen use of the <strong>FSM</strong> (Finite
-State Machines). FSM is just one of many AI engines called decision makers
-(a.k.a. AI systems).</p>
+<p>In <a href="decision_makers/../first_steps.html">previous chapter</a> we have seen use of the <strong>FSM</strong> (Finite State Machines).
+FSM is just one of many AI engines called decision makers (a.k.a. AI systems).</p>
 <p>Decision makers only job is to do what their name suggest - make a decision about
 what agent should do. They usually contain a set of states/actions with rules to
 possible transitions, what differentiate one from another is how these transitions
@@ -360,7 +359,7 @@ from now on) are always the first choice for AI system for a reason - they are
 the simplest to implement and the most intuitive decision making engines ever
 invented.</p>
 <p>Here, take a look at the states and transitions of our simple enemy behavior:</p>
-<p><img src="decision_makers/../images/fsm.svg" alt="FSM" /></p>
+<p><img src="decision_makers/finite_state_machine/../../images/fsm.svg" alt="FSM" /></p>
 <p>Each block is a state that enemy can be in and every arrow is a transition with
 condition that has to be met to allow for transition to happen.
 Here in our case there are simple, single transitions pointing from one state to
@@ -372,19 +371,7 @@ transitions.</p>
 that starts from active state and validates their conditions, first one that
 succeeds triggers change from active state to one that transition points to.</p>
 </blockquote>
-<h2 id="table-of-contents"><a class="header" href="#table-of-contents">Table of contents:</a></h2>
-<ul>
-<li><a href="decision_makers/finite_state_machine.html#how-it-works">How it works</a></li>
-<li><a href="decision_makers/finite_state_machine.html#how-to-implement-fsm">How to implement FSM</a>
-<ul>
-<li><a href="decision_makers/finite_state_machine.html#the-dummy-way">The dummy way</a></li>
-<li><a href="decision_makers/finite_state_machine.html#the-better-way">The better way</a></li>
-</ul>
-</li>
-<li><a href="decision_makers/finite_state_machine.html#use-of-machinery-decision-maker-from-emergent-crate">Use of Machinery decision maker from emergent crate</a></li>
-<li><a href="decision_makers/finite_state_machine.html#typical-use-cases-for-fsm">Typical use cases for FSM</a></li>
-</ul>
-<h2 id="how-it-works"><a class="header" href="#how-it-works">How it works</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="how-it-works"><a class="header" href="#how-it-works">How it works</a></h1>
 <p>Imagine we start from <strong>Change Direction</strong> state and we tell FSM to make a
 decision, it looks at transitions pointing from this state, here there is only
 one: <strong>Move</strong> wit condition: <strong>Just Do It</strong> (which here it means: it always
@@ -392,7 +379,7 @@ succeeds). Since this tansition condition succeeded, FMS changes its active stat
 to <strong>Move</strong> state and enemy moves forward for few turns in the direction previously
 set by <strong>Change Direction</strong> state.</p>
 <p>In the mean time we run decision making from time to time (can be each frame,
-can be each second - usually decision making runs at slower fewquency than game
+can be each second - usually decision making runs at slower frequency than game
 frames, or sometimes it is triggered only when decision making engine receives
 an event that tells that important change in game state happened and FSM should
 make a decision about its new state).</p>
@@ -403,8 +390,8 @@ which will wait few turns doing nothing.</p>
 <p>When there is no more waiting turns left, FSM switches back to <strong>Change Direction</strong>
 state, which all of it makes &quot;Change Direction, Move, Wait&quot; behavior of our Enemy.
 Really simple, right?</p>
-<h2 id="how-to-implement-fsm"><a class="header" href="#how-to-implement-fsm">How to implement FSM</a></h2>
-<p>In chapter <a href="decision_makers/../first_steps.html">First steps</a> we have shown the easiest FSM implementation using enums
+<div style="break-before: page; page-break-before: always;"></div><h1 id="how-to-implement"><a class="header" href="#how-to-implement">How to implement</a></h1>
+<p>In chapter <a href="decision_makers/finite_state_machine/../../first_steps.html">First steps</a> we have shown the easiest FSM implementation using enums
 but the downside of that approach is that when number of states gets bigger, and
 number of possible state changes grow with them, we will eventually end up with
 spaghetti of state changes put all over the place with no clear way to see all
@@ -464,7 +451,7 @@ impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>This might looks like the solution used in <a href="decision_makers/../first_steps.html">First steps</a> but with extra steps in
+<p>This might looks like the solution used in <a href="decision_makers/finite_state_machine/../../first_steps.html">First steps</a> but with extra steps in
 form of states as trait objects. Yes, you're right, so what's the goal of that?
 The goal is that with this approach we are able to &quot;easly&quot; iterate on states,
 quickly add new ones or remove ones we do not need anymore and all that FSM setup
@@ -570,7 +557,7 @@ impl State&lt;EnemyState, EnemyData&gt; for EnemyChangeDirectionState {
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>Although code size has grown comparing to implementation used in <a href="decision_makers/../first_steps.html">First steps</a>,
+<p>Although code size has grown comparing to implementation used in <a href="decision_makers/finite_state_machine/../../first_steps.html">First steps</a>,
 we have modularized states. That would get useful when for example we would have
 many different NPC types using same context type to store their data and by that
 we would share same states across multiple AI agent types - we would reduce
@@ -1808,7 +1795,7 @@ over AI behaviors, but it's important to warn you that <strong>FSM main downside
 that usually number of transitions grows exponentially with number of states</strong>
 and you should consider using other decision making engines when you find yourself
 struggling with states and transitions when your FSM gets big enough.</p>
-<h2 id="use-of-machinery-decision-maker-from-emergent-crate"><a class="header" href="#use-of-machinery-decision-maker-from-emergent-crate">Use of <code>Machinery</code> decision maker from <code>emergent</code> crate</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="use-of-machinery-decision-maker-from-emergent-crate"><a class="header" href="#use-of-machinery-decision-maker-from-emergent-crate">Use of Machinery decision maker from emergent crate</a></h1>
 <p>If you would like to just use existing solution for FSM, consider trying
 <a href="https://crates.io/emergent"><code>emergent</code></a> crate and its <a href="https://docs.rs/emergent/1.3.0/emergent/decision_makers/machinery/struct.Machinery.html"><code>Machinery</code></a> decision making engine:</p>
 <pre><pre class="playground"><code class="language-rust">
@@ -1990,7 +1977,7 @@ assert_eq!(enemy.data.position.1, 0);
 assert_eq!(enemy.data.direction, Direction::Down);
 <span class="boring">}
 </span></code></pre></pre>
-<h2 id="typical-use-cases-for-fsm"><a class="header" href="#typical-use-cases-for-fsm">Typical use cases for FSM</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="typical-use-cases"><a class="header" href="#typical-use-cases">Typical use cases</a></h1>
 <ul>
 <li>
 <p>AI behavior</p>
@@ -2011,6 +1998,952 @@ from one to another instantly.</p>
 Crafting. You might use FSM to manage changes between these different game modes.</p>
 </li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="hierarchical-finite-state-machine"><a class="header" href="#hierarchical-finite-state-machine">Hierarchical Finite State Machine</a></h1>
+<p>In the chapter about <a href="decision_makers/hierarchical_finite_state_machine/../finite_state_machine/introduction.html">FSM</a> we have been talking about FSM being messy when number
+of states grows. The reason for that was that along with number of states, number
+of transitions grow exponentially, which at the point of having for example 20
+different states, behavior is starting to get messy and unmanagable - for that
+exact problem Hierarchical Finite State Machines (<strong>HFSM</strong> for short from now on)
+has got invented.</p>
+<p>Let's take a look at some more complex FSM than what we have made in <a href="decision_makers/hierarchical_finite_state_machine/../finite_state_machine/introduction.html">FSM</a> chapter:</p>
+<p><img src="decision_makers/hierarchical_finite_state_machine/../../images/hfsm-0.svg" alt="HFSM-0" /></p>
+<p>Number of transitions got higher and we can see that many transitions targets
+same state using same condition.</p>
+<p>When we analyze this network we can find that there are two distinct super-states:
+<strong>Patrol</strong> and <strong>Combat</strong>:</p>
+<p><img src="decision_makers/hierarchical_finite_state_machine/../../images/hfsm-1.svg" alt="HFSM-1" /></p>
+<p>And each of these states contains their own network of sub-states:</p>
+<p><img src="decision_makers/hierarchical_finite_state_machine/../../images/hfsm-2.svg" alt="HFSM-2" /></p>
+<p>And this is hierarchical approach to FSM:</p>
+<blockquote>
+<p>HFSM has the same rules for transitions as FSM, what's new is that you can use
+other FSM networks as states. Whenever FSM network, used as state in another
+FSM, gets activated, it will reset its active state to initial one.</p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="how-it-works-1"><a class="header" href="#how-it-works-1">How it works</a></h1>
+<p>Rememeber that HFSM is just a FSM that can use other FSM objects as states, hence
+<em>hierarchy</em> in the name - we compose networks in other networks.</p>
+<p>We have a hierarchy of states that looks like this:</p>
+<ul>
+<li>Patrol
+<ul>
+<li>Find Next Waypoint</li>
+<li>Walk Towards Waypoint</li>
+</ul>
+</li>
+<li>Combat
+<ul>
+<li>Walk towards player</li>
+<li>Attack player</li>
+</ul>
+</li>
+</ul>
+<p>Each network layer doesn't know anything about other networks, they are fully
+encapsulated. We start at first network layer which has <strong>Patrol</strong> and <strong>Combat</strong>
+states and start with <strong>Patrol</strong> state active, it gets activated and we start
+executing <strong>Patrol</strong> network which has <strong>Find Next Waypoint</strong> state (we start
+here) and <strong>Walk Towards Waypoint</strong> state. We have found waypoint so we switch
+to <strong>Walk Towards Waypoint</strong> state. Notice that while we are executing <strong>Patrol</strong>
+network we are still executing root network too, which means at any time we can
+get player in range condition succeed and we switch at root level to <strong>Combat</strong>
+network, then there it starts at <strong>Walk Towards Player</strong>, it reaches the player,
+switches to <strong>Attack Player</strong>, makes player dead and rot network switches back
+to <strong>Patrol</strong> network and its <strong>Find Next Waypoint</strong> and goes on like that.</p>
+<p>The key information is:</p>
+<blockquote>
+<p>In HFSM, FSM networks are equivalent to states so as long as network is active,
+it will process its states, and if we get networks tree many levels deep, all
+nodes (FMS networks) that are along the way from the root to the leaf, are
+active and they can make decisions.</p>
+</blockquote>
+<p>This allows us to modularize our previously made FSM even more, making us able
+to group states into reusable &quot;categories&quot; instead of copy-paste bits here and
+there - think of it as nested prefabs for behaviors.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="how-to-implement-1"><a class="header" href="#how-to-implement-1">How to implement</a></h1>
+<p>Happily there is not much work to do to turn FSM into HFSM - what we need to do
+is to add <code>decide</code> method to <code>State</code> and implement <code>State</code> for <code>FSM</code> type so we
+can just use it as states, also adapt existing code to process these network as
+states correctly.</p>
+<p>Let's start with <code>State</code>:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>trait State&lt;T&gt; {
+  fn activated(&amp;mut self, context: &amp;mut T) {}
+  // This method will be called whenever owning FSM doesn't change its state, so
+  // we can use it to handle inner decision making - in case of FSM we call its
+  // decision making here.
+  fn decide(&amp;mut self, context: &amp;mut T) {}
+  fn update(&amp;mut self, context: &amp;mut T) {}
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Then we improve <code>FSM</code> to forward decision making and update calls to its children
+networks:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use std::{collections::HashMap, hash::Hash};
+</span><span class="boring">
+</span><span class="boring">type Condition&lt;T&gt; = fn(&amp;T) -&gt; bool;
+</span><span class="boring">
+</span><span class="boring">trait State&lt;T&gt; {
+</span><span class="boring">  fn activated(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">  fn decide(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSMTransition&lt;K, T&gt; {
+</span><span class="boring">  to: K,
+</span><span class="boring">  condition: Condition&lt;T&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSMState&lt;K, T&gt; {
+</span><span class="boring">  state: Box&lt;dyn State&lt;T&gt;&gt;,
+</span><span class="boring">  transitions: Vec&lt;FSMTransition&lt;K, T&gt;&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;K, T&gt; FSMState&lt;K, T&gt; {
+</span><span class="boring">  fn new&lt;S: State&lt;T&gt; + 'static&gt;(state: S) -&gt; Self {
+</span><span class="boring">    Self {
+</span><span class="boring">      state: Box::new(state),
+</span><span class="boring">      transitions: vec![],
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn transition(mut self, to: K, condition: Condition&lt;T&gt;) -&gt; Self {
+</span><span class="boring">    self.transitions.push(FSMTransition {to, condition});
+</span><span class="boring">    self
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn decide(&amp;self, context: &amp;T) -&gt; Option&lt;K&gt; where K: Clone {
+</span><span class="boring">    for transition in &amp;self.transitions {
+</span><span class="boring">      if (transition.condition)(context) {
+</span><span class="boring">        return Some(transition.to.clone());
+</span><span class="boring">      }
+</span><span class="boring">    }
+</span><span class="boring">    None
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span>struct FSM&lt;K, T&gt; {
+  states: HashMap&lt;K, FSMState&lt;K, T&gt;&gt;,
+  active_state: K,
+  // This one will be used to reset active state when this FSM will get activated.
+  initial_state: K,
+}
+
+impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
+  fn new(active_state: K) -&gt; Self where K: Clone {
+    Self {
+      states: Default::default(),
+      initial_state: active_state.clone(),
+      active_state,
+    }
+  }
+
+<span class="boring">fn state(mut self, id: K, state: FSMState&lt;K, T&gt;) -&gt; Self {
+</span><span class="boring">  self.states.insert(id, state);
+</span><span class="boring">  self
+</span><span class="boring">}
+</span><span class="boring">
+</span>  // We have added `forced` argument to be able to force change because from now
+  // on state won't be activated if it's the same as currently active state.
+  // User would call this method with `forced` set to true after FSM ceration to
+  // initialize newly created FSM.
+  fn set_active_state(&amp;mut self, id: K, context: &amp;mut T, forced: bool) {
+    if forced || id != self.active_state {
+      if let Some(state) = self.states.get_mut(&amp;id) {
+        state.state.activated(context);
+        self.active_state = id;
+      }
+    }
+  }
+
+  fn decide(&amp;mut self, context: &amp;mut T) where K: Clone {
+    if let Some(state) = self.states.get_mut(&amp;self.active_state) {
+      if let Some(id) = state.decide(context) {
+        self.set_active_state(id, context, false);
+      } else {
+        // From now on in case of FSM not having to change its state, we can tell
+        // active state to optionally handle its decision making (this si useful
+        // for nested FSM).
+        state.state.decide(context);
+      }
+    }
+  }
+<span class="boring">
+</span><span class="boring">fn update(&amp;mut self, context: &amp;mut T) {
+</span><span class="boring">  if let Some(state) = self.states.get_mut(&amp;self.active_state) {
+</span><span class="boring">    state.state.update(context);
+</span><span class="boring">  }
+</span><span class="boring">}
+</span>}
+<span class="boring">}
+</span></code></pre></pre>
+<p>What's left is to setup FSM within enemy type.</p>
+<p>First for the sake of the tutorial we create a simplified data types that will
+describe enemy state:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+enum Target {
+  None,
+  Found,
+  Reached,
+}
+
+struct EnemyData {
+  waypoint: Target,
+  player: Target,
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p><code>EnemyData</code> will contain information about its targets: waypoint and player.
+<code>Target</code> will describe what we know about the target. In case of waypoint it can
+be either Found or Reached since there is always some waypoint in the world.
+In case of player None means player is dead, Found means player is in enemy range
+and Reached means enemy is in contact range of player and can attack him.</p>
+<p>Here are all possible states for all FSM hierarchy levels:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+enum EnemyState {
+  Patrol,
+  Combat,
+  FindWaypoint,
+  WalkTowardsWaypoint,
+  WalkTowardsPlayer,
+  AttackPlayer,
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Patrol and Combat are the root level FSM states and these will contain sub-networks.
+FindWaypoint and WalkTowardsWaypoint belongs to Patrol FSM, WalkTowardsPlayer
+and AttackPlayer belongs to Combat FSM.</p>
+<p>Ok, now let's finally see the enemy FSM setup:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use std::{collections::HashMap, hash::Hash};
+</span><span class="boring">
+</span><span class="boring">type Condition&lt;T&gt; = fn(&amp;T) -&gt; bool;
+</span><span class="boring">
+</span><span class="boring">trait State&lt;T&gt; {
+</span><span class="boring">  fn activated(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">  fn decide(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSMTransition&lt;K, T&gt; {
+</span><span class="boring">  to: K,
+</span><span class="boring">  condition: Condition&lt;T&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSMState&lt;K, T&gt; {
+</span><span class="boring">  state: Box&lt;dyn State&lt;T&gt;&gt;,
+</span><span class="boring">  transitions: Vec&lt;FSMTransition&lt;K, T&gt;&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;K, T&gt; FSMState&lt;K, T&gt; {
+</span><span class="boring">  fn new&lt;S: State&lt;T&gt; + 'static&gt;(state: S) -&gt; Self {
+</span><span class="boring">    Self {
+</span><span class="boring">      state: Box::new(state),
+</span><span class="boring">      transitions: vec![],
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn transition(mut self, to: K, condition: Condition&lt;T&gt;) -&gt; Self {
+</span><span class="boring">    self.transitions.push(FSMTransition {to, condition});
+</span><span class="boring">    self
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn decide(&amp;self, context: &amp;T) -&gt; Option&lt;K&gt; where K: Clone {
+</span><span class="boring">    for transition in &amp;self.transitions {
+</span><span class="boring">      if (transition.condition)(context) {
+</span><span class="boring">        return Some(transition.to.clone());
+</span><span class="boring">      }
+</span><span class="boring">    }
+</span><span class="boring">    None
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSM&lt;K, T&gt; {
+</span><span class="boring">  states: HashMap&lt;K, FSMState&lt;K, T&gt;&gt;,
+</span><span class="boring">  active_state: K,
+</span><span class="boring">  initial_state: K,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
+</span><span class="boring">  fn new(active_state: K) -&gt; Self where K: Clone {
+</span><span class="boring">    Self {
+</span><span class="boring">      states: Default::default(),
+</span><span class="boring">      initial_state: active_state.clone(),
+</span><span class="boring">      active_state,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn state(mut self, id: K, state: FSMState&lt;K, T&gt;) -&gt; Self {
+</span><span class="boring">    self.states.insert(id, state);
+</span><span class="boring">    self
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn set_active_state(&amp;mut self, id: K, context: &amp;mut T, forced: bool) {
+</span><span class="boring">    if forced || id != self.active_state {
+</span><span class="boring">      if let Some(state) = self.states.get_mut(&amp;id) {
+</span><span class="boring">        state.state.activated(context);
+</span><span class="boring">        self.active_state = id;
+</span><span class="boring">      }
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn decide(&amp;mut self, context: &amp;mut T) where K: Clone {
+</span><span class="boring">    if let Some(state) = self.states.get_mut(&amp;self.active_state) {
+</span><span class="boring">      if let Some(id) = state.decide(context) {
+</span><span class="boring">        self.set_active_state(id, context, false);
+</span><span class="boring">      } else {
+</span><span class="boring">        state.state.decide(context);
+</span><span class="boring">      }
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) {
+</span><span class="boring">    if let Some(state) = self.states.get_mut(&amp;self.active_state) {
+</span><span class="boring">      state.state.update(context);
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;K: Clone + Hash + Eq, T&gt; State&lt;T&gt; for FSM&lt;K, T&gt; {
+</span><span class="boring">  fn activated(&amp;mut self, context: &amp;mut T) {
+</span><span class="boring">    self.set_active_state(self.initial_state.clone(), context, true);
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn decide(&amp;mut self, context: &amp;mut T) {
+</span><span class="boring">    self.decide(context);
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) {
+</span><span class="boring">    self.update(context);
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+</span><span class="boring">enum Target {
+</span><span class="boring">  None,
+</span><span class="boring">  Found,
+</span><span class="boring">  Reached,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+</span><span class="boring">enum EnemyState {
+</span><span class="boring">  Patrol,
+</span><span class="boring">  Combat,
+</span><span class="boring">  FindWaypoint,
+</span><span class="boring">  WalkTowardsWaypoint,
+</span><span class="boring">  WalkTowardsPlayer,
+</span><span class="boring">  AttackPlayer,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyData {
+</span><span class="boring">  waypoint: Target,
+</span><span class="boring">  player: Target,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Enemy {
+</span><span class="boring">  data: EnemyData,
+</span><span class="boring">  fsm: FSM&lt;EnemyState, EnemyData&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Enemy {
+  fn new() -&gt; Self {
+    let mut data = EnemyData {
+      waypoint: Target::None,
+      player: Target::None,
+    };
+
+    let patrol = FSM::new(EnemyState::FindWaypoint)
+      .state(
+        EnemyState::FindWaypoint,
+        FSMState::new(EnemyFindWaypointState)
+          .transition(EnemyState::WalkTowardsWaypoint, waypoint_found),
+      )
+      .state(
+        EnemyState::WalkTowardsWaypoint,
+        FSMState::new(EnemyWalkTowardsWaypointState)
+          .transition(EnemyState::FindWaypoint, waypoint_reached),
+      );
+
+    let combat = FSM::new(EnemyState::WalkTowardsPlayer)
+      .state(
+        EnemyState::WalkTowardsPlayer,
+        FSMState::new(EnemyWalkTowardsPlayerState)
+          .transition(EnemyState::AttackPlayer, player_reached),
+      )
+      .state(
+        EnemyState::AttackPlayer,
+        FSMState::new(EnemyAttackPlayerState)
+          .transition(EnemyState::WalkTowardsPlayer, player_found),
+      );
+
+    let mut fsm = FSM::new(EnemyState::Patrol)
+      .state(
+        EnemyState::Patrol,
+        FSMState::new(patrol)
+          .transition(EnemyState::Combat, player_found),
+      )
+      .state(
+        EnemyState::Combat,
+        FSMState::new(combat)
+          .transition(EnemyState::Patrol, player_dead),
+      );
+
+    fsm.set_active_state(EnemyState::Patrol, &amp;mut data, true);
+    Self { data, fsm }
+  }
+<span class="boring">
+</span><span class="boring">fn tick(&amp;mut self) {
+</span><span class="boring">  self.fsm.decide(&amp;mut self.data);
+</span><span class="boring">  self.fsm.update(&amp;mut self.data);
+</span><span class="boring">}
+</span>}
+<span class="boring">
+</span><span class="boring">fn waypoint_found(data: &amp;EnemyData) -&gt; bool {
+</span><span class="boring">  data.waypoint == Target::Found
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn waypoint_reached(data: &amp;EnemyData) -&gt; bool {
+</span><span class="boring">  data.waypoint == Target::Reached
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn player_found(data: &amp;EnemyData) -&gt; bool {
+</span><span class="boring">  data.player == Target::Found
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn player_reached(data: &amp;EnemyData) -&gt; bool {
+</span><span class="boring">  data.player == Target::Reached
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn player_dead(data: &amp;EnemyData) -&gt; bool {
+</span><span class="boring">  data.player == Target::None
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyFindWaypointState;
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyData&gt; for EnemyFindWaypointState {}
+</span><span class="boring">
+</span><span class="boring">struct EnemyWalkTowardsWaypointState;
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyData&gt; for EnemyWalkTowardsWaypointState {}
+</span><span class="boring">
+</span><span class="boring">struct EnemyWalkTowardsPlayerState;
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyData&gt; for EnemyWalkTowardsPlayerState {}
+</span><span class="boring">
+</span><span class="boring">struct EnemyAttackPlayerState;
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyData&gt; for EnemyAttackPlayerState {}
+</span><span class="boring">}
+</span></code></pre></pre>
+<p>All what we had to do was to put patrol and combat FSMs as we put states in root
+FSM.</p>
+<p>So how all of this setup changes enemy state in time:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use std::{collections::HashMap, hash::Hash};
+</span><span class="boring">
+</span><span class="boring">type Condition&lt;T&gt; = fn(&amp;T) -&gt; bool;
+</span><span class="boring">
+</span><span class="boring">trait State&lt;T&gt; {
+</span><span class="boring">  fn activated(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">  fn decide(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) {}
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSMTransition&lt;K, T&gt; {
+</span><span class="boring">  to: K,
+</span><span class="boring">  condition: Condition&lt;T&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSMState&lt;K, T&gt; {
+</span><span class="boring">  state: Box&lt;dyn State&lt;T&gt;&gt;,
+</span><span class="boring">  transitions: Vec&lt;FSMTransition&lt;K, T&gt;&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;K, T&gt; FSMState&lt;K, T&gt; {
+</span><span class="boring">  fn new&lt;S: State&lt;T&gt; + 'static&gt;(state: S) -&gt; Self {
+</span><span class="boring">    Self {
+</span><span class="boring">      state: Box::new(state),
+</span><span class="boring">      transitions: vec![],
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn transition(mut self, to: K, condition: Condition&lt;T&gt;) -&gt; Self {
+</span><span class="boring">    self.transitions.push(FSMTransition {to, condition});
+</span><span class="boring">    self
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn decide(&amp;self, context: &amp;T) -&gt; Option&lt;K&gt; where K: Clone {
+</span><span class="boring">    for transition in &amp;self.transitions {
+</span><span class="boring">      if (transition.condition)(context) {
+</span><span class="boring">        return Some(transition.to.clone());
+</span><span class="boring">      }
+</span><span class="boring">    }
+</span><span class="boring">    None
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct FSM&lt;K, T&gt; {
+</span><span class="boring">  states: HashMap&lt;K, FSMState&lt;K, T&gt;&gt;,
+</span><span class="boring">  active_state: K,
+</span><span class="boring">  initial_state: K,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
+</span><span class="boring">  fn new(active_state: K) -&gt; Self where K: Clone {
+</span><span class="boring">    Self {
+</span><span class="boring">      states: Default::default(),
+</span><span class="boring">      initial_state: active_state.clone(),
+</span><span class="boring">      active_state,
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn state(mut self, id: K, state: FSMState&lt;K, T&gt;) -&gt; Self {
+</span><span class="boring">    self.states.insert(id, state);
+</span><span class="boring">    self
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn set_active_state(&amp;mut self, id: K, context: &amp;mut T, forced: bool) {
+</span><span class="boring">    if forced || id != self.active_state {
+</span><span class="boring">      if let Some(state) = self.states.get_mut(&amp;id) {
+</span><span class="boring">        state.state.activated(context);
+</span><span class="boring">        self.active_state = id;
+</span><span class="boring">      }
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn decide(&amp;mut self, context: &amp;mut T) where K: Clone {
+</span><span class="boring">    if let Some(state) = self.states.get_mut(&amp;self.active_state) {
+</span><span class="boring">      if let Some(id) = state.decide(context) {
+</span><span class="boring">        self.set_active_state(id, context, false);
+</span><span class="boring">      } else {
+</span><span class="boring">        state.state.decide(context);
+</span><span class="boring">      }
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) {
+</span><span class="boring">    if let Some(state) = self.states.get_mut(&amp;self.active_state) {
+</span><span class="boring">      state.state.update(context);
+</span><span class="boring">    }
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;K: Clone + Hash + Eq, T&gt; State&lt;T&gt; for FSM&lt;K, T&gt; {
+</span><span class="boring">  fn activated(&amp;mut self, context: &amp;mut T) {
+</span><span class="boring">    self.set_active_state(self.initial_state.clone(), context, true);
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn decide(&amp;mut self, context: &amp;mut T) {
+</span><span class="boring">    self.decide(context);
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) {
+</span><span class="boring">    self.update(context);
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+</span><span class="boring">enum Target {
+</span><span class="boring">  None,
+</span><span class="boring">  Found,
+</span><span class="boring">  Reached,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+</span><span class="boring">enum EnemyState {
+</span><span class="boring">  Patrol,
+</span><span class="boring">  Combat,
+</span><span class="boring">  FindWaypoint,
+</span><span class="boring">  WalkTowardsWaypoint,
+</span><span class="boring">  WalkTowardsPlayer,
+</span><span class="boring">  AttackPlayer,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyData {
+</span><span class="boring">  waypoint: Target,
+</span><span class="boring">  player: Target,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Enemy {
+</span><span class="boring">  data: EnemyData,
+</span><span class="boring">  fsm: FSM&lt;EnemyState, EnemyData&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Enemy {
+</span><span class="boring">  fn new() -&gt; Self {
+</span><span class="boring">    let mut data = EnemyData {
+</span><span class="boring">      waypoint: Target::None,
+</span><span class="boring">      player: Target::None,
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    let patrol = FSM::new(EnemyState::FindWaypoint)
+</span><span class="boring">      .state(
+</span><span class="boring">        EnemyState::FindWaypoint,
+</span><span class="boring">        FSMState::new(EnemyFindWaypointState)
+</span><span class="boring">          .transition(EnemyState::WalkTowardsWaypoint, waypoint_found),
+</span><span class="boring">      )
+</span><span class="boring">      .state(
+</span><span class="boring">        EnemyState::WalkTowardsWaypoint,
+</span><span class="boring">        FSMState::new(EnemyWalkTowardsWaypointState)
+</span><span class="boring">          .transition(EnemyState::FindWaypoint, waypoint_reached),
+</span><span class="boring">      );
+</span><span class="boring">
+</span><span class="boring">    let combat = FSM::new(EnemyState::WalkTowardsPlayer)
+</span><span class="boring">      .state(
+</span><span class="boring">        EnemyState::WalkTowardsPlayer,
+</span><span class="boring">        FSMState::new(EnemyWalkTowardsPlayerState)
+</span><span class="boring">          .transition(EnemyState::AttackPlayer, player_reached),
+</span><span class="boring">      )
+</span><span class="boring">      .state(
+</span><span class="boring">        EnemyState::AttackPlayer,
+</span><span class="boring">        FSMState::new(EnemyAttackPlayerState)
+</span><span class="boring">          .transition(EnemyState::WalkTowardsPlayer, player_found),
+</span><span class="boring">      );
+</span><span class="boring">
+</span><span class="boring">    let mut fsm = FSM::new(EnemyState::Patrol)
+</span><span class="boring">      .state(
+</span><span class="boring">        EnemyState::Patrol,
+</span><span class="boring">        FSMState::new(patrol)
+</span><span class="boring">          .transition(EnemyState::Combat, player_found),
+</span><span class="boring">      )
+</span><span class="boring">      .state(
+</span><span class="boring">        EnemyState::Combat,
+</span><span class="boring">        FSMState::new(combat)
+</span><span class="boring">          .transition(EnemyState::Patrol, player_dead),
+</span><span class="boring">      );
+</span><span class="boring">
+</span><span class="boring">    fsm.set_active_state(EnemyState::Patrol, &amp;mut data, true);
+</span><span class="boring">    Self { data, fsm }
+</span><span class="boring">  }
+</span><span class="boring">
+</span><span class="boring">  fn tick(&amp;mut self) {
+</span><span class="boring">    self.fsm.decide(&amp;mut self.data);
+</span><span class="boring">    self.fsm.update(&amp;mut self.data);
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn waypoint_found(data: &amp;EnemyData) -&gt; bool {
+</span><span class="boring">  data.waypoint == Target::Found
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn waypoint_reached(data: &amp;EnemyData) -&gt; bool {
+</span><span class="boring">  data.waypoint == Target::Reached
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn player_found(data: &amp;EnemyData) -&gt; bool {
+</span><span class="boring">  data.player == Target::Found
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn player_reached(data: &amp;EnemyData) -&gt; bool {
+</span><span class="boring">  data.player == Target::Reached
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn player_dead(data: &amp;EnemyData) -&gt; bool {
+</span><span class="boring">  data.player == Target::None
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyFindWaypointState;
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyData&gt; for EnemyFindWaypointState {
+</span><span class="boring">  fn activated(&amp;mut self, context: &amp;mut EnemyData) {
+</span><span class="boring">    context.waypoint = Target::Found;
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyWalkTowardsWaypointState;
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyData&gt; for EnemyWalkTowardsWaypointState {
+</span><span class="boring">  fn activated(&amp;mut self, context: &amp;mut EnemyData) {
+</span><span class="boring">    context.waypoint = Target::Reached;
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyWalkTowardsPlayerState;
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyData&gt; for EnemyWalkTowardsPlayerState {
+</span><span class="boring">  fn activated(&amp;mut self, context: &amp;mut EnemyData) {
+</span><span class="boring">    context.player = Target::Reached;
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyAttackPlayerState;
+</span><span class="boring">
+</span><span class="boring">impl State&lt;EnemyData&gt; for EnemyAttackPlayerState {
+</span><span class="boring">  fn activated(&amp;mut self, context: &amp;mut EnemyData) {
+</span><span class="boring">    context.player = Target::None;
+</span><span class="boring">  }
+</span><span class="boring">}
+</span><span class="boring">
+</span>let mut enemy = Enemy::new();
+enemy.data.waypoint = Target::Found;
+
+enemy.tick();
+assert_eq!(enemy.fsm.active_state, EnemyState::Patrol);
+assert_eq!(enemy.data.waypoint, Target::Reached);
+assert_eq!(enemy.data.player, Target::None);
+enemy.tick();
+assert_eq!(enemy.fsm.active_state, EnemyState::Patrol);
+assert_eq!(enemy.data.waypoint, Target::Found);
+assert_eq!(enemy.data.player, Target::None);
+
+enemy.data.player = Target::Found;
+
+enemy.tick();
+assert_eq!(enemy.fsm.active_state, EnemyState::Combat);
+assert_eq!(enemy.data.waypoint, Target::Found);
+assert_eq!(enemy.data.player, Target::Reached);
+enemy.tick();
+assert_eq!(enemy.fsm.active_state, EnemyState::Combat);
+assert_eq!(enemy.data.waypoint, Target::Found);
+assert_eq!(enemy.data.player, Target::None);
+enemy.tick();
+assert_eq!(enemy.fsm.active_state, EnemyState::Patrol);
+assert_eq!(enemy.data.waypoint, Target::Found);
+assert_eq!(enemy.data.player, Target::None);
+enemy.tick();
+assert_eq!(enemy.fsm.active_state, EnemyState::Patrol);
+assert_eq!(enemy.data.waypoint, Target::Reached);
+assert_eq!(enemy.data.player, Target::None);
+<span class="boring">}
+</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="hierarchical-use-of-machinery-decision-maker-from-emergent-crate"><a class="header" href="#hierarchical-use-of-machinery-decision-maker-from-emergent-crate">Hierarchical use of Machinery decision maker from emergent crate</a></h1>
+<p>By default all <a href="https://crates.io/emergent"><code>emergent</code></a> decision makers are designed to be used in hierarchies
+so building HFSM is really simple - you just put one <a href="https://docs.rs/emergent/1.3.0/emergent/decision_makers/machinery/struct.Machinery.html"><code>Machinery</code></a> as a state in
+another. What's new comparing to the flat Machinery setup is we have to assign
+initial state decision maker that whenever Machinery gets activated, it will
+activate some starting state for that Machinery.</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate emergent;
+</span><span class="boring">use emergent::prelude::*;
+</span><span class="boring">use std::hash::Hash;
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+</span><span class="boring">enum Target {
+</span><span class="boring">  None,
+</span><span class="boring">  Found,
+</span><span class="boring">  Reached,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+</span><span class="boring">enum EnemyState {
+</span><span class="boring">  Patrol,
+</span><span class="boring">  Combat,
+</span><span class="boring">  FindWaypoint,
+</span><span class="boring">  WalkTowardsWaypoint,
+</span><span class="boring">  WalkTowardsPlayer,
+</span><span class="boring">  AttackPlayer,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct EnemyData {
+</span><span class="boring">  waypoint: Target,
+</span><span class="boring">  player: Target,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Enemy {
+</span><span class="boring">  data: EnemyData,
+</span><span class="boring">  machinery: Machinery&lt;EnemyData, EnemyState&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Enemy {
+  fn new() -&gt; Self {
+    let mut data = EnemyData {
+      waypoint: Target::None,
+      player: Target::None,
+    };
+
+    let patrol = MachineryBuilder::default()
+      .state(
+        EnemyState::FindWaypoint,
+        MachineryState::task(EnemyFindWaypointTask)
+          .change(MachineryChange::new(
+            EnemyState::WalkTowardsWaypoint,
+            ClosureCondition::new(waypoint_found),
+          )),
+      )
+      .state(
+        EnemyState::WalkTowardsWaypoint,
+        MachineryState::task(EnemyWalkTowardsWaypointTask)
+          .change(MachineryChange::new(
+            EnemyState::FindWaypoint,
+            ClosureCondition::new(waypoint_reached),
+          )),
+      )
+      .build()
+      // We assign initial state decision maker if we want to make sure that
+      // whenever machinery gets activated it will start at some state (useful
+      // when building hierarchies).
+      .initial_state_decision_maker(
+        SingleDecisionMaker::new(EnemyState::FindWaypoint),
+      );
+
+    let combat = MachineryBuilder::default()
+      .state(
+        EnemyState::WalkTowardsPlayer,
+        MachineryState::task(EnemyWalkTowardsPlayerTask)
+          .change(MachineryChange::new(
+            EnemyState::AttackPlayer,
+            ClosureCondition::new(player_reached),
+          )),
+      )
+      .state(
+        EnemyState::AttackPlayer,
+        MachineryState::task(EnemyAttackPlayerTask)
+          .change(MachineryChange::new(
+            EnemyState::WalkTowardsPlayer,
+            ClosureCondition::new(player_found),
+          )),
+      )
+      .build()
+      .initial_state_decision_maker(
+        SingleDecisionMaker::new(EnemyState::WalkTowardsPlayer),
+      );
+
+    let mut machinery = MachineryBuilder::default()
+      .state(
+        EnemyState::Patrol,
+        MachineryState::task(patrol)
+          .change(MachineryChange::new(
+            EnemyState::Combat,
+            ClosureCondition::new(player_found),
+          )),
+      )
+      .state(
+        EnemyState::Combat,
+        MachineryState::task(combat)
+          .change(MachineryChange::new(
+            EnemyState::Patrol,
+            ClosureCondition::new(player_dead),
+          )),
+      )
+      .build()
+      .initial_state_decision_maker(
+        SingleDecisionMaker::new(EnemyState::Patrol),
+      );
+
+    // since we have assigned initial state decision maker we can activate root
+    // machinery to activate its initial state.
+    machinery.on_enter(&amp;mut data);
+    Self { data, machinery }
+  }
+
+  fn tick(&amp;mut self) {
+    self.machinery.process(&amp;mut self.data);
+    self.machinery.update(&amp;mut self.data);
+  }
+}
+
+// Condition functions that are used in testing possible state changes:
+
+fn waypoint_found(data: &amp;EnemyData) -&gt; bool {
+  data.waypoint == Target::Found
+}
+
+fn waypoint_reached(data: &amp;EnemyData) -&gt; bool {
+  data.waypoint == Target::Reached
+}
+
+fn player_found(data: &amp;EnemyData) -&gt; bool {
+  data.player == Target::Found
+}
+
+fn player_reached(data: &amp;EnemyData) -&gt; bool {
+  data.player == Target::Reached
+}
+
+fn player_dead(data: &amp;EnemyData) -&gt; bool {
+  data.player == Target::None
+}
+
+// Enemy state tasks that will process enemy data:
+
+struct EnemyFindWaypointTask;
+
+impl Task&lt;EnemyData&gt; for EnemyFindWaypointTask {
+  fn on_enter(&amp;mut self, memory: &amp;mut EnemyData) {
+    memory.waypoint = Target::Found;
+  }
+}
+
+struct EnemyWalkTowardsWaypointTask;
+
+impl Task&lt;EnemyData&gt; for EnemyWalkTowardsWaypointTask {
+  fn on_enter(&amp;mut self, memory: &amp;mut EnemyData) {
+    memory.waypoint = Target::Reached;
+  }
+}
+
+struct EnemyWalkTowardsPlayerTask;
+
+impl Task&lt;EnemyData&gt; for EnemyWalkTowardsPlayerTask {
+  fn on_enter(&amp;mut self, memory: &amp;mut EnemyData) {
+    memory.player = Target::Reached;
+  }
+}
+
+struct EnemyAttackPlayerTask;
+
+impl Task&lt;EnemyData&gt; for EnemyAttackPlayerTask {
+  fn on_enter(&amp;mut self, memory: &amp;mut EnemyData) {
+    memory.player = Target::None;
+  }
+}
+
+let mut enemy = Enemy::new();
+
+enemy.tick();
+assert_eq!(enemy.machinery.active_state(), Some(&amp;EnemyState::Patrol));
+assert_eq!(enemy.data.waypoint, Target::Reached);
+assert_eq!(enemy.data.player, Target::None);
+enemy.tick();
+assert_eq!(enemy.machinery.active_state(), Some(&amp;EnemyState::Patrol));
+assert_eq!(enemy.data.waypoint, Target::Found);
+assert_eq!(enemy.data.player, Target::None);
+
+enemy.data.player = Target::Found;
+
+enemy.tick();
+assert_eq!(enemy.machinery.active_state(), Some(&amp;EnemyState::Combat));
+assert_eq!(enemy.data.waypoint, Target::Found);
+assert_eq!(enemy.data.player, Target::Reached);
+enemy.tick();
+assert_eq!(enemy.machinery.active_state(), Some(&amp;EnemyState::Combat));
+assert_eq!(enemy.data.waypoint, Target::Found);
+assert_eq!(enemy.data.player, Target::None);
+enemy.tick();
+assert_eq!(enemy.machinery.active_state(), Some(&amp;EnemyState::Patrol));
+assert_eq!(enemy.data.waypoint, Target::Found);
+assert_eq!(enemy.data.player, Target::None);
+enemy.tick();
+assert_eq!(enemy.machinery.active_state(), Some(&amp;EnemyState::Patrol));
+assert_eq!(enemy.data.waypoint, Target::Reached);
+assert_eq!(enemy.data.player, Target::None);
+<span class="boring">}
+</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="typical-use-cases-1"><a class="header" href="#typical-use-cases-1">Typical use cases</a></h1>
+<p>These are basically the same as <a href="decision_makers/hierarchical_finite_state_machine/../finite_state_machine/usecases.html">FSM use cases</a> but are focused on better
+readability and optimizations by using hierarchies of networks instead of one
+big flat network.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="more"><a class="header" href="#more">More...</a></h1>
+<p>If you need an explanation of some AI-related problem, consider creating an issue
+on github with what you would like to achieve, what problem you would like to
+solve but don't know how to tackle it, and at some point it might land in the book.</p>
+<p>You can create new issue here: <a href="https://github.com/PsichiX/emergent/issues/new">https://github.com/PsichiX/emergent/issues/new</a></p>
 
                     </main>
 

@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Finite State Machine - Emergent AI - Smart agents and events for games</title>
+        <title>How to implement - Emergent AI - Smart agents and events for games</title>
                 
 
         <!-- Custom HTML head -->
@@ -14,21 +14,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
-                <link rel="icon" href="../favicon.svg">
-                        <link rel="shortcut icon" href="../favicon.png">
-                <link rel="stylesheet" href="../css/variables.css">
-        <link rel="stylesheet" href="../css/general.css">
-        <link rel="stylesheet" href="../css/chrome.css">
-                <link rel="stylesheet" href="../css/print.css" media="print">
+                <link rel="icon" href="../../favicon.svg">
+                        <link rel="shortcut icon" href="../../favicon.png">
+                <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+                <link rel="stylesheet" href="../../css/print.css" media="print">
         
         <!-- Fonts -->
-        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
-                <link rel="stylesheet" href="../fonts/fonts.css">
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+                <link rel="stylesheet" href="../../fonts/fonts.css">
         
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="../highlight.css">
-        <link rel="stylesheet" href="../tomorrow-night.css">
-        <link rel="stylesheet" href="../ayu-highlight.css">
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         
@@ -36,7 +36,7 @@
     <body>
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
-            var path_to_root = "../";
+            var path_to_root = "../../";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "ayu";
         </script>
 
@@ -82,7 +82,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../first_steps.html"><strong aria-hidden="true">2.</strong> First steps</a></li><li class="chapter-item expanded "><a href="../decision_makers/index.html"><strong aria-hidden="true">3.</strong> Decision makers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../decision_makers/finite_state_machine.html" class="active"><strong aria-hidden="true">3.1.</strong> Finite State Machine</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.2.</strong> Hierarchical Finite State Machine</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.3.</strong> Behavior Tree</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.4.</strong> Utility AI</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.5.</strong> Goal Oriented Action Planning</div></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Common AI problems and solutions</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">4.1.</strong> NPC day cycle</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.2.</strong> Steering</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.3.</strong> Crowd movement</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.4.</strong> Crowds shared behavior</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.5.</strong> More...</div></li></ol></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../../first_steps.html"><strong aria-hidden="true">2.</strong> First steps</a></li><li class="chapter-item expanded "><a href="../../decision_makers/introduction.html"><strong aria-hidden="true">3.</strong> Decision makers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../decision_makers/finite_state_machine/introduction.html"><strong aria-hidden="true">3.1.</strong> Finite State Machine</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../decision_makers/finite_state_machine/explanation.html"><strong aria-hidden="true">3.1.1.</strong> How it works</a></li><li class="chapter-item expanded "><a href="../../decision_makers/finite_state_machine/implementation.html" class="active"><strong aria-hidden="true">3.1.2.</strong> How to implement</a></li><li class="chapter-item expanded "><a href="../../decision_makers/finite_state_machine/use_of_machinery.html"><strong aria-hidden="true">3.1.3.</strong> Use of Machinery decision maker from emergent crate</a></li><li class="chapter-item expanded "><a href="../../decision_makers/finite_state_machine/usecases.html"><strong aria-hidden="true">3.1.4.</strong> Typical use cases</a></li></ol></li><li class="chapter-item expanded "><a href="../../decision_makers/hierarchical_finite_state_machine/introduction.html"><strong aria-hidden="true">3.2.</strong> Hierarchical Finite State Machine</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../decision_makers/hierarchical_finite_state_machine/explanation.html"><strong aria-hidden="true">3.2.1.</strong> How it works</a></li><li class="chapter-item expanded "><a href="../../decision_makers/hierarchical_finite_state_machine/implementation.html"><strong aria-hidden="true">3.2.2.</strong> How to implement</a></li><li class="chapter-item expanded "><a href="../../decision_makers/hierarchical_finite_state_machine/use_of_machinery.html"><strong aria-hidden="true">3.2.3.</strong> Hierarchical use of Machinery decision maker from emergent crate</a></li><li class="chapter-item expanded "><a href="../../decision_makers/hierarchical_finite_state_machine/usecases.html"><strong aria-hidden="true">3.2.4.</strong> Typical use cases</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.3.</strong> Utility AI</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.4.</strong> Behavior Tree</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.5.</strong> Goal Oriented Action Planning</div></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Common AI problems and solutions</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">4.1.</strong> NPC day cycle</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.2.</strong> Steering</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.3.</strong> Crowd movement</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.4.</strong> Crowds shared behavior</div></li></ol></li><li class="chapter-item expanded "><a href="../../more.html"><strong aria-hidden="true">5.</strong> More...</a></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -114,7 +114,7 @@
                     <h1 class="menu-title">Emergent AI - Smart agents and events for games</h1>
 
                     <div class="right-buttons">
-                                                <a href="../print.html" title="Print this book" aria-label="Print this book">
+                                                <a href="../../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
                                                                         
@@ -143,57 +143,8 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="finite-state-machine"><a class="header" href="#finite-state-machine">Finite State Machine</a></h1>
-<p>When starting the journey with AI systems, Finite State Machines (FSM in short
-from now on) are always the first choice for AI system for a reason - they are
-the simplest to implement and the most intuitive decision making engines ever
-invented.</p>
-<p>Here, take a look at the states and transitions of our simple enemy behavior:</p>
-<p><img src="../images/fsm.svg" alt="FSM" /></p>
-<p>Each block is a state that enemy can be in and every arrow is a transition with
-condition that has to be met to allow for transition to happen.
-Here in our case there are simple, single transitions pointing from one state to
-another, but in more complex behaviors there can be <em>infinite</em> number of
-transitions.</p>
-<p>Decision making for FSM has a really simple rule applied to it:</p>
-<blockquote>
-<p>When decision about state change has to be made, FSM goes through all transitions
-that starts from active state and validates their conditions, first one that
-succeeds triggers change from active state to one that transition points to.</p>
-</blockquote>
-<h2 id="table-of-contents"><a class="header" href="#table-of-contents">Table of contents:</a></h2>
-<ul>
-<li><a href="#how-it-works">How it works</a></li>
-<li><a href="#how-to-implement-fsm">How to implement FSM</a>
-<ul>
-<li><a href="#the-dummy-way">The dummy way</a></li>
-<li><a href="#the-better-way">The better way</a></li>
-</ul>
-</li>
-<li><a href="#use-of-machinery-decision-maker-from-emergent-crate">Use of Machinery decision maker from emergent crate</a></li>
-<li><a href="#typical-use-cases-for-fsm">Typical use cases for FSM</a></li>
-</ul>
-<h2 id="how-it-works"><a class="header" href="#how-it-works">How it works</a></h2>
-<p>Imagine we start from <strong>Change Direction</strong> state and we tell FSM to make a
-decision, it looks at transitions pointing from this state, here there is only
-one: <strong>Move</strong> wit condition: <strong>Just Do It</strong> (which here it means: it always
-succeeds). Since this tansition condition succeeded, FMS changes its active state
-to <strong>Move</strong> state and enemy moves forward for few turns in the direction previously
-set by <strong>Change Direction</strong> state.</p>
-<p>In the mean time we run decision making from time to time (can be each frame,
-can be each second - usually decision making runs at slower fewquency than game
-frames, or sometimes it is triggered only when decision making engine receives
-an event that tells that important change in game state happened and FSM should
-make a decision about its new state).</p>
-<p>At some point when FSM runs its decision making, goes through <strong>Move</strong> state
-transitions and finds out that condition of a transition pointing to <strong>Wait</strong>
-state reports no more move turns, so FSM changes its active state to <strong>Wait</strong>
-which will wait few turns doing nothing.</p>
-<p>When there is no more waiting turns left, FSM switches back to <strong>Change Direction</strong>
-state, which all of it makes &quot;Change Direction, Move, Wait&quot; behavior of our Enemy.
-Really simple, right?</p>
-<h2 id="how-to-implement-fsm"><a class="header" href="#how-to-implement-fsm">How to implement FSM</a></h2>
-<p>In chapter <a href="../first_steps.html">First steps</a> we have shown the easiest FSM implementation using enums
+                        <h1 id="how-to-implement"><a class="header" href="#how-to-implement">How to implement</a></h1>
+<p>In chapter <a href="../../first_steps.html">First steps</a> we have shown the easiest FSM implementation using enums
 but the downside of that approach is that when number of states gets bigger, and
 number of possible state changes grow with them, we will eventually end up with
 spaghetti of state changes put all over the place with no clear way to see all
@@ -253,7 +204,7 @@ impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>This might looks like the solution used in <a href="../first_steps.html">First steps</a> but with extra steps in
+<p>This might looks like the solution used in <a href="../../first_steps.html">First steps</a> but with extra steps in
 form of states as trait objects. Yes, you're right, so what's the goal of that?
 The goal is that with this approach we are able to &quot;easly&quot; iterate on states,
 quickly add new ones or remove ones we do not need anymore and all that FSM setup
@@ -359,7 +310,7 @@ impl State&lt;EnemyState, EnemyData&gt; for EnemyChangeDirectionState {
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>Although code size has grown comparing to implementation used in <a href="../first_steps.html">First steps</a>,
+<p>Although code size has grown comparing to implementation used in <a href="../../first_steps.html">First steps</a>,
 we have modularized states. That would get useful when for example we would have
 many different NPC types using same context type to store their data and by that
 we would share same states across multiple AI agent types - we would reduce
@@ -1597,218 +1548,18 @@ over AI behaviors, but it's important to warn you that <strong>FSM main downside
 that usually number of transitions grows exponentially with number of states</strong>
 and you should consider using other decision making engines when you find yourself
 struggling with states and transitions when your FSM gets big enough.</p>
-<h2 id="use-of-machinery-decision-maker-from-emergent-crate"><a class="header" href="#use-of-machinery-decision-maker-from-emergent-crate">Use of <code>Machinery</code> decision maker from <code>emergent</code> crate</a></h2>
-<p>If you would like to just use existing solution for FSM, consider trying
-<a href="https://crates.io/emergent"><code>emergent</code></a> crate and its <a href="https://docs.rs/emergent/1.3.0/emergent/decision_makers/machinery/struct.Machinery.html"><code>Machinery</code></a> decision making engine:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span><span class="boring">extern crate emergent;
-</span><span class="boring">use emergent::prelude::*;
-</span><span class="boring">use std::hash::Hash;
-</span><span class="boring">
-</span><span class="boring">#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-</span><span class="boring">enum Direction {
-</span><span class="boring">  Up,
-</span><span class="boring">  Down,
-</span><span class="boring">  Left,
-</span><span class="boring">  Right,
-</span><span class="boring">}
-</span><span class="boring">
-</span><span class="boring">impl Direction {
-</span><span class="boring">  fn horizontal(&amp;self) -&gt; isize {
-</span><span class="boring">    match self {
-</span><span class="boring">      Self::Left =&gt; -1,
-</span><span class="boring">      Self::Right =&gt; 1,
-</span><span class="boring">      _ =&gt; 0,
-</span><span class="boring">    }
-</span><span class="boring">  }
-</span><span class="boring">
-</span><span class="boring">  fn vertical(&amp;self) -&gt; isize {
-</span><span class="boring">    match self {
-</span><span class="boring">      Self::Up =&gt; -1,
-</span><span class="boring">      Self::Down =&gt; 1,
-</span><span class="boring">      _ =&gt; 0,
-</span><span class="boring">    }
-</span><span class="boring">  }
-</span><span class="boring">
-</span><span class="boring">  fn next(&amp;self) -&gt; Self {
-</span><span class="boring">    match self {
-</span><span class="boring">      Self::Up =&gt; Self::Right,
-</span><span class="boring">      Self::Down =&gt; Self::Left,
-</span><span class="boring">      Self::Left =&gt; Self::Up,
-</span><span class="boring">      Self::Right =&gt; Self::Down,
-</span><span class="boring">    }
-</span><span class="boring">  }
-</span><span class="boring">}
-</span><span class="boring">
-</span><span class="boring">#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
-</span><span class="boring">enum EnemyState {
-</span><span class="boring">  Wait,
-</span><span class="boring">  Move,
-</span><span class="boring">  ChangeDirection,
-</span><span class="boring">}
-</span><span class="boring">
-</span><span class="boring">struct EnemyData {
-</span><span class="boring">  position: (isize, isize),
-</span><span class="boring">  direction: Direction,
-</span><span class="boring">  turns: usize,
-</span><span class="boring">}
-</span><span class="boring">
-</span>struct WaitTask(pub usize);
-
-// Tasks are units that do the actual work of the state.
-impl Task&lt;EnemyData&gt; for WaitTask {
-  // While task is locked, FSM won't change to another state even if it can.
-  // We lock this task for the time there are turns left.
-  fn is_locked(&amp;self, memory: &amp;EnemyData) -&gt; bool {
-    memory.turns &gt; 0
-  }
-
-  fn on_enter(&amp;mut self, memory: &amp;mut EnemyData) {
-    memory.turns = self.0;
-  }
-
-  fn on_update(&amp;mut self, memory: &amp;mut EnemyData) {
-    memory.turns = memory.turns.max(1) - 1;
-  }
-}
-
-struct MoveTask(pub usize);
-
-impl Task&lt;EnemyData&gt; for MoveTask {
-  fn is_locked(&amp;self, memory: &amp;EnemyData) -&gt; bool {
-    memory.turns &gt; 0
-  }
-
-  fn on_enter(&amp;mut self, memory: &amp;mut EnemyData) {
-    memory.turns = self.0;
-  }
-
-  fn on_update(&amp;mut self, memory: &amp;mut EnemyData) {
-    if memory.turns &gt; 0 {
-      memory.turns -= 1;
-      memory.position.0 += memory.direction.horizontal();
-      memory.position.1 += memory.direction.vertical();
-    }
-  }
-}
-
-struct ChangeDirectionTask;
-
-impl Task&lt;EnemyData&gt; for ChangeDirectionTask {
-  fn on_enter(&amp;mut self, memory: &amp;mut EnemyData) {
-    memory.direction = memory.direction.next();
-  }
-}
-
-struct Enemy {
-  data: EnemyData,
-  machinery: Machinery&lt;EnemyData, EnemyState&gt;,
-}
-
-impl Enemy {
-  fn new(x: isize, y: isize, direction: Direction) -&gt; Self {
-    let mut data = EnemyData {
-      position: (x, y),
-      direction,
-      turns: 0,
-    };
-    let mut machinery = MachineryBuilder::default()
-      .state(
-        EnemyState::Wait,
-        MachineryState::task(WaitTask(1))
-          // In `emergent` Conditions are traits that are implemented also for
-          // booleans, which means we can just use constants as conditions so
-          // here we make this transition always passing and the state locking
-          // controls how long task will run.
-          .change(MachineryChange::new(EnemyState::ChangeDirection, true)),
-      )
-      .state(
-        EnemyState::Move,
-        MachineryState::task(MoveTask(2))
-          .change(MachineryChange::new(EnemyState::Wait, true)),
-      )
-      .state(
-        EnemyState::ChangeDirection,
-        MachineryState::task(ChangeDirectionTask)
-          .change(MachineryChange::new(EnemyState::Move, true)),
-      )
-      .build();
-    // Newly created decision makers doesn't have any state activated and since
-    // FSM can change its states starting from active state, we need to activate
-    // first state by ourself.
-    machinery.change_active_state(
-      Some(EnemyState::ChangeDirection),
-      &amp;mut data,
-      true,
-    );
-
-    Self { data, machinery }
-  }
-
-  fn tick(&amp;mut self) {
-    // `process` method performs decision making.
-    self.machinery.process(&amp;mut self.data);
-    self.machinery.update(&amp;mut self.data);
-  }
-}
-
-let mut enemy = Enemy::new(0, 0, Direction::Up);
-
-assert_eq!(enemy.machinery.active_state(), Some(&amp;EnemyState::ChangeDirection));
-assert_eq!(enemy.data.position.0, 0);
-assert_eq!(enemy.data.position.1, 0);
-assert_eq!(enemy.data.direction, Direction::Right);
-for i in 1..3 {
-  enemy.tick();
-  assert_eq!(enemy.machinery.active_state(), Some(&amp;EnemyState::Move));
-  assert_eq!(enemy.data.position.0, i);
-  assert_eq!(enemy.data.position.1, 0);
-  assert_eq!(enemy.data.direction, Direction::Right);
-}
-enemy.tick();
-assert_eq!(enemy.machinery.active_state(), Some(&amp;EnemyState::Wait));
-assert_eq!(enemy.data.position.0, 2);
-assert_eq!(enemy.data.position.1, 0);
-assert_eq!(enemy.data.direction, Direction::Right);
-enemy.tick();
-assert_eq!(enemy.machinery.active_state(), Some(&amp;EnemyState::ChangeDirection));
-assert_eq!(enemy.data.position.0, 2);
-assert_eq!(enemy.data.position.1, 0);
-assert_eq!(enemy.data.direction, Direction::Down);
-<span class="boring">}
-</span></code></pre></pre>
-<h2 id="typical-use-cases-for-fsm"><a class="header" href="#typical-use-cases-for-fsm">Typical use cases for FSM</a></h2>
-<ul>
-<li>
-<p>AI behavior</p>
-<p>Indie games with small number of AI agent states, usually platformers or
-fast-paced games like shooters or bullet hells - in general games that doesn't
-need long-term or strategic planning and they have to make decision fast to
-adapt to quickly changed environment.</p>
-</li>
-<li>
-<p>Animations</p>
-<p>All modern game engines use FSM to manage animations, transition between them
-also contains information about blending between states to not make states snap
-from one to another instantly.</p>
-</li>
-<li>
-<p>Game states / game modes</p>
-<p>Imagine you have a game session with several states: Overworld, Battle, Shop,
-Crafting. You might use FSM to manage changes between these different game modes.</p>
-</li>
-</ul>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                                                    <a rel="prev" href="../decision_makers/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                                    <a rel="prev" href="../../decision_makers/finite_state_machine/explanation.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
+                                                    <a rel="next" href="../../decision_makers/finite_state_machine/use_of_machinery.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
                         
                         <div style="clear: both"></div>
                     </nav>
@@ -1816,10 +1567,13 @@ Crafting. You might use FSM to manage changes between these different game modes
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                                    <a rel="prev" href="../decision_makers/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                    <a rel="prev" href="../../decision_makers/finite_state_machine/explanation.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
+                                    <a rel="next" href="../../decision_makers/finite_state_machine/use_of_machinery.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
                             </nav>
 
         </div>
@@ -1832,13 +1586,13 @@ Crafting. You might use FSM to manage changes between these different game modes
         </script>
         
         
-                <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+                <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
         
-        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- Custom JS scripts -->
         
