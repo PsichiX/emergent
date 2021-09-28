@@ -26,7 +26,13 @@ This modularity gives more power to the user, it allows user to build hierarchie
 of different decision makers to build the exact behavior user wants without
 putting limits on what is achievable!
 
-__Read more about all the concepts in the documentation here: [https://docs.rs/emergent](https://docs.rs/emergent)__
+Read more about all the concepts in the documentation
+---
+[https://docs.rs/emergent](https://docs.rs/emergent)
+
+Read about developing your own AI systems in the book
+---
+[https://psichix.github.io/emergent/][https://psichix.github.io/emergent/]
 
 ## Media
 
