@@ -83,7 +83,7 @@ impl<M> std::fmt::Debug for ReasonerState<M> {
 /// Reasoner (a.k.a. Utility AI).
 ///
 /// Reasoner contains list of states with considerations that will score probability of given state
-/// to happen. When states get scored, then it picks one with the higher score and change into it.
+/// to happen. When states get scored, then it picks one with the highest score and change into it.
 ///
 /// # Example
 /// ```
@@ -174,6 +174,9 @@ where
 
     ///Performs decision making.
     pub fn process(&mut self, memory: &mut M) -> bool {
+        if self.states.is_empty() {
+            return false;
+        }
         let new_id = self
             .states
             .iter()
