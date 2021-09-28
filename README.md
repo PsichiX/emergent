@@ -32,7 +32,7 @@ putting limits on what is achievable!
 
 ### Read about developing your own AI systems in the book
 
-[https://psichix.github.io/emergent/][https://psichix.github.io/emergent/]
+[https://psichix.github.io/emergent/](https://psichix.github.io/emergent/)
 
 ## Media
 
