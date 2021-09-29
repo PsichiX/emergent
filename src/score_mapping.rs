@@ -5,7 +5,8 @@ use std::ops::Range;
 
 /// Score mapping is used to manipulate score calculated by consideration.
 ///
-/// Usually it can be applied to [`ConsiderationRemap::new`](fn@crate::consideration::ConsiderationRemap::new).
+/// Usually it can be applied to [`ConsiderationRemap::new`](fn@crate::consideration::ConsiderationRemap::new)
+/// or [`Consideration::remap`](fn@crate::consideration::Consideration::remap).
 ///
 /// # Example
 /// ```
@@ -19,11 +20,7 @@ use std::ops::Range;
 ///     }
 /// }
 ///
-/// let consideration = ConsiderationRemap::new(
-///     0.5, // consideration constant score
-///     Squared,
-/// );
-/// assert_eq!(consideration.score(&()), 0.25);
+/// assert_eq!(0.5.remap(Squared).score(&()), 0.25);
 /// ```
 pub trait ScoreMapping {
     /// Remaps score got from consideration.
@@ -47,11 +44,7 @@ pub trait ScoreMapping {
 /// ```
 /// use emergent::prelude::*;
 ///
-/// let consideration = ConsiderationRemap::new(
-///     0.5, // consideration constant score
-///     NoScoreMapping,
-/// );
-/// assert_eq!(consideration.score(&()), 0.5);
+/// assert_eq!(0.5.remap(NoScoreMapping).score(&()), 0.5);
 /// ```
 #[derive(Debug, Copy, Clone)]
 pub struct NoScoreMapping;
@@ -68,11 +61,7 @@ impl ScoreMapping for NoScoreMapping {
 /// ```
 /// use emergent::prelude::*;
 ///
-/// let consideration = ConsiderationRemap::new(
-///     0.5, // consideration constant score
-///     ClosureScoreMapping::new(|score| score * score),
-/// );
-/// assert_eq!(consideration.score(&()), 0.25);
+/// assert_eq!(0.5.remap(ClosureScoreMapping::new(|score| score * score)).score(&()), 0.25);
 /// ```
 pub struct ClosureScoreMapping(pub Box<dyn Fn(Scalar) -> Scalar>);
 
@@ -104,11 +93,7 @@ impl std::fmt::Debug for ClosureScoreMapping {
 /// ```
 /// use emergent::prelude::*;
 ///
-/// let consideration = ConsiderationRemap::new(
-///     0.0, // consideration constant score
-///     ReverseScoreMapping.chain(ReverseScoreMapping),
-/// );
-/// assert_eq!(consideration.score(&()), 0.0);
+/// assert_eq!(0.0.remap(ReverseScoreMapping.chain(ReverseScoreMapping)).score(&()), 0.0);
 /// ```
 pub struct ChainedScoreMapping<A, B>
 where
@@ -158,11 +143,7 @@ where
 /// ```
 /// use emergent::prelude::*;
 ///
-/// let consideration = ConsiderationRemap::new(
-///     5.0, // consideration constant score
-///     ScoreRemap::new(0.0..10.0, 0.0..1.0),
-/// );
-/// assert_eq!(consideration.score(&()), 0.5);
+/// assert_eq!(5.0.remap(ScoreRemap::new(0.0..10.0, 0.0..1.0)).score(&()), 0.5);
 /// ```
 pub struct ScoreRemap {
     pub from: Range<Scalar>,
@@ -197,11 +178,7 @@ impl std::fmt::Debug for ScoreRemap {
 /// ```
 /// use emergent::prelude::*;
 ///
-/// let consideration = ConsiderationRemap::new(
-///     1.0, // consideration constant score
-///     ReverseScoreMapping,
-/// );
-/// assert_eq!(consideration.score(&()), 0.0);
+/// assert_eq!(1.0.remap(ReverseScoreMapping).score(&()), 0.0);
 /// ```
 pub struct ReverseScoreMapping;
 
@@ -223,11 +200,7 @@ impl std::fmt::Debug for ReverseScoreMapping {
 /// ```
 /// use emergent::prelude::*;
 ///
-/// let consideration = ConsiderationRemap::new(
-///     10.0, // consideration constant score
-///     InverseScoreMapping,
-/// );
-/// assert_eq!(consideration.score(&()), 0.1);
+/// assert_eq!(10.0.remap(InverseScoreMapping).score(&()), 0.1);
 /// ```
 pub struct InverseScoreMapping;
 

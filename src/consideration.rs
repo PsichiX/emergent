@@ -36,7 +36,17 @@ use crate::{condition::*, score_mapping::*, Scalar};
 /// assert_eq!(Hunger.score(&memory), 0.1);
 /// ```
 pub trait Consideration<M = ()> {
+    // Scores probability of certain fact.
     fn score(&self, memory: &M) -> Scalar;
+
+    // Applies score mapping to this consideration.
+    fn remap<T>(self, mapping: T) -> ConsiderationRemap<M, T>
+    where
+        T: ScoreMapping,
+        Self: Sized + 'static,
+    {
+        ConsiderationRemap::new(self, mapping)
+    }
 }
 
 impl<M> Consideration<M> for Scalar {
