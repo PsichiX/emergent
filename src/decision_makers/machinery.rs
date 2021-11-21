@@ -67,7 +67,7 @@ impl<M, K> MachineryChange<M, K> {
     }
 
     /// Constructs new change descriptor with ID and condition.
-    pub fn new_raw<C>(to: K, condition: Box<dyn Condition<M>>) -> Self {
+    pub fn new_raw(to: K, condition: Box<dyn Condition<M>>) -> Self {
         Self { to, condition }
     }
 
@@ -126,7 +126,7 @@ impl<M, K> MachineryState<M, K> {
     }
 
     /// Constructs new state with task and list of changes.
-    pub fn new_raw<T>(task: Box<dyn Task<M>>, changes: Vec<MachineryChange<M, K>>) -> Self {
+    pub fn new_raw(task: Box<dyn Task<M>>, changes: Vec<MachineryChange<M, K>>) -> Self {
         Self { task, changes }
     }
 
