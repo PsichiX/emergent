@@ -35,7 +35,7 @@ use crate::{condition::*, score_mapping::*, Scalar};
 /// let mut memory = Memory { counter: 10 };
 /// assert_eq!(Hunger.score(&memory), 0.1);
 /// ```
-pub trait Consideration<M = ()> {
+pub trait Consideration<M = ()>: Send + Sync {
     // Scores probability of certain fact.
     fn score(&self, memory: &M) -> Scalar;
 
@@ -69,12 +69,12 @@ impl<M> Consideration<M> for Scalar {
 /// );
 /// assert_eq!(consideration.score(&memory), 0.1);
 /// ```
-pub struct ClosureConsideration<M = ()>(pub Box<dyn Fn(&M) -> Scalar>);
+pub struct ClosureConsideration<M = ()>(pub Box<dyn Fn(&M) -> Scalar + Send + Sync>);
 
 impl<M> ClosureConsideration<M> {
     pub fn new<F>(f: F) -> Self
     where
-        F: Fn(&M) -> Scalar + 'static,
+        F: Fn(&M) -> Scalar + 'static + Send + Sync,
     {
         Self(Box::new(f))
     }

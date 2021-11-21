@@ -22,7 +22,7 @@ use std::ops::Range;
 ///
 /// assert_eq!(0.5.remap(Squared).score(&()), 0.25);
 /// ```
-pub trait ScoreMapping {
+pub trait ScoreMapping: Send + Sync {
     /// Remaps score got from consideration.
     fn remap(&self, score: Scalar) -> Scalar;
 
@@ -63,12 +63,12 @@ impl ScoreMapping for NoScoreMapping {
 ///
 /// assert_eq!(0.5.remap(ClosureScoreMapping::new(|score| score * score)).score(&()), 0.25);
 /// ```
-pub struct ClosureScoreMapping(pub Box<dyn Fn(Scalar) -> Scalar>);
+pub struct ClosureScoreMapping(pub Box<dyn Fn(Scalar) -> Scalar + Send + Sync>);
 
 impl ClosureScoreMapping {
     pub fn new<F>(f: F) -> Self
     where
-        F: Fn(Scalar) -> Scalar + 'static,
+        F: Fn(Scalar) -> Scalar + 'static + Send + Sync,
     {
         Self(Box::new(f))
     }

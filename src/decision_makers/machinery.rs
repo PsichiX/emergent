@@ -350,14 +350,14 @@ where
     /// Updates active state.
     pub fn update(&mut self, memory: &mut M) {
         if let Some(id) = &self.active_state {
-            self.states.get_mut(&id).unwrap().task.on_update(memory);
+            self.states.get_mut(id).unwrap().task.on_update(memory);
         }
     }
 }
 
 impl<M, K> DecisionMaker<M, K> for Machinery<M, K>
 where
-    K: Clone + Hash + Eq,
+    K: Clone + Hash + Eq + Send + Sync,
 {
     fn decide(&mut self, memory: &mut M) -> Option<K> {
         self.process(memory);
@@ -371,7 +371,7 @@ where
 
 impl<M, K> Task<M> for Machinery<M, K>
 where
-    K: Clone + Hash + Eq,
+    K: Clone + Hash + Eq + Send + Sync,
 {
     fn is_locked(&self, memory: &M) -> bool {
         if let Some(id) = &self.active_state {

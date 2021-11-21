@@ -50,7 +50,7 @@ use std::marker::PhantomData;
 /// Increment.on_enter(&mut memory);
 /// assert_eq!(memory.counter, 2);
 /// ```
-pub trait Task<M = ()> {
+pub trait Task<M = ()>: Send + Sync {
     /// Tells if task is locked (it's still running). Used by decision makers to tell if one can
     /// change its state (when current task is not locked).
     fn is_locked(&self, _memory: &M) -> bool {
@@ -77,7 +77,7 @@ pub trait Task<M = ()> {
 }
 
 /// Task that represent no work. Use it when AI has to do nothing.
-pub struct NoTask<M = ()>(PhantomData<M>);
+pub struct NoTask<M = ()>(PhantomData<fn() -> M>);
 
 impl<M> Default for NoTask<M> {
     fn default() -> Self {
@@ -107,11 +107,11 @@ impl<M> std::fmt::Debug for NoTask<M> {
 /// assert_eq!(memory.counter, 2);
 /// ```
 pub struct ClosureTask<M = ()> {
-    locked: Option<Box<dyn Fn(&M) -> bool>>,
-    enter: Option<Box<dyn FnMut(&mut M)>>,
-    exit: Option<Box<dyn FnMut(&mut M)>>,
-    update: Option<Box<dyn FnMut(&mut M)>>,
-    process: Option<Box<dyn FnMut(&mut M) -> bool>>,
+    locked: Option<Box<dyn Fn(&M) -> bool + Send + Sync>>,
+    enter: Option<Box<dyn FnMut(&mut M) + Send + Sync>>,
+    exit: Option<Box<dyn FnMut(&mut M) + Send + Sync>>,
+    update: Option<Box<dyn FnMut(&mut M) + Send + Sync>>,
+    process: Option<Box<dyn FnMut(&mut M) -> bool + Send + Sync>>,
 }
 
 impl<M> Default for ClosureTask<M> {
@@ -130,7 +130,7 @@ impl<M> ClosureTask<M> {
     /// See [`Task::is_locked`]
     pub fn locked<F>(mut self, f: F) -> Self
     where
-        F: Fn(&M) -> bool + 'static,
+        F: Fn(&M) -> bool + 'static + Send + Sync,
     {
         self.locked = Some(Box::new(f));
         self
@@ -139,7 +139,7 @@ impl<M> ClosureTask<M> {
     /// See [`Task::on_enter`]
     pub fn enter<F>(mut self, f: F) -> Self
     where
-        F: FnMut(&mut M) + 'static,
+        F: FnMut(&mut M) + 'static + Send + Sync,
     {
         self.enter = Some(Box::new(f));
         self
@@ -148,7 +148,7 @@ impl<M> ClosureTask<M> {
     /// See [`Task::on_exit`]
     pub fn exit<F>(mut self, f: F) -> Self
     where
-        F: FnMut(&mut M) + 'static,
+        F: FnMut(&mut M) + 'static + Send + Sync,
     {
         self.exit = Some(Box::new(f));
         self
@@ -157,7 +157,7 @@ impl<M> ClosureTask<M> {
     /// See [`Task::on_update`]
     pub fn update<F>(mut self, f: F) -> Self
     where
-        F: FnMut(&mut M) + 'static,
+        F: FnMut(&mut M) + 'static + Send + Sync,
     {
         self.update = Some(Box::new(f));
         self
@@ -166,7 +166,7 @@ impl<M> ClosureTask<M> {
     /// See [`Task::on_process`]
     pub fn process<F>(mut self, f: F) -> Self
     where
-        F: FnMut(&mut M) -> bool + 'static,
+        F: FnMut(&mut M) -> bool + 'static + Send + Sync,
     {
         self.process = Some(Box::new(f));
         self

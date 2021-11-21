@@ -130,7 +130,7 @@ use std::marker::PhantomData;
 /// assert!(switcher.change_mind(None, &mut ()));
 /// assert_eq!(switcher.active_index, None);
 /// ```
-pub trait DecisionMaker<M = (), K = DefaultKey> {
+pub trait DecisionMaker<M = (), K = DefaultKey>: Send + Sync {
     /// Performs decision making and returns the key of the state it switched into.
     fn decide(&mut self, memory: &mut M) -> Option<K>;
 
@@ -141,7 +141,8 @@ pub trait DecisionMaker<M = (), K = DefaultKey> {
 }
 
 /// Empty decision maker that simply does nothing.
-pub struct NoDecisionMaker<M = (), K = DefaultKey>(PhantomData<(M, K)>);
+#[allow(clippy::type_complexity)]
+pub struct NoDecisionMaker<M = (), K = DefaultKey>(PhantomData<(fn() -> M, fn() -> K)>);
 
 impl<M, K> Default for NoDecisionMaker<M, K> {
     fn default() -> Self {
@@ -192,7 +193,7 @@ where
 
 impl<M, K> DecisionMaker<M, K> for SingleDecisionMaker<K>
 where
-    K: Clone + Eq,
+    K: Clone + Eq + Send + Sync,
 {
     fn decide(&mut self, _: &mut M) -> Option<K> {
         self.active = true;

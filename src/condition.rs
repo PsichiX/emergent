@@ -33,7 +33,7 @@ use crate::{consideration::*, Scalar};
 /// let mut memory = Memory { counter: 1 };
 /// assert!(AboveThreshold(0).validate(&memory));
 /// ```
-pub trait Condition<M = ()> {
+pub trait Condition<M = ()>: Send + Sync {
     /// Tells if given condition is met based on the state of the memory provided.
     fn validate(&self, memory: &M) -> bool;
 }
@@ -56,12 +56,12 @@ impl<M> Condition<M> for bool {
 /// let condition = ClosureCondition::new(|memory: &Memory| memory.counter > 0);
 /// assert!(condition.validate(&memory));
 /// ```
-pub struct ClosureCondition<M = ()>(pub Box<dyn Fn(&M) -> bool>);
+pub struct ClosureCondition<M = ()>(pub Box<dyn Fn(&M) -> bool + Send + Sync>);
 
 impl<M> ClosureCondition<M> {
     pub fn new<F>(f: F) -> Self
     where
-        F: Fn(&M) -> bool + 'static,
+        F: Fn(&M) -> bool + 'static + Send + Sync,
     {
         Self(Box::new(f))
     }

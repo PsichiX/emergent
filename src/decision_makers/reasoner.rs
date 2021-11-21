@@ -181,7 +181,7 @@ where
             .states
             .iter()
             .map(|(id, state)| (id, state.consideration.score(memory)))
-            .max_by(|(_, a), (_, b)| a.partial_cmp(&b).unwrap())
+            .max_by(|(_, a), (_, b)| a.partial_cmp(b).unwrap())
             .unwrap()
             .0
             .clone();
@@ -197,14 +197,14 @@ where
     /// Update currently active state.
     pub fn update(&mut self, memory: &mut M) {
         if let Some(id) = &self.active_state {
-            self.states.get_mut(&id).unwrap().task.on_update(memory);
+            self.states.get_mut(id).unwrap().task.on_update(memory);
         }
     }
 }
 
 impl<M, K> DecisionMaker<M, K> for Reasoner<M, K>
 where
-    K: Clone + Hash + Eq,
+    K: Clone + Hash + Eq + Send + Sync,
 {
     fn decide(&mut self, memory: &mut M) -> Option<K> {
         self.process(memory);
@@ -218,7 +218,7 @@ where
 
 impl<M, K> Task<M> for Reasoner<M, K>
 where
-    K: Clone + Hash + Eq,
+    K: Clone + Hash + Eq + Send + Sync,
 {
     fn is_locked(&self, memory: &M) -> bool {
         if let Some(id) = &self.active_state {

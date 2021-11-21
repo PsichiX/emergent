@@ -46,7 +46,7 @@ impl<M> Consideration<M> for EvaluatorMin<M> {
         self.considerations
             .iter()
             .map(|consideration| consideration.score(memory))
-            .min_by(|a, b| a.partial_cmp(&b).unwrap())
+            .min_by(|a, b| a.partial_cmp(b).unwrap())
             .unwrap_or_default()
     }
 }

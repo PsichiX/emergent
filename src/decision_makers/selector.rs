@@ -200,14 +200,14 @@ where
     /// Update currently active state.
     pub fn update(&mut self, memory: &mut M) {
         if let Some(id) = &self.active_state {
-            self.states.get_mut(&id).unwrap().task.on_update(memory);
+            self.states.get_mut(id).unwrap().task.on_update(memory);
         }
     }
 }
 
 impl<M, K> DecisionMaker<M, K> for Selector<M, K>
 where
-    K: Clone + Hash + Eq,
+    K: Clone + Hash + Eq + Send + Sync,
 {
     fn decide(&mut self, memory: &mut M) -> Option<K> {
         self.process(memory);
@@ -221,7 +221,7 @@ where
 
 impl<M, K> Task<M> for Selector<M, K>
 where
-    K: Clone + Hash + Eq,
+    K: Clone + Hash + Eq + Send + Sync,
 {
     fn is_locked(&self, memory: &M) -> bool {
         if let Some(id) = &self.active_state {
@@ -279,7 +279,7 @@ where
 /// let states = vec![&"a", &"b", &"c"];
 /// assert_eq!(PickMiddleOne.pick(&states, &()), Some("b"));
 /// ```
-pub trait SelectorStatePicker<M = (), K = DefaultKey> {
+pub trait SelectorStatePicker<M = (), K = DefaultKey>: Send + Sync {
     /// Pick some or none state that wins.
     fn pick(&mut self, available: &[&K], memory: &M) -> Option<K>;
 }
@@ -306,13 +306,13 @@ where
 /// assert_eq!(picker.pick(&states, &()), Some("a"));
 /// ```
 pub struct ClosureSelectorStatePicker<M = (), K = DefaultKey>(
-    Box<dyn FnMut(&[&K], &M) -> Option<K>>,
+    Box<dyn FnMut(&[&K], &M) -> Option<K> + Send + Sync>,
 );
 
 impl<M, K> ClosureSelectorStatePicker<M, K> {
     pub fn new<F>(f: F) -> Self
     where
-        F: FnMut(&[&K], &M) -> Option<K> + 'static,
+        F: FnMut(&[&K], &M) -> Option<K> + 'static + Send + Sync,
     {
         Self(Box::new(f))
     }

@@ -635,8 +635,8 @@ where
 
 impl<M, CK, AK> DecisionMaker<M, AK> for Planner<M, CK, AK>
 where
-    CK: Clone + Hash + Eq,
-    AK: Clone + Hash + Eq,
+    CK: Clone + Hash + Eq + Send + Sync,
+    AK: Clone + Hash + Eq + Send + Sync,
 {
     fn decide(&mut self, memory: &mut M) -> Option<AK> {
         self.process(memory);
@@ -650,8 +650,8 @@ where
 
 impl<M, CK, AK> Task<M> for Planner<M, CK, AK>
 where
-    CK: Clone + Hash + Eq,
-    AK: Clone + Hash + Eq,
+    CK: Clone + Hash + Eq + Send + Sync,
+    AK: Clone + Hash + Eq + Send + Sync,
 {
     fn is_locked(&self, memory: &M) -> bool {
         if let Some(id) = self.active_action() {

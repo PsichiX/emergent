@@ -27,6 +27,13 @@ macro_rules! set {
     };
 }
 
+fn check_send_sync<T>(_: &T)
+where
+    T: Send + Sync,
+{
+    println!("{} is Send + Sync!", std::any::type_name::<T>());
+}
+
 #[test]
 fn test_reasoner() {
     struct Memory {
@@ -91,6 +98,7 @@ fn test_reasoner() {
             MoodStateTask::new("Sad"),
         ),
     });
+    check_send_sync(&reasoner);
 
     assert_eq!(reasoner.active_state(), None);
     assert_eq!(reasoner.process(&mut memory), true);
@@ -168,6 +176,7 @@ fn test_machinery() {
             vec![MachineryChange::new(Mood::Happy, MoodCondition::GreaterThan(0.5))],
         ),
     });
+    check_send_sync(&machinery);
 
     assert_eq!(machinery.active_state(), None);
     assert_eq!(
@@ -271,6 +280,7 @@ fn test_planner() {
             vec![MachineryChange::new(Action::Work, TimeCondition(Time::Day))],
         ),
     });
+    check_send_sync(&machinery);
     assert_eq!(
         machinery.change_active_state(Some(Action::Sleep), &mut memory, true),
         Ok(true)
@@ -361,6 +371,7 @@ fn test_planner() {
         true,
     )
     .unwrap();
+    check_send_sync(&planner);
 
     assert_eq!(planner.process(&mut memory), true);
     assert_eq!(
@@ -399,6 +410,7 @@ fn test_sequencer() {
         true,
         true,
     );
+    check_send_sync(&sequencer);
 
     assert_eq!(sequencer.process(&mut memory), true);
     assert_eq!(memory, true);
@@ -426,6 +438,7 @@ fn test_selector() {
             ),
         },
     );
+    check_send_sync(&selector);
 
     assert_eq!(selector.process(&mut memory), true);
     assert_eq!(memory, true);
@@ -449,6 +462,7 @@ fn test_parallelizer() {
             ClosureTask::default().enter(|m| *m = true),
         ),
     ]);
+    check_send_sync(&parallelizer);
 
     assert_eq!(parallelizer.process(&mut memory), true);
     assert_eq!(memory, true);
@@ -480,6 +494,7 @@ fn test_lod() {
             println!("* Foreground hunger calculation: {}", m.memory.hunger);
         }))
         .build();
+    check_send_sync(&lod);
 
     let mut memory = LodMemory {
         lod_level: 0,
@@ -556,6 +571,7 @@ fn test_behavior_tree() {
                 .node(BehaviorTree::state(true, FlipMode)),
         )
         .build();
+    check_send_sync(&tree);
 
     let mut memory = Memory {
         mode: true,

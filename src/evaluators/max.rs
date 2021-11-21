@@ -46,7 +46,7 @@ impl<M> Consideration<M> for EvaluatorMax<M> {
         self.considerations
             .iter()
             .map(|consideration| consideration.score(memory))
-            .max_by(|a, b| a.partial_cmp(&b).unwrap())
+            .max_by(|a, b| a.partial_cmp(b).unwrap())
             .unwrap_or_default()
     }
 }
