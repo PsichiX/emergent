@@ -36,11 +36,17 @@ use std::collections::HashMap;
 /// assert!(memory.remove("tuple"));
 /// assert_eq!(memory.len(), 0);
 /// ```
-pub struct DataTable<T> {
+pub struct DataTable<T>
+where
+    T: Send + Sync,
+{
     rows: HashMap<String, T>,
 }
 
-impl<T> Default for DataTable<T> {
+impl<T> Default for DataTable<T>
+where
+    T: Send + Sync,
+{
     fn default() -> Self {
         Self {
             rows: Default::default(),
@@ -50,7 +56,7 @@ impl<T> Default for DataTable<T> {
 
 impl<T> std::fmt::Debug for DataTable<T>
 where
-    T: std::fmt::Debug,
+    T: std::fmt::Debug + Send + Sync,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("DataTable")
@@ -61,7 +67,7 @@ where
 
 impl<T> Clone for DataTable<T>
 where
-    T: Clone,
+    T: Clone + Send + Sync,
 {
     fn clone(&self) -> Self {
         Self {
@@ -70,7 +76,10 @@ where
     }
 }
 
-impl<T> DataTable<T> {
+impl<T> DataTable<T>
+where
+    T: Send + Sync,
+{
     /// Returns number of rows stored in datatable.
     pub fn len(&self) -> usize {
         self.rows.len()

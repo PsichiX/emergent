@@ -42,7 +42,7 @@ use std::{
 /// assert_eq!(memory.len(), 0);
 /// ```
 pub struct Blackboard {
-    properties: HashMap<String, Box<dyn Any>>,
+    properties: HashMap<String, Box<dyn Any + Send + Sync>>,
 }
 
 impl Default for Blackboard {
@@ -138,13 +138,13 @@ impl Blackboard {
     /// Put value to property under given name.
     pub fn set<T>(&mut self, name: String, value: T)
     where
-        T: Any + 'static,
+        T: Any + 'static + Send + Sync,
     {
         self.properties.insert(name, Box::new(value));
     }
 
     /// Put value to property under given name.
-    pub fn set_raw(&mut self, name: String, value: Box<dyn Any>) {
+    pub fn set_raw(&mut self, name: String, value: Box<dyn Any + Send + Sync>) {
         self.properties.insert(name, value);
     }
 

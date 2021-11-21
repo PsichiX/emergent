@@ -606,3 +606,9 @@ fn test_behavior_tree() {
     assert_eq!(tree.on_process(&mut memory), true);
     assert_eq!(memory.mode, true);
 }
+
+#[test]
+fn test_send_sync() {
+    check_send_sync(&Blackboard::default());
+    check_send_sync(&DataTable::<()>::default());
+}
