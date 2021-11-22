@@ -123,13 +123,16 @@ impl<M> Parallelizer<M> {
     }
 }
 
-impl<M> DecisionMaker<M, ()> for Parallelizer<M> {
-    fn decide(&mut self, memory: &mut M) -> Option<()> {
+impl<M, K> DecisionMaker<M, K> for Parallelizer<M>
+where
+    K: Default,
+{
+    fn decide(&mut self, memory: &mut M) -> Option<K> {
         self.process(memory);
-        Some(())
+        Some(K::default())
     }
 
-    fn change_mind(&mut self, _: Option<()>, memory: &mut M) -> bool {
+    fn change_mind(&mut self, _: Option<K>, memory: &mut M) -> bool {
         self.reset(memory, true)
     }
 }
