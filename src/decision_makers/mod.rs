@@ -76,7 +76,6 @@ pub mod selector;
 pub mod sequencer;
 
 use crate::DefaultKey;
-use std::marker::PhantomData;
 
 /// Iterface for all decision making engines.
 ///
@@ -141,28 +140,16 @@ pub trait DecisionMaker<M = (), K = DefaultKey>: Send + Sync {
 }
 
 /// Empty decision maker that simply does nothing.
-#[allow(clippy::type_complexity)]
-pub struct NoDecisionMaker<M = (), K = DefaultKey>(PhantomData<(fn() -> M, fn() -> K)>);
+#[derive(Default, Debug, Copy, Clone)]
+pub struct NoDecisionMaker;
 
-impl<M, K> Default for NoDecisionMaker<M, K> {
-    fn default() -> Self {
-        Self(Default::default())
-    }
-}
-
-impl<M, K> DecisionMaker<M, K> for NoDecisionMaker<M, K> {
+impl<M, K> DecisionMaker<M, K> for NoDecisionMaker {
     fn decide(&mut self, _: &mut M) -> Option<K> {
         None
     }
 
     fn change_mind(&mut self, _: Option<K>, _: &mut M) -> bool {
         false
-    }
-}
-
-impl<M, K> std::fmt::Debug for NoDecisionMaker<M, K> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("NoDecisionMaker").finish()
     }
 }
 
