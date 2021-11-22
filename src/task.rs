@@ -20,8 +20,6 @@
 //! - [`ClosureTask`]: a wrapper around closure-based tasks where each life-cycle method is provided
 //!   by the user as separate closures, best for prototyping or making small non-repetitive logic.
 
-use std::marker::PhantomData;
-
 /// Task represent unit of work, an action performed in a time.
 ///
 /// Tasks can only manipulate what's in the memory passed to their life-cycle methods so common way
@@ -77,21 +75,10 @@ pub trait Task<M = ()>: Send + Sync {
 }
 
 /// Task that represent no work. Use it when AI has to do nothing.
-pub struct NoTask<M = ()>(PhantomData<fn() -> M>);
+#[derive(Debug, Default, Copy, Clone)]
+pub struct NoTask;
 
-impl<M> Default for NoTask<M> {
-    fn default() -> Self {
-        Self(Default::default())
-    }
-}
-
-impl<M> Task<M> for NoTask<M> {}
-
-impl<M> std::fmt::Debug for NoTask<M> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("NoTask").finish()
-    }
-}
+impl<M> Task<M> for NoTask {}
 
 /// Task thet wraps closures for each life-cycle method.
 ///
