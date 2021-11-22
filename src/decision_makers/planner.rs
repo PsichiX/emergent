@@ -325,7 +325,7 @@ where
     CK: Clone + Hash + Eq,
     AK: Clone + Hash + Eq,
 {
-    /// Constructs new planner with conditions, actions, goal selector and exact conditions match seting.
+    /// Constructs new planner with conditions, actions, goal selector and exact conditions match setting.
     pub fn new<DM>(
         conditions: HashMap<CK, Box<dyn Condition<M>>>,
         actions: HashMap<AK, PlannerAction<M, CK>>,
@@ -343,7 +343,7 @@ where
         )
     }
 
-    /// Constructs new planner with conditions, actions, goal selector and exact conditions match seting.
+    /// Constructs new planner with conditions, actions, goal selector and exact conditions match setting.
     pub fn new_raw(
         conditions: HashMap<CK, Box<dyn Condition<M>>>,
         actions: HashMap<AK, PlannerAction<M, CK>>,
@@ -379,7 +379,7 @@ where
         })
     }
 
-    /// Constructs new planner with conditions, actions, goal selector and exact conditions match seting.
+    /// Constructs new planner with conditions, actions, goal selector and exact conditions match setting.
     ///
     /// # Safety
     /// Make sure IDs in all inputs matches each other (there are no IDs pointing to non-existing objects)
@@ -400,7 +400,7 @@ where
         )
     }
 
-    /// Constructs new planner with conditions, actions, goal selector and exact conditions match seting.
+    /// Constructs new planner with conditions, actions, goal selector and exact conditions match setting.
     ///
     /// # Safety
     /// Make sure IDs in all inputs matches each other (there are no IDs pointing to non-existing objects)

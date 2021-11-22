@@ -139,6 +139,18 @@ where
         }
     }
 
+    /// Constructs new selector with state picker and states.
+    pub fn new_raw(
+        state_picker: Box<dyn SelectorStatePicker<M, K>>,
+        states: HashMap<K, SelectorState<M>>,
+    ) -> Self {
+        Self {
+            state_picker,
+            states,
+            active_state: None,
+        }
+    }
+
     /// Returns currently active state ID.
     pub fn active_state(&self) -> Option<&K> {
         self.active_state.as_ref()

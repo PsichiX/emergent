@@ -107,7 +107,7 @@ impl<M, K> MachineryState<M, K> {
     }
 
     /// Construct new state with task only.
-    pub fn task_raw<T>(task: Box<dyn Task<M>>) -> Self {
+    pub fn task_raw(task: Box<dyn Task<M>>) -> Self {
         Self {
             task,
             changes: vec![],
