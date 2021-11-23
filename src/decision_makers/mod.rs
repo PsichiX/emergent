@@ -75,7 +75,7 @@ pub mod reasoner;
 pub mod selector;
 pub mod sequencer;
 
-use crate::DefaultKey;
+use crate::{task::Task, DefaultKey};
 
 /// Iterface for all decision making engines.
 ///
@@ -153,6 +153,8 @@ impl<M, K> DecisionMaker<M, K> for NoDecisionMaker {
     }
 }
 
+impl<M> Task<M> for NoDecisionMaker {}
+
 /// Single choice decision maker (it always takes single specified decision).
 pub struct SingleDecisionMaker<K = DefaultKey> {
     id: K,
@@ -200,6 +202,8 @@ where
         false
     }
 }
+
+impl<M, K> Task<M> for SingleDecisionMaker<K> where K: Send + Sync {}
 
 impl<K> std::fmt::Debug for SingleDecisionMaker<K>
 where
