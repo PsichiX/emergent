@@ -36,7 +36,7 @@ pub type Scalar = f64;
 
 pub type DefaultKey = String;
 
-pub trait DecisionMakingTask<M = (), K = DefaultKey> {}
+pub trait DecisionMakingTask<M = (), K = DefaultKey>: DecisionMaker<M, K> + Task<M> {}
 
 impl<T, M, K> DecisionMakingTask<M, K> for T where T: DecisionMaker<M, K> + Task<M> {}
 
