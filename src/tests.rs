@@ -49,11 +49,6 @@ fn test_decision_making_task() {
     foo::<Reasoner>();
     foo::<Selector>();
     foo::<Sequencer>();
-
-    let temp = Box::new(Reasoner::<(), DefaultKey>::new(Default::default()));
-    let _ = temp.into_decision_maker();
-    let temp = Box::new(Reasoner::<(), DefaultKey>::new(Default::default()));
-    let _ = temp.into_task();
 }
 
 #[test]
