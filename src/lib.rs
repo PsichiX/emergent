@@ -36,9 +36,41 @@ pub type Scalar = f64;
 
 pub type DefaultKey = String;
 
-pub trait DecisionMakingTask<M = (), K = DefaultKey>: DecisionMaker<M, K> + Task<M> {}
+pub trait DecisionMakingTask<M = (), K = DefaultKey>:
+    DecisionMaker<M, K> + Task<M> + Sized
+{
+    fn as_decision_maker(&self) -> &dyn DecisionMaker<M, K> {
+        self
+    }
 
-impl<T, M, K> DecisionMakingTask<M, K> for T where T: DecisionMaker<M, K> + Task<M> {}
+    fn as_decision_maker_mut(&mut self) -> &mut dyn DecisionMaker<M, K> {
+        self
+    }
+
+    fn as_task(&self) -> &dyn Task<M> {
+        self
+    }
+
+    fn as_task_mut(&mut self) -> &mut dyn Task<M> {
+        self
+    }
+
+    fn into_decision_maker(self) -> Box<dyn DecisionMaker<M, K>>
+    where
+        Self: 'static,
+    {
+        Box::new(self)
+    }
+
+    fn into_task(self) -> Box<dyn Task<M>>
+    where
+        Self: 'static,
+    {
+        Box::new(self)
+    }
+}
+
+impl<T, M, K> DecisionMakingTask<M, K> for T where T: DecisionMaker<M, K> + Task<M> + Sized {}
 
 #[doc(hidden)]
 pub mod prelude {
