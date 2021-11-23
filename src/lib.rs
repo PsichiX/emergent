@@ -27,12 +27,18 @@ pub mod task;
 #[cfg(test)]
 pub mod tests;
 
+use crate::{decision_makers::DecisionMaker, task::Task};
+
 #[cfg(not(feature = "scalar64"))]
 pub type Scalar = f32;
 #[cfg(feature = "scalar64")]
 pub type Scalar = f64;
 
 pub type DefaultKey = String;
+
+pub trait DecisionMakingTask<M = (), K = DefaultKey> {}
+
+impl<T, M, K> DecisionMakingTask<M, K> for T where T: DecisionMaker<M, K> + Task<M> {}
 
 #[doc(hidden)]
 pub mod prelude {
@@ -48,6 +54,6 @@ pub mod prelude {
         memory::{blackboard::*, datatable::*, *},
         score_mapping::*,
         task::*,
-        DefaultKey, Scalar,
+        DecisionMakingTask, DefaultKey, Scalar,
     };
 }

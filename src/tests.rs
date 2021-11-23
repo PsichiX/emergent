@@ -35,6 +35,23 @@ where
 }
 
 #[test]
+fn test_decision_making_task() {
+    fn foo<T>()
+    where
+        T: DecisionMakingTask,
+    {
+        println!("{} is DecisionMakingTask!", std::any::type_name::<T>());
+    }
+
+    foo::<Machinery>();
+    foo::<Parallelizer>();
+    foo::<Planner>();
+    foo::<Reasoner>();
+    foo::<Selector>();
+    foo::<Sequencer>();
+}
+
+#[test]
 fn test_reasoner() {
     struct Memory {
         pub mood: Scalar,
