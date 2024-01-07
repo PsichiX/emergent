@@ -1,15 +1,17 @@
 <!DOCTYPE HTML>
-<html lang="en" class="sidebar-visible no-js ayu">
+<html lang="en" class="ayu" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Emergent AI - Smart agents and events for games</title>
-        <meta name="robots" content="noindex" />
+        <meta name="robots" content="noindex">
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="#ffffff" />
+        <meta name="theme-color" content="#ffffff">
 
         <link rel="icon" href="favicon.svg">
         <link rel="shortcut icon" href="favicon.png">
@@ -17,25 +19,29 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
         <link rel="stylesheet" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+
     </head>
-    <body>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "ayu";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -51,45 +57,76 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             var html = document.querySelector('html');
-            html.classList.remove('no-js')
             html.classList.remove('ayu')
             html.classList.add(theme);
-            html.classList.add('js');
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
         </script>
 
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
-            var html = document.querySelector('html');
-            var sidebar = 'hidden';
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
             }
-            html.classList.remove('sidebar-visible');
-            html.classList.add("sidebar-" + sidebar);
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
                 <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="first_steps.html"><strong aria-hidden="true">2.</strong> First steps</a></li><li class="chapter-item expanded "><a href="decision_makers/introduction.html"><strong aria-hidden="true">3.</strong> Decision makers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="decision_makers/finite_state_machine/introduction.html"><strong aria-hidden="true">3.1.</strong> Finite State Machine</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="decision_makers/finite_state_machine/explanation.html"><strong aria-hidden="true">3.1.1.</strong> How it works</a></li><li class="chapter-item expanded "><a href="decision_makers/finite_state_machine/implementation.html"><strong aria-hidden="true">3.1.2.</strong> How to implement</a></li><li class="chapter-item expanded "><a href="decision_makers/finite_state_machine/use_of_machinery.html"><strong aria-hidden="true">3.1.3.</strong> Use of Machinery decision maker from emergent crate</a></li><li class="chapter-item expanded "><a href="decision_makers/finite_state_machine/usecases.html"><strong aria-hidden="true">3.1.4.</strong> Typical use cases</a></li></ol></li><li class="chapter-item expanded "><a href="decision_makers/hierarchical_finite_state_machine/introduction.html"><strong aria-hidden="true">3.2.</strong> Hierarchical Finite State Machine</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="decision_makers/hierarchical_finite_state_machine/explanation.html"><strong aria-hidden="true">3.2.1.</strong> How it works</a></li><li class="chapter-item expanded "><a href="decision_makers/hierarchical_finite_state_machine/implementation.html"><strong aria-hidden="true">3.2.2.</strong> How to implement</a></li><li class="chapter-item expanded "><a href="decision_makers/hierarchical_finite_state_machine/use_of_machinery.html"><strong aria-hidden="true">3.2.3.</strong> Hierarchical use of Machinery decision maker from emergent crate</a></li><li class="chapter-item expanded "><a href="decision_makers/hierarchical_finite_state_machine/usecases.html"><strong aria-hidden="true">3.2.4.</strong> Typical use cases</a></li></ol></li><li class="chapter-item expanded "><a href="decision_makers/utility_ai/introduction.html"><strong aria-hidden="true">3.3.</strong> Utility AI</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="decision_makers/utility_ai/explanation.html"><strong aria-hidden="true">3.3.1.</strong> How it works</a></li><li class="chapter-item expanded "><a href="decision_makers/utility_ai/implementation.html"><strong aria-hidden="true">3.3.2.</strong> How to implement</a></li><li class="chapter-item expanded "><a href="decision_makers/utility_ai/use_of_reasoner.html"><strong aria-hidden="true">3.3.3.</strong> Use of Reasoner decision maker from emergent crate</a></li><li class="chapter-item expanded "><a href="decision_makers/utility_ai/usecases.html"><strong aria-hidden="true">3.3.4.</strong> Typical use cases</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.4.</strong> Behavior Tree</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.5.</strong> Goal Oriented Action Planning</div></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Emergent gameplay</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">4.1.</strong> Emergent AI agents behavior</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.2.</strong> Emergent storytelling with AI-driven game events</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.3.</strong> Dreams and long-term memories impacting agent behavior</div></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.</strong> Integrating AI systems into ECS frameworks</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Common AI problems and solutions</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">6.1.</strong> NPC day cycle</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.2.</strong> Steering</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.3.</strong> Crowd movement</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.4.</strong> Crowds shared behavior</div></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">7.</strong> Let's create emergent gameplay together!</div></li><li class="chapter-item expanded "><a href="more.html"><strong aria-hidden="true">8.</strong> More...</a></li></ol>
             </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
         </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
 
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky bordered">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
                             <i class="fa fa-bars"></i>
-                        </button>
+                        </label>
                         <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
                             <i class="fa fa-paint-brush"></i>
                         </button>
@@ -98,7 +135,7 @@
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
                         <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
@@ -111,6 +148,7 @@
                         <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -124,8 +162,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -156,8 +195,7 @@ agents in the game - it can be and already is widely used for animation systems,
 events happening in game world, or even to control sounds and music.</p>
 <h2 id="you-are-probably-already-making-an-ai-system-without-even-noticing-it-right-now"><a class="header" href="#you-are-probably-already-making-an-ai-system-without-even-noticing-it-right-now">You are probably already making an AI system without even noticing it right now!</a></h2>
 <p>For a moment let's try to write a simple enemy wandering code the way we usually do.</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>enum Direction {
   Up,
@@ -224,16 +262,14 @@ impl Enemy {
     }
   }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>You can notice <code>update</code> function - this is what controls this enemy simple AI.
 You might not have noticed it but you have used Finite State Machine for this
 problem, hardcore way thought.</p>
 <p>Btw. That snippet was really hard to read, right? Yeah, that's how our naive
 &quot;simple&quot; AI implementations usually end up growing in complexity.</p>
 <p>We can do better, let me refactor it to prove it to you:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">enum Direction {
 </span><span class="boring">  Up,
@@ -315,8 +351,7 @@ impl Enemy {
     }
   }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Now we can clearly see what is the actual behavior of this AI:</p>
 <ul>
 <li>wait few turns</li>
@@ -396,8 +431,7 @@ be implemented for all states. This state has <code>update</code> method with co
 read from / write to and it returns optional state ID. We do this bc we want
 states to do their work and that state might tells FSM to change into new state
 after FSM updates this state.</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use std::{collections::HashMap, hash::Hash};
 </span><span class="boring">
@@ -440,8 +474,7 @@ impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
     }
   }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This might looks like the solution used in <a href="decision_makers/finite_state_machine/../../first_steps.html">First steps</a> but with extra steps in
 form of states as trait objects. Yes, you're right, so what's the goal of that?
 The goal is that with this approach we are able to &quot;easly&quot; iterate on states,
@@ -452,8 +485,7 @@ hardcoded states IDs of transitions in state logic, that's not ok, we will fix
 that when we will do <em>the better way</em> of implementing FSM later, for now let's
 see how do we use FSM system we have created.</p>
 <p>Let's start with implementing enemy states:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">trait State&lt;K, T&gt; {
 </span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) -&gt; Option&lt;K&gt;;
@@ -546,8 +578,7 @@ impl State&lt;EnemyState, EnemyData&gt; for EnemyChangeDirectionState {
     Some(EnemyState::Move)
   }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Although code size has grown comparing to implementation used in <a href="decision_makers/finite_state_machine/../../first_steps.html">First steps</a>,
 we have modularized states. That would get useful when for example we would have
 many different NPC types using same context type to store their data and by that
@@ -555,8 +586,7 @@ we would share same states across multiple AI agent types - we would reduce
 duplication of the logic and would allow for quick adding/removing possible
 states for certain types of NPCs, sadly we don't show that here.</p>
 <p>Now let's take a look at our enemy type setup:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use std::{collections::HashMap, hash::Hash};
 </span><span class="boring">
@@ -706,8 +736,7 @@ impl Enemy {
     self.fsm.update(&amp;mut self.data);
   }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>You can see now that because we have modularized states, whenever we would want
 to create new state we create a state object then apply it to whatever FSM engine
 we want without digging through all the code to adapt AI agent to use of new
@@ -716,8 +745,7 @@ implementing changes to the AI. Modularity is the key to easier development when
 complexity of the AI scales up.</p>
 <p>And here are tests that show how enemy state changes in time (look how state
 changes after every <code>update</code> method call):</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use std::{collections::HashMap, hash::Hash};
 </span><span class="boring">
@@ -891,8 +919,7 @@ assert_eq!(enemy.fsm.active_state, EnemyState::ChangeDirection);
 assert_eq!(enemy.data.position.0, 2);
 assert_eq!(enemy.data.position.1, 0);
 assert_eq!(enemy.data.direction, Direction::Right);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Now, do you remember we have been talking about &quot;almost completely decoupled
 states&quot;? While the downside of this approach to decision making by returning the
 ID of state to change into, we can avoid that and actually completely decouple
@@ -901,8 +928,7 @@ states from one another if we implement FSM the better way.</p>
 <p>Our goal is to decouple states from one another completely, to do that we have
 to find out how states are coupled right now - let's take a look at some state
 logic:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">trait State&lt;K, T&gt; {
 </span><span class="boring">  fn update(&amp;mut self, context: &amp;mut T) -&gt; Option&lt;K&gt;;
@@ -969,16 +995,14 @@ impl State&lt;EnemyState, EnemyData&gt; for EnemyMoveState {
     }
   }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>You can see that state update method contains conditions that tell if we should
 change into new state and state logic itself (enemy movement).</p>
 <p>What we can do with it is we can abstract conditions and state changes into
 separate code units and let states only perform their actual logic on update,
 also we add a state method to be called when state gets activated so it can setup
 context for that state updates:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>type Condition&lt;T&gt; = fn(&amp;T) -&gt; bool;
 
@@ -986,15 +1010,13 @@ trait State&lt;T&gt; {
   fn activated(&amp;mut self, context: &amp;mut T) {}
   fn update(&amp;mut self, context: &amp;mut T) {}
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Since we did that we also have to introduce new FSM transition and state types.
 FSM state will now hold the actual state object and list of all possible
 transitions, it will also be able to decide if FSM should change into new state
 by testing each transition condition and first one that passes, its state ID gets
 returned and FSM will then activate that state:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">type Condition&lt;T&gt; = fn(&amp;T) -&gt; bool;
 </span><span class="boring">
@@ -1035,11 +1057,9 @@ impl&lt;K, T&gt; FSMState&lt;K, T&gt; {
     None
   }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Now what's left is to adapt FSM to work with new states and transitions:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use std::{collections::HashMap, hash::Hash};
 </span><span class="boring">
@@ -1157,8 +1177,7 @@ impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
     }
   }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>We have separated previous version of <code>update</code> method into two methods, one for
 deciding on what state FSM should change into, and another to actually update
 active state.</p>
@@ -1168,8 +1187,7 @@ frequency than the states update (for the sake of this tutorial we will call
 them together in enemy <code>tick</code> method just for the sake of smplification).</p>
 <p>When it comes to the enemy code itself, not much have changed except FSM setup
 and enemy data type:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use std::{collections::HashMap, hash::Hash};
 </span><span class="boring">
@@ -1361,13 +1379,11 @@ impl Enemy {
     self.fsm.update(&amp;mut self.data);
   }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>And now our states are completely decoupled from one another, they only do their
 job and don't care about any state transitions, making it super easy to just
 setup and modify all states and changes at the time when we create FSM:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use std::{collections::HashMap, hash::Hash};
 </span><span class="boring">
@@ -1534,11 +1550,9 @@ impl State&lt;EnemyData&gt; for EnemyChangeDirectionState {
     context.direction = context.direction.next();
   }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>What's left is to look at how our new better FSM mutates its enemy data in time:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use std::{collections::HashMap, hash::Hash};
 </span><span class="boring">
@@ -1770,8 +1784,7 @@ assert_eq!(enemy.data.position.0, 0);
 assert_eq!(enemy.data.position.1, -2);
 assert_eq!(enemy.data.direction, Direction::Right);
 assert_eq!(enemy.data.turns, 0);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>What we have achieved by making FSM the better way:</p>
 <ul>
 <li>states are now units that do only their actual work.</li>
@@ -1788,9 +1801,8 @@ and you should consider using other decision making engines when you find yourse
 struggling with states and transitions when your FSM gets big enough.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="use-of-machinery-decision-maker-from-emergent-crate"><a class="header" href="#use-of-machinery-decision-maker-from-emergent-crate">Use of Machinery decision maker from emergent crate</a></h1>
 <p>If you would like to just use existing solution for FSM, consider trying
-<a href="https://crates.io/emergent"><code>emergent</code></a> crate and its <a href="https://docs.rs/emergent/1.5.0/emergent/decision_makers/machinery/struct.Machinery.html"><code>Machinery</code></a> decision making engine:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<a href="https://crates.io/emergent"><code>emergent</code></a> crate and its <a href="https://docs.rs/emergent/latest/emergent/decision_makers/machinery/struct.Machinery.html"><code>Machinery</code></a> decision making engine:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate emergent;
 </span><span class="boring">use emergent::prelude::*;
@@ -1966,8 +1978,7 @@ assert_eq!(enemy.machinery.active_state(), Some(&amp;EnemyState::ChangeDirection
 assert_eq!(enemy.data.position.0, 2);
 assert_eq!(enemy.data.position.1, 0);
 assert_eq!(enemy.data.direction, Direction::Down);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="typical-use-cases"><a class="header" href="#typical-use-cases">Typical use cases</a></h1>
 <ul>
 <li>
@@ -2057,8 +2068,7 @@ is to add <code>decide</code> method to <code>State</code> and implement <code>S
 can just use it as states, also adapt existing code to process these networks as
 states correctly.</p>
 <p>Let's start with <code>State</code>:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>trait State&lt;T&gt; {
   fn activated(&amp;mut self, context: &amp;mut T) {}
@@ -2068,12 +2078,10 @@ states correctly.</p>
   fn decide(&amp;mut self, context: &amp;mut T) {}
   fn update(&amp;mut self, context: &amp;mut T) {}
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Then we improve <code>FSM</code> to forward decision making and update calls to its children
 networks:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use std::{collections::HashMap, hash::Hash};
 </span><span class="boring">
@@ -2171,13 +2179,11 @@ impl&lt;K: Hash + Eq, T&gt; FSM&lt;K, T&gt; {
 </span><span class="boring">  }
 </span><span class="boring">}
 </span>}
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>What's left to do is to setup FSM within enemy type.</p>
 <p>First, for the sake of the tutorial, we create a simplified data types that will
 describe enemy state:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 enum Target {
@@ -2190,16 +2196,14 @@ struct EnemyData {
   waypoint: Target,
   player: Target,
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><code>EnemyData</code> will contain information about its targets: waypoint and player.
 <code>Target</code> will describe what we know about the target. In case of waypoint it can
 be either Found or Reached since there is always some waypoint in the world.
 In case of player None means player is dead, Found means player is in enemy range
 and Reached means enemy is in contact range of player and can attack him.</p>
 <p>Here are all possible states for all FSM hierarchy levels:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
 enum EnemyState {
@@ -2210,14 +2214,12 @@ enum EnemyState {
   WalkTowardsPlayer,
   AttackPlayer,
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Patrol and Combat are the root level FSM states and these will contain sub-networks.
 FindWaypoint and WalkTowardsWaypoint belongs to Patrol FSM, WalkTowardsPlayer
 and AttackPlayer belongs to Combat FSM.</p>
 <p>Ok, now let's finally see the enemy FSM setup:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use std::{collections::HashMap, hash::Hash};
 </span><span class="boring">
@@ -2437,13 +2439,11 @@ and AttackPlayer belongs to Combat FSM.</p>
 </span><span class="boring">struct EnemyAttackPlayerState;
 </span><span class="boring">
 </span><span class="boring">impl State&lt;EnemyData&gt; for EnemyAttackPlayerState {}
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <p>All what we had to do was to put patrol and combat FSMs as we put states in root
 FSM.</p>
 <p>So how all of this setup changes enemy state in time:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use std::{collections::HashMap, hash::Hash};
 </span><span class="boring">
@@ -2710,16 +2710,14 @@ enemy.tick();
 assert_eq!(enemy.fsm.active_state, EnemyState::Patrol);
 assert_eq!(enemy.data.waypoint, Target::Reached);
 assert_eq!(enemy.data.player, Target::None);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="hierarchical-use-of-machinery-decision-maker-from-emergent-crate"><a class="header" href="#hierarchical-use-of-machinery-decision-maker-from-emergent-crate">Hierarchical use of Machinery decision maker from emergent crate</a></h1>
 <p>By default all <a href="https://crates.io/emergent"><code>emergent</code></a> decision makers are designed to be used in hierarchies
-so building HFSM is really simple - you just put one <a href="https://docs.rs/emergent/1.5.0/emergent/decision_makers/machinery/struct.Machinery.html"><code>Machinery</code></a> as a state in
+so building HFSM is really simple - you just put one <a href="https://docs.rs/emergent/latest/emergent/decision_makers/machinery/struct.Machinery.html"><code>Machinery</code></a> as a state in
 another. What's new comparing to the flat Machinery setup is we have to assign
 initial state decision maker that whenever Machinery gets activated, it will
 activate some starting state for that Machinery.</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate emergent;
 </span><span class="boring">use emergent::prelude::*;
@@ -2927,8 +2925,7 @@ enemy.tick();
 assert_eq!(enemy.machinery.active_state(), Some(&amp;EnemyState::Patrol));
 assert_eq!(enemy.data.waypoint, Target::Reached);
 assert_eq!(enemy.data.player, Target::None);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="typical-use-cases-1"><a class="header" href="#typical-use-cases-1">Typical use cases</a></h1>
 <p>These are basically the same as <a href="decision_makers/hierarchical_finite_state_machine/../finite_state_machine/usecases.html">FSM use cases</a> but are focused on better
 readability and optimizations by using hierarchies of networks instead of one
@@ -3044,21 +3041,18 @@ contain for example FSM with fixed transitions (you can do this thanks to
 focusing our solutions on full modularity).</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="how-to-implement-2"><a class="header" href="#how-to-implement-2">How to implement</a></h1>
 <p>First we have to define alias types for <code>Score</code> and <code>Scorer</code>:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>type Score = f32;
 type Scorer&lt;T&gt; = fn(&amp;T) -&gt; Score;
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>We aliased <code>f32</code> as <code>Score</code> in case we would want to change it to <code>f64</code> at some
 point and be able to perform that change only in alias declaration.</p>
 <p><code>Scorer</code> is just an alias to function that will take context as input and produce
 score as output, used later as state probability score for decision making.</p>
 <p><code>State</code> trait stays the same as what we have made for FSM.</p>
 <p>Next we define an <code>UtilityState</code> that will store an actual state and scorer:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use std::{collections::HashMap, hash::Hash};
 </span><span class="boring">
@@ -3071,11 +3065,9 @@ score as output, used later as state probability score for decision making.</p>
   state: Box&lt;dyn State&lt;T&gt;&gt;,
   scorer: Scorer&lt;T&gt;,
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Now let's implement <code>Utility</code> decision maker:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use std::{collections::HashMap, hash::Hash};
 </span><span class="boring">
@@ -3148,8 +3140,7 @@ impl&lt;K: Hash + Eq, T&gt; Utility&lt;K, T&gt; {
     }
   }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Methods: <code>new</code>, <code>set_active_state</code> and <code>update</code> arent much different from what
 we have done for FSM, but <code>decide</code> method changes completely, obviously.</p>
 <p>It performs iterator operations suck as:</p>
@@ -3165,8 +3156,7 @@ will change state only if new one is different than currently active state).</p>
 propagate decision making in case we use <code>Utility</code> in hierarchy just like we did
 with HFSM (yes, we are making <code>Utility</code> support hierarchies).</p>
 <p>We also need to implement <code>State</code> trait for <code>Utility</code> type:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use std::{collections::HashMap, hash::Hash};
 </span><span class="boring">
@@ -3203,12 +3193,10 @@ with HFSM (yes, we are making <code>Utility</code> support hierarchies).</p>
     self.update(context);
   }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Ok, so we have completed <code>Utility</code> decision maker implementation, we can now make
 state ID and data types for enemy:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
 enum EnemyState {
@@ -3226,13 +3214,11 @@ struct EnemyData {
   distance_to_opponent: f32,
   opponent_strength: f32,
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>We keep these types same as what we have defined in <a href="decision_makers/utility_ai/./explanation.html">explanation chapter</a>.</p>
 <p>Now take a look how we can translate scorer operations for these states into
 actual scoring functions:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">type Score = f32;
 </span><span class="boring">
@@ -3261,15 +3247,13 @@ fn scorer_gather_wood(context: &amp;EnemyData) -&gt; Score {
 fn scorer_attack_opponent(context: &amp;EnemyData) -&gt; Score {
   (1.0 - context.distance_to_opponent) + context.opponent_strength
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Obviously if we would like to reuse parts of these scorers logic we can put these
 operations into separate functions, the point is that all what matters is to
 produce a single score, you can organize your scorers as you wish.</p>
 <p>Next step is to implement enemy states that will mutate enemy data to reflect
 changes in the world:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">type Score = f32;
 </span><span class="boring">
@@ -3318,11 +3302,9 @@ impl State&lt;EnemyData&gt; for EnemyAttackOpponentState {
     context.opponent_strength = 0.0;
   }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Finally we implement <code>Enemy</code> type itself and its <code>Utility</code> decision maker setup:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use std::{collections::HashMap, hash::Hash};
 </span><span class="boring">
@@ -3504,11 +3486,9 @@ impl Enemy {
 </span><span class="boring">    context.opponent_strength = 0.0;
 </span><span class="boring">  }
 </span><span class="boring">}
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <p>And what's left is to test how enemy states react to changes in the world:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use std::{collections::HashMap, hash::Hash};
 </span><span class="boring">
@@ -3742,23 +3722,21 @@ assert_eq!(enemy.data.distance_to_trees, 1.0);
 assert_eq!(enemy.data.wood_needed, 0);
 assert_eq!(enemy.data.distance_to_opponent, 1.0);
 assert_eq!(enemy.data.opponent_strength, 0.0);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>As you can see, all state changes are completely environment-driven - no fixed
 transitions, fully emergent behavior.</p>
 <p>Not much more is needed to be explained because most implmentation is very similar
 if not the same, as with FSM, we just had to implement scoring feature for decision
 making - that's how easy is to move from FSM to Utility AI!</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="use-of-reasoner-decision-maker-from-emergent-crate"><a class="header" href="#use-of-reasoner-decision-maker-from-emergent-crate">Use of Reasoner decision maker from emergent crate</a></h1>
-<p>Usage of <a href="https://docs.rs/emergent/1.5.0/emergent/decision_makers/reasoner/struct.Reasoner.html"><code>Reasoner</code></a> decision maker from <a href="https://crates.io/emergent"><code>emergent</code></a> crate isn't much different
+<p>Usage of <a href="https://docs.rs/emergent/latest/emergent/decision_makers/reasoner/struct.Reasoner.html"><code>Reasoner</code></a> decision maker from <a href="https://crates.io/emergent"><code>emergent</code></a> crate isn't much different
 from what we have made by ourselves - what's different, considerations are actually
-separate structs for which we implement <a href="https://docs.rs/emergent/1.5.0/emergent/consideration/trait.Consideration.html"><code>Consideration</code></a> trait but we could also
-just use scoring functions and wrap them with <a href="https://docs.rs/emergent/1.5.0/emergent/consideration/struct.ClosureConsideration.html"><code>ClosureConsideration</code></a>, but we
+separate structs for which we implement <a href="https://docs.rs/emergent/latest/emergent/consideration/trait.Consideration.html"><code>Consideration</code></a> trait but we could also
+just use scoring functions and wrap them with <a href="https://docs.rs/emergent/latest/emergent/consideration/struct.ClosureConsideration.html"><code>ClosureConsideration</code></a>, but we
 want to keep ourselves on the full modularity track - the point is, there are
 many ways you can organize your logic with <a href="https://crates.io/emergent"><code>emergent</code></a> crate, it is all for you
 to decide what works best for you.</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate emergent;
 </span><span class="boring">use emergent::prelude::*;
@@ -3981,8 +3959,7 @@ assert_eq!(enemy.data.distance_to_trees, 1.0);
 assert_eq!(enemy.data.wood_needed, 0);
 assert_eq!(enemy.data.distance_to_opponent, 1.0);
 assert_eq!(enemy.data.opponent_strength, 0.0);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="typical-use-cases-2"><a class="header" href="#typical-use-cases-2">Typical use cases</a></h1>
 <ul>
 <li>
@@ -4026,31 +4003,43 @@ solve but don't know how to tackle it, and at some point it might land in the bo
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
             </nav>
 
         </div>
 
-        <script type="text/javascript">
+
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript">
+
+        <script>
         window.addEventListener('load', function() {
             window.setTimeout(window.print, 100);
         });
         </script>
+
+    </div>
     </body>
 </html>
