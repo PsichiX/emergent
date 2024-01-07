@@ -41,16 +41,9 @@ use std::{
 /// assert!(memory.remove("tuple"));
 /// assert_eq!(memory.len(), 0);
 /// ```
+#[derive(Default)]
 pub struct Blackboard {
     properties: HashMap<String, Box<dyn Any + Send + Sync>>,
-}
-
-impl Default for Blackboard {
-    fn default() -> Self {
-        Self {
-            properties: Default::default(),
-        }
-    }
 }
 
 impl std::fmt::Debug for Blackboard {
@@ -91,7 +84,7 @@ impl Blackboard {
     /// Returns type ID of a property data stored in blackboard.
     pub fn type_id(&self, name: &str) -> Option<TypeId> {
         if let Some(value) = self.properties.get(name) {
-            let v: &dyn Any = &*value;
+            let v: &dyn Any = value;
             return Some(v.type_id());
         }
         None
@@ -122,7 +115,7 @@ impl Blackboard {
     /// Returns reference to property data as [`Any`].
     pub fn raw(&self, name: &str) -> Option<&dyn Any> {
         if let Some(value) = self.properties.get(name) {
-            return Some(&*value);
+            return Some(value);
         }
         None
     }
@@ -180,7 +173,7 @@ impl Blackboard {
     /// Return iterator over properties keys and type IDs.
     pub fn key_types(&self) -> impl Iterator<Item = (&str, TypeId)> {
         self.properties.iter().map(|(k, v)| {
-            let v: &dyn Any = &*v;
+            let v: &dyn Any = v;
             (k.as_str(), v.type_id())
         })
     }
@@ -188,7 +181,7 @@ impl Blackboard {
     /// Return iterator over properties keys and their data as [`Any`].
     pub fn iter(&self) -> impl Iterator<Item = (&str, &dyn Any)> {
         self.properties.iter().map(|(k, v)| {
-            let v: &dyn Any = &*v;
+            let v: &dyn Any = v;
             (k.as_str(), v)
         })
     }

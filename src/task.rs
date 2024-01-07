@@ -93,6 +93,7 @@ impl<M> Task<M> for NoTask {}
 /// task.on_enter(&mut memory);
 /// assert_eq!(memory.counter, 2);
 /// ```
+#[allow(clippy::type_complexity)]
 pub struct ClosureTask<M = ()> {
     locked: Option<Box<dyn Fn(&M) -> bool + Send + Sync>>,
     enter: Option<Box<dyn FnMut(&mut M) + Send + Sync>>,

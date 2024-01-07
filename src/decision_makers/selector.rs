@@ -317,6 +317,7 @@ where
 /// let states = vec![&"a", &"b", &"c"];
 /// assert_eq!(picker.pick(&states, &()), Some("a"));
 /// ```
+#[allow(clippy::type_complexity)]
 pub struct ClosureSelectorStatePicker<M = (), K = DefaultKey>(
     Box<dyn FnMut(&[&K], &M) -> Option<K> + Send + Sync>,
 );

@@ -216,4 +216,4 @@ assert_eq!(enemy.data.player, Target::None);
 ```
 
 [`emergent`]: https://crates.io/emergent
-[`Machinery`]: https://docs.rs/emergent/1.5.0/emergent/decision_makers/machinery/struct.Machinery.html
+[`Machinery`]: https://docs.rs/emergent/latest/emergent/decision_makers/machinery/struct.Machinery.html

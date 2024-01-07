@@ -9,6 +9,15 @@ checks:
     cargo clippy
     cargo test
 
+# Clean artifacts and intermediate state
+clean:
+    find . -name target -type d -exec rm -r {} +
+    just remove-lockfiles
+
+# Remove lock files
+remove-lockfiles:
+    find . -name Cargo.lock -type f -exec rm {} +
+
 # Test and build the book
 book:
     mdbook build book

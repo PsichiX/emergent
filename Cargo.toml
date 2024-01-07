@@ -1,6 +1,6 @@
 [package]
 name = "emergent"
-version = "1.5.13"
+version = "1.6.0"
 authors = ["Patryk 'PsichiX' Budzynski <psichix@gmail.com>"]
 edition = "2021"
 description = "Toolset for producing emergent gameplay for games written in Rust"
@@ -15,5 +15,3 @@ exclude = ["media/", "book/"]
 
 [features]
 scalar64 = []
-
-[dependencies]

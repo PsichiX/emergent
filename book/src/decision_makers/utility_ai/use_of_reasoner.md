@@ -233,6 +233,6 @@ assert_eq!(enemy.data.opponent_strength, 0.0);
 ```
 
 [`emergent`]: https://crates.io/emergent
-[`Reasoner`]: https://docs.rs/emergent/1.5.0/emergent/decision_makers/reasoner/struct.Reasoner.html
-[`Consideration`]: https://docs.rs/emergent/1.5.0/emergent/consideration/trait.Consideration.html
-[`ClosureConsideration`]: https://docs.rs/emergent/1.5.0/emergent/consideration/struct.ClosureConsideration.html
+[`Reasoner`]: https://docs.rs/emergent/latest/emergent/decision_makers/reasoner/struct.Reasoner.html
+[`Consideration`]: https://docs.rs/emergent/latest/emergent/consideration/trait.Consideration.html
+[`ClosureConsideration`]: https://docs.rs/emergent/latest/emergent/consideration/struct.ClosureConsideration.html
