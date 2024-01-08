@@ -1,4 +1,4 @@
-//! Run states one-by one as long as they succeed (boolean AND operation).
+//! Run states one-by-one as long as they succeed (boolean AND operation).
 
 use crate::{condition::*, decision_makers::*, task::*};
 
@@ -83,7 +83,7 @@ impl<M> Sequencer<M> {
         }
     }
 
-    /// Returns currently active state.
+    /// Returns currently active state index.
     pub fn active_index(&self) -> Option<usize> {
         self.active_index
     }
@@ -101,7 +101,7 @@ impl<M> Sequencer<M> {
         self.continuity
     }
 
-    /// Change currently active state.
+    /// Reset currently active state.
     ///
     /// By default state won't change if active state is locked, but we can force state change.
     pub fn reset(&mut self, memory: &mut M, forced: bool) -> bool {
@@ -116,17 +116,31 @@ impl<M> Sequencer<M> {
         true
     }
 
+    fn change_active_index(&mut self, index: Option<usize>, memory: &mut M) -> bool {
+        if index == self.active_index {
+            return false;
+        }
+        if let Some(index) = self.active_index {
+            let state = self.states.get_mut(index).unwrap();
+            if state.task.is_locked(memory) {
+                return false;
+            }
+            state.task.on_exit(memory);
+        }
+        if let Some(index) = index {
+            self.states.get_mut(index).unwrap().task.on_enter(memory);
+        }
+        self.active_index = index;
+        true
+    }
+
     /// Perform decision making.
     pub fn process(&mut self, memory: &mut M) -> bool {
         if self.states.is_empty() {
             return false;
         }
-        if let Some(index) = self.active_index {
-            if self.states.get(index).unwrap().task.is_locked(memory) {
-                return false;
-            }
-            self.states.get_mut(index).unwrap().task.on_exit(memory);
-            let index = if self.looped {
+        let index = if let Some(index) = self.active_index {
+            if self.looped {
                 if self.continuity {
                     self.states
                         .iter()
@@ -176,21 +190,13 @@ impl<M> Sequencer<M> {
                     }
                     None => None,
                 }
-            };
-            if let Some(index) = index {
-                self.states.get_mut(index).unwrap().task.on_enter(memory);
-                self.active_index = Some(index);
-            } else {
-                self.active_index = None;
             }
-            return true;
-        } else if let Some(index) = self
-            .states
-            .iter()
-            .position(|state| state.condition.validate(memory))
-        {
-            self.states.get_mut(index).unwrap().task.on_enter(memory);
-            self.active_index = Some(index);
+        } else {
+            self.states
+                .iter()
+                .position(|state| state.condition.validate(memory))
+        };
+        if self.change_active_index(index, memory) {
             return true;
         }
         if let Some(index) = self.active_index {

@@ -441,20 +441,16 @@ fn test_sequencer() {
 fn test_selector() {
     let mut memory = false;
 
-    let mut selector = Selector::new(
-        OrderedSelectorStatePicker::First,
-        map! {
-            _ :
-            true => SelectorState::new(
-                ClosureCondition::new(|m| *m),
-                ClosureTask::default().enter(|m| *m = false),
-            ),
-            false => SelectorState::new(
-                ClosureCondition::new(|m| !m),
-                ClosureTask::default().enter(|m| *m = true),
-            ),
-        },
-    );
+    let mut selector = Selector::new(vec![
+        SelectorState::new(
+            ClosureCondition::new(|m| *m),
+            ClosureTask::default().enter(|m| *m = false),
+        ),
+        SelectorState::new(
+            ClosureCondition::new(|m| !m),
+            ClosureTask::default().enter(|m| *m = true),
+        ),
+    ]);
     check_send_sync(&selector);
 
     assert_eq!(selector.process(&mut memory), true);
@@ -522,14 +518,14 @@ fn test_lod() {
     };
 
     // we start with agent running in the background.
-    assert_eq!(lod.active_state(), None);
+    assert_eq!(lod.active_index(), None);
     assert_eq!(lod.process(&mut memory), true);
-    assert_eq!(lod.active_state(), Some(&0));
+    assert_eq!(lod.active_index(), Some(0));
     // agent will now run in foreground and we assume 5 seconds have passed since last meal.
     memory.lod_level = 1;
     memory.memory.time_since_last_meal = 5.0;
     assert_eq!(lod.process(&mut memory), true);
-    assert_eq!(lod.active_state(), Some(&1));
+    assert_eq!(lod.active_index(), Some(1));
     assert_eq!(memory.memory.hunger, 5.0);
     lod.update(&mut memory);
     assert_eq!(memory.memory.hunger, 4.0);

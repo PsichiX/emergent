@@ -345,13 +345,12 @@ impl<M> BehaviorTree<M> {
             Self::Selector { condition, nodes } => {
                 let states = nodes
                     .into_iter()
-                    .enumerate()
-                    .map(|(index, node)| {
+                    .map(|node| {
                         let (condition, task) = node.consume();
-                        (index, SelectorState::new_raw(condition, task))
+                        SelectorState::new_raw(condition, task)
                     })
                     .collect();
-                let selector = Selector::new(OrderedSelectorStatePicker::First, states);
+                let selector = Selector::new(states);
                 (condition, Box::new(selector))
             }
             Self::Parallel { condition, nodes } => {

@@ -22,7 +22,7 @@ where
 
 /// Allows to run different decision making depending on the level of details set in memory.
 ///
-/// Useful to optimize AI processing to for example run narow phase logic when agent is near the
+/// Useful to optimize AI processing to for example run narrow phase logic when agent is near the
 /// player and run broad phase logic when agent runs in the background.
 ///
 /// # Example
@@ -59,14 +59,14 @@ where
 /// };
 ///
 /// // we start with agent running in the background.
-/// assert_eq!(lod.active_state(), None);
+/// assert_eq!(lod.active_index(), None);
 /// assert_eq!(lod.process(&mut memory), true);
-/// assert_eq!(lod.active_state(), Some(&0));
+/// assert_eq!(lod.active_index(), Some(0));
 /// // agent will now run in foreground and we assume 5 seconds have passed since last meal.
 /// memory.lod_level = 1;
 /// memory.memory.time_since_last_meal = 5.0;
 /// assert_eq!(lod.process(&mut memory), true);
-/// assert_eq!(lod.active_state(), Some(&1));
+/// assert_eq!(lod.active_index(), Some(1));
 /// assert_eq!(memory.memory.hunger, 5.0);
 /// lod.update(&mut memory);
 /// assert_eq!(memory.memory.hunger, 4.0);
@@ -101,25 +101,24 @@ impl<M> Lod<M> {
     }
 
     /// Consumes this builder and builds selector decision maker that will switch between levels.
-    pub fn build(self) -> Selector<LodMemory<M>, usize>
+    pub fn build(self) -> Selector<LodMemory<M>>
     where
         M: 'static,
     {
-        let states = self
-            .0
-            .into_iter()
-            .enumerate()
-            .map(|(index, task)| {
-                let state = SelectorState::new_raw(
-                    Box::new(ClosureCondition::new(move |memory: &LodMemory<M>| {
-                        memory.lod_level == index
-                    })),
-                    task,
-                );
-                (index, state)
-            })
-            .collect();
-        Selector::new(OrderedSelectorStatePicker::First, states)
+        Selector::new(
+            self.0
+                .into_iter()
+                .enumerate()
+                .map(|(index, task)| {
+                    SelectorState::new_raw(
+                        Box::new(ClosureCondition::new(move |memory: &LodMemory<M>| {
+                            memory.lod_level == index
+                        })),
+                        task,
+                    )
+                })
+                .collect(),
+        )
     }
 }
 

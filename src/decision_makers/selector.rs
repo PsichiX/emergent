@@ -1,50 +1,6 @@
-//! Runs one state that succeeds (boolean OR operation).
+//! Runs first state that succeeds (boolean OR operation).
 
-use crate::{condition::*, decision_makers::*, task::*, DefaultKey};
-use std::{collections::HashMap, hash::Hash};
-
-/// Selector error.
-pub enum SelectorError<K = DefaultKey> {
-    /// Selector doesn't have state with given ID.
-    StateDoesNotExists(K),
-}
-
-impl<K> Clone for SelectorError<K>
-where
-    K: Clone,
-{
-    fn clone(&self) -> Self {
-        match self {
-            Self::StateDoesNotExists(key) => Self::StateDoesNotExists(key.clone()),
-        }
-    }
-}
-
-impl<K> PartialEq for SelectorError<K>
-where
-    K: PartialEq,
-{
-    fn eq(&self, other: &Self) -> bool {
-        match (self, other) {
-            (Self::StateDoesNotExists(a), Self::StateDoesNotExists(b)) => a == b,
-        }
-    }
-}
-
-impl<K> Eq for SelectorError<K> where K: Eq {}
-
-impl<K> std::fmt::Debug for SelectorError<K>
-where
-    K: std::fmt::Debug,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::StateDoesNotExists(key) => {
-                write!(f, "StateDoesNotExists({:?})", key)
-            }
-        }
-    }
-}
+use crate::{condition::*, decision_makers::*, task::*};
 
 /// Defines selector state with task and condition.
 pub struct SelectorState<M = ()> {
@@ -79,13 +35,11 @@ impl<M> std::fmt::Debug for SelectorState<M> {
 
 /// Selector runs at most only one state at any given time.
 ///
-/// First selector finds all states that their condition succeed, then uses state picker to decide
-/// what state to choose from the list of successful states.
+/// Selector finds first state that its condition succeed and runs it.
 ///
 /// # Example
 /// ```
 /// use emergent::prelude::*;
-/// use std::{collections::HashMap, hash::Hash};
 ///
 /// struct Is(pub bool);
 ///
@@ -103,141 +57,120 @@ impl<M> std::fmt::Debug for SelectorState<M> {
 ///     }
 /// }
 ///
-/// let mut states = HashMap::new();
-/// states.insert(false, SelectorState::new(Is(true), Set(false)));
-/// states.insert(true, SelectorState::new(Is(false), Set(true)));
-///
-/// let mut selector = Selector::new((), states);
+/// let mut selector = Selector::new(vec![
+///     SelectorState::new(Is(true), Set(false)),
+///     SelectorState::new(Is(false), Set(true)),
+/// ]);
 /// let mut memory = false;
 /// assert!(selector.process(&mut memory));
 /// assert_eq!(memory, true);
 /// assert!(selector.process(&mut memory));
 /// assert_eq!(memory, false);
 /// ```
-pub struct Selector<M = (), K = DefaultKey>
-where
-    K: Clone + Hash + Eq,
-{
-    state_picker: Box<dyn SelectorStatePicker<M, K>>,
-    states: HashMap<K, SelectorState<M>>,
-    active_state: Option<K>,
+pub struct Selector<M = ()> {
+    states: Vec<SelectorState<M>>,
+    active_index: Option<usize>,
 }
 
-impl<M, K> Selector<M, K>
-where
-    K: Clone + Hash + Eq,
-{
-    /// Constructs new selector with state picker and states.
-    pub fn new<P>(state_picker: P, states: HashMap<K, SelectorState<M>>) -> Self
-    where
-        P: SelectorStatePicker<M, K> + 'static,
-    {
+impl<M> Selector<M> {
+    /// Constructs new selector from states.
+    pub fn new(states: Vec<SelectorState<M>>) -> Self {
         Self {
-            state_picker: Box::new(state_picker),
             states,
-            active_state: None,
+            active_index: None,
         }
     }
 
-    /// Constructs new selector with state picker and states.
-    pub fn new_raw(
-        state_picker: Box<dyn SelectorStatePicker<M, K>>,
-        states: HashMap<K, SelectorState<M>>,
-    ) -> Self {
+    /// Constructs new selector from states.
+    pub fn new_raw(states: Vec<SelectorState<M>>) -> Self {
         Self {
-            state_picker,
             states,
-            active_state: None,
+            active_index: None,
         }
     }
 
-    /// Returns currently active state ID.
-    pub fn active_state(&self) -> Option<&K> {
-        self.active_state.as_ref()
+    /// Returns currently active state index.
+    pub fn active_index(&self) -> Option<usize> {
+        self.active_index
     }
 
-    /// Change currently active state.
+    /// Reset currently active state.
     ///
     /// By default state won't change if active state is locked, but we can force state change.
-    pub fn change_active_state(
-        &mut self,
-        id: Option<K>,
-        memory: &mut M,
-        forced: bool,
-    ) -> Result<bool, SelectorError<K>> {
-        if id == self.active_state {
-            return Ok(false);
-        }
-        if let Some(id) = &id {
-            if !self.states.contains_key(id) {
-                return Err(SelectorError::StateDoesNotExists(id.clone()));
-            }
-        }
-        if let Some(id) = &self.active_state {
-            let state = self.states.get_mut(id).unwrap();
+    pub fn reset(&mut self, memory: &mut M, forced: bool) -> bool {
+        if let Some(index) = self.active_index {
+            let state = self.states.get_mut(index).unwrap();
             if !forced && state.task.is_locked(memory) {
-                return Ok(false);
+                return false;
+            }
+            state.task.on_exit(memory);
+            self.active_index = None;
+        }
+        true
+    }
+
+    fn change_active_index(&mut self, index: Option<usize>, memory: &mut M) -> bool {
+        if index == self.active_index {
+            return false;
+        }
+        if let Some(index) = self.active_index {
+            let state = self.states.get_mut(index).unwrap();
+            if state.task.is_locked(memory) {
+                return false;
             }
             state.task.on_exit(memory);
         }
-        if let Some(id) = &id {
-            self.states.get_mut(id).unwrap().task.on_enter(memory);
+        if let Some(index) = index {
+            self.states.get_mut(index).unwrap().task.on_enter(memory);
         }
-        self.active_state = id;
-        Ok(true)
+        self.active_index = index;
+        true
     }
 
     /// Perform decision making.
     pub fn process(&mut self, memory: &mut M) -> bool {
-        let available = self
+        if self.states.is_empty() {
+            return false;
+        }
+        let index = self
             .states
             .iter()
-            .filter(|(_, state)| state.condition.validate(memory))
-            .map(|(id, _)| id)
-            .collect::<Vec<_>>();
-        let new_id = if available.is_empty() {
-            None
-        } else {
-            self.state_picker.pick(&available, memory)
-        };
-        if let Ok(true) = self.change_active_state(new_id, memory, false) {
+            .position(|state| state.condition.validate(memory));
+        if self.change_active_index(index, memory) {
             return true;
         }
-        if let Some(id) = &self.active_state {
-            return self.states.get_mut(id).unwrap().task.on_process(memory);
+        if let Some(index) = self.active_index {
+            return self.states.get_mut(index).unwrap().task.on_process(memory);
         }
         false
     }
 
     /// Update currently active state.
     pub fn update(&mut self, memory: &mut M) {
-        if let Some(id) = &self.active_state {
-            self.states.get_mut(id).unwrap().task.on_update(memory);
+        if let Some(index) = self.active_index {
+            self.states.get_mut(index).unwrap().task.on_update(memory);
         }
     }
 }
 
-impl<M, K> DecisionMaker<M, K> for Selector<M, K>
+impl<M, K> DecisionMaker<M, K> for Selector<M>
 where
-    K: Clone + Hash + Eq + Send + Sync,
+    K: Default,
 {
     fn decide(&mut self, memory: &mut M) -> Option<K> {
         self.process(memory);
-        self.active_state().cloned()
+        Some(K::default())
     }
 
-    fn change_mind(&mut self, id: Option<K>, memory: &mut M) -> bool {
-        matches!(self.change_active_state(id, memory, true), Ok(true))
+    fn change_mind(&mut self, _: Option<K>, memory: &mut M) -> bool {
+        self.reset(memory, true)
     }
 }
 
-impl<M, K> Task<M> for Selector<M, K>
-where
-    K: Clone + Hash + Eq + Send + Sync,
-{
+impl<M> Task<M> for Selector<M> {
     fn is_locked(&self, memory: &M) -> bool {
-        if let Some(id) = &self.active_state {
-            if let Some(state) = self.states.get(id) {
+        if let Some(index) = self.active_index {
+            if let Some(state) = self.states.get(index) {
                 return state.task.is_locked(memory);
             }
         }
@@ -245,12 +178,12 @@ where
     }
 
     fn on_enter(&mut self, memory: &mut M) {
-        let _ = self.change_active_state(None, memory, true);
+        self.reset(memory, true);
         self.process(memory);
     }
 
     fn on_exit(&mut self, memory: &mut M) {
-        let _ = self.change_active_state(None, memory, true);
+        self.reset(memory, true);
     }
 
     fn on_update(&mut self, memory: &mut M) {
@@ -262,105 +195,11 @@ where
     }
 }
 
-impl<M, K> std::fmt::Debug for Selector<M, K>
-where
-    K: Clone + Hash + Eq + std::fmt::Debug,
-{
+impl<M> std::fmt::Debug for Selector<M> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("Selector")
             .field("states", &self.states)
-            .field("active_state", &self.active_state)
+            .field("active_index", &self.active_index)
             .finish()
-    }
-}
-
-/// Picks single state ID from array of successful states.
-///
-/// # Example
-/// ```
-/// use emergent::prelude::*;
-///
-/// struct PickMiddleOne;
-///
-/// impl<M, K> SelectorStatePicker<M, K> for PickMiddleOne where K: Clone {
-///     fn pick(&mut self, available: &[&K], memory: &M) -> Option<K> {
-///         available.iter().nth(available.len() / 2).map(|id| (**id).clone())
-///     }
-/// }
-///
-/// let states = vec![&"a", &"b", &"c"];
-/// assert_eq!(PickMiddleOne.pick(&states, &()), Some("b"));
-/// ```
-pub trait SelectorStatePicker<M = (), K = DefaultKey>: Send + Sync {
-    /// Pick some or none state that wins.
-    fn pick(&mut self, available: &[&K], memory: &M) -> Option<K>;
-}
-
-impl<M, K> SelectorStatePicker<M, K> for ()
-where
-    K: Clone,
-{
-    fn pick(&mut self, available: &[&K], _: &M) -> Option<K> {
-        available.first().map(|id| (*id).clone())
-    }
-}
-
-/// Wraps closure in selector state picker.
-///
-/// # Example
-/// ```
-/// use emergent::prelude::*;
-///
-/// let mut picker = ClosureSelectorStatePicker::<(), &str>::new(
-///     |ids, _| ids.first().map(|id| (**id).clone()),
-/// );
-/// let states = vec![&"a", &"b", &"c"];
-/// assert_eq!(picker.pick(&states, &()), Some("a"));
-/// ```
-#[allow(clippy::type_complexity)]
-pub struct ClosureSelectorStatePicker<M = (), K = DefaultKey>(
-    Box<dyn FnMut(&[&K], &M) -> Option<K> + Send + Sync>,
-);
-
-impl<M, K> ClosureSelectorStatePicker<M, K> {
-    pub fn new<F>(f: F) -> Self
-    where
-        F: FnMut(&[&K], &M) -> Option<K> + 'static + Send + Sync,
-    {
-        Self(Box::new(f))
-    }
-}
-
-impl<M, K> SelectorStatePicker<M, K> for ClosureSelectorStatePicker<M, K> {
-    fn pick(&mut self, available: &[&K], memory: &M) -> Option<K> {
-        (self.0)(available, memory)
-    }
-}
-
-/// Selects first, last or nth available state ID.
-///
-/// # Example
-/// ```
-/// use emergent::prelude::*;
-///
-/// let states = vec![&"a", &"b", &"c"];
-/// assert_eq!(OrderedSelectorStatePicker::Last.pick(&states, &()), Some("c"));
-/// ```
-pub enum OrderedSelectorStatePicker {
-    First,
-    Last,
-    Nth(usize),
-}
-
-impl<M, K> SelectorStatePicker<M, K> for OrderedSelectorStatePicker
-where
-    K: Clone,
-{
-    fn pick(&mut self, available: &[&K], _: &M) -> Option<K> {
-        match self {
-            Self::First => available.first().map(|id| (**id).clone()),
-            Self::Last => available.last().map(|id| (**id).clone()),
-            Self::Nth(index) => available.get(*index).map(|id| (**id).clone()),
-        }
     }
 }
