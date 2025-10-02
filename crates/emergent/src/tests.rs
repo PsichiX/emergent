@@ -1,6 +1,22 @@
-#![cfg(test)]
-
-use crate::prelude::*;
+use crate::{
+    builders::{
+        behavior_tree::{BehaviorTree, BehaviorTreeTask},
+        lod::{Lod, LodMemory},
+    },
+    condition::{ClosureCondition, Condition},
+    consideration::Consideration,
+    decision_makers::{
+        machinery::{Machinery, MachineryChange, MachineryState},
+        parallelizer::{Parallelizer, ParallelizerState},
+        planner::{Planner, PlannerAction},
+        reasoner::{Reasoner, ReasonerState},
+        selector::{Selector, SelectorState},
+        sequencer::{Sequencer, SequencerState},
+    },
+    memory::{blackboard::Blackboard, datatable::DataTable},
+    task::{ClosureTask, NoTask, Task},
+    DecisionMakingTask, Scalar,
+};
 use std::collections::{HashMap, HashSet};
 
 macro_rules! map {
@@ -27,7 +43,7 @@ macro_rules! set {
     };
 }
 
-fn check_send_sync<T>(_: &T)
+fn check_send_sync<T>()
 where
     T: Send + Sync,
 {
@@ -115,15 +131,14 @@ fn test_reasoner() {
             MoodStateTask::new("Sad"),
         ),
     });
-    check_send_sync(&reasoner);
 
     assert_eq!(reasoner.active_state(), None);
-    assert_eq!(reasoner.process(&mut memory), true);
+    assert!(reasoner.process(&mut memory));
     assert_eq!(reasoner.active_state(), Some(&Mood::Sad));
     memory.mood = 1.0;
-    assert_eq!(reasoner.process(&mut memory), true);
+    assert!(reasoner.process(&mut memory));
     assert_eq!(reasoner.active_state(), Some(&Mood::Happy));
-    assert_eq!(reasoner.process(&mut memory), false);
+    assert!(!reasoner.process(&mut memory));
     assert_eq!(
         reasoner.change_active_state(None, &mut memory, true),
         Ok(true)
@@ -193,19 +208,18 @@ fn test_machinery() {
             vec![MachineryChange::new(Mood::Happy, MoodCondition::GreaterThan(0.5))],
         ),
     });
-    check_send_sync(&machinery);
 
     assert_eq!(machinery.active_state(), None);
     assert_eq!(
         machinery.change_active_state(Some(Mood::Sad), &mut memory, true),
         Ok(true)
     );
-    assert_eq!(machinery.process(&mut memory), false);
+    assert!(!machinery.process(&mut memory));
     assert_eq!(machinery.active_state(), Some(&Mood::Sad));
     memory.mood = 1.0;
-    assert_eq!(machinery.process(&mut memory), true);
+    assert!(machinery.process(&mut memory));
     assert_eq!(machinery.active_state(), Some(&Mood::Happy));
-    assert_eq!(machinery.process(&mut memory), false);
+    assert!(!machinery.process(&mut memory));
     assert_eq!(
         machinery.change_active_state(None, &mut memory, true),
         Ok(true)
@@ -289,15 +303,14 @@ fn test_planner() {
     let mut machinery = Machinery::new(map! {
         _ :
         Action::Work => MachineryState::new(
-            NoTask::default(),
+            NoTask,
             vec![MachineryChange::new(Action::Sleep, TimeCondition(Time::Night))],
         ),
         Action::Sleep => MachineryState::new(
-            NoTask::default(),
+            NoTask,
             vec![MachineryChange::new(Action::Work, TimeCondition(Time::Day))],
         ),
     });
-    check_send_sync(&machinery);
     assert_eq!(
         machinery.change_active_state(Some(Action::Sleep), &mut memory, true),
         Ok(true)
@@ -388,9 +401,8 @@ fn test_planner() {
         true,
     )
     .unwrap();
-    check_send_sync(&planner);
 
-    assert_eq!(planner.process(&mut memory), true);
+    assert!(planner.process(&mut memory));
     assert_eq!(
         planner.active_plan(),
         Some(vec![Action::DriveTramToWorkplace, Action::Work].as_slice())
@@ -402,7 +414,7 @@ fn test_planner() {
         traffic: false,
     };
 
-    assert_eq!(planner.process(&mut memory), true);
+    assert!(planner.process(&mut memory));
     assert_eq!(
         planner.active_plan(),
         Some(vec![Action::DriveCarToHome, Action::Sleep].as_slice())
@@ -427,14 +439,13 @@ fn test_sequencer() {
         true,
         true,
     );
-    check_send_sync(&sequencer);
 
-    assert_eq!(sequencer.process(&mut memory), true);
-    assert_eq!(memory, true);
-    assert_eq!(sequencer.process(&mut memory), true);
-    assert_eq!(memory, false);
-    assert_eq!(sequencer.process(&mut memory), true);
-    assert_eq!(memory, true);
+    assert!(sequencer.process(&mut memory));
+    assert!(memory);
+    assert!(sequencer.process(&mut memory));
+    assert!(!memory);
+    assert!(sequencer.process(&mut memory));
+    assert!(memory);
 }
 
 #[test]
@@ -451,14 +462,13 @@ fn test_selector() {
             ClosureTask::default().enter(|m| *m = true),
         ),
     ]);
-    check_send_sync(&selector);
 
-    assert_eq!(selector.process(&mut memory), true);
-    assert_eq!(memory, true);
-    assert_eq!(selector.process(&mut memory), true);
-    assert_eq!(memory, false);
-    assert_eq!(selector.process(&mut memory), true);
-    assert_eq!(memory, true);
+    assert!(selector.process(&mut memory));
+    assert!(memory);
+    assert!(selector.process(&mut memory));
+    assert!(!memory);
+    assert!(selector.process(&mut memory));
+    assert!(memory);
 }
 
 #[test]
@@ -475,14 +485,13 @@ fn test_parallelizer() {
             ClosureTask::default().enter(|m| *m = true),
         ),
     ]);
-    check_send_sync(&parallelizer);
 
-    assert_eq!(parallelizer.process(&mut memory), true);
-    assert_eq!(memory, true);
-    assert_eq!(parallelizer.process(&mut memory), true);
-    assert_eq!(memory, false);
-    assert_eq!(parallelizer.process(&mut memory), true);
-    assert_eq!(memory, true);
+    assert!(parallelizer.process(&mut memory));
+    assert!(memory);
+    assert!(parallelizer.process(&mut memory));
+    assert!(!memory);
+    assert!(parallelizer.process(&mut memory));
+    assert!(memory);
 }
 
 #[test]
@@ -507,7 +516,6 @@ fn test_lod() {
             println!("* Foreground hunger calculation: {}", m.memory.hunger);
         }))
         .build();
-    check_send_sync(&lod);
 
     let mut memory = LodMemory {
         lod_level: 0,
@@ -519,12 +527,12 @@ fn test_lod() {
 
     // we start with agent running in the background.
     assert_eq!(lod.active_index(), None);
-    assert_eq!(lod.process(&mut memory), true);
+    assert!(lod.process(&mut memory));
     assert_eq!(lod.active_index(), Some(0));
     // agent will now run in foreground and we assume 5 seconds have passed since last meal.
     memory.lod_level = 1;
     memory.memory.time_since_last_meal = 5.0;
-    assert_eq!(lod.process(&mut memory), true);
+    assert!(lod.process(&mut memory));
     assert_eq!(lod.active_index(), Some(1));
     assert_eq!(memory.memory.hunger, 5.0);
     lod.update(&mut memory);
@@ -584,44 +592,51 @@ fn test_behavior_tree() {
                 .node(BehaviorTree::state(true, FlipMode)),
         )
         .build();
-    check_send_sync(&tree);
 
     let mut memory = Memory {
         mode: true,
         counter: 0,
     };
 
-    assert_eq!(tree.on_process(&mut memory), true);
-    assert_eq!(memory.mode, true);
+    assert!(tree.on_process(&mut memory));
+    assert!(memory.mode);
     assert_eq!(memory.counter, 2);
 
-    assert_eq!(tree.on_process(&mut memory), false);
+    assert!(!tree.on_process(&mut memory));
     tree.on_update(&mut memory);
-    assert_eq!(memory.mode, true);
+    assert!(memory.mode);
     assert_eq!(memory.counter, 1);
 
-    assert_eq!(tree.on_process(&mut memory), false);
+    assert!(!tree.on_process(&mut memory));
     tree.on_update(&mut memory);
-    assert_eq!(memory.mode, true);
+    assert!(memory.mode);
     assert_eq!(memory.counter, 0);
 
-    assert_eq!(tree.on_process(&mut memory), true);
+    assert!(tree.on_process(&mut memory));
 
-    assert_eq!(tree.on_process(&mut memory), true);
-    assert_eq!(memory.mode, false);
+    assert!(tree.on_process(&mut memory));
+    assert!(!memory.mode);
     assert_eq!(memory.counter, 1);
 
-    assert_eq!(tree.on_process(&mut memory), false);
+    assert!(!tree.on_process(&mut memory));
     tree.on_update(&mut memory);
-    assert_eq!(memory.mode, false);
+    assert!(!memory.mode);
     assert_eq!(memory.counter, 0);
 
-    assert_eq!(tree.on_process(&mut memory), true);
-    assert_eq!(memory.mode, true);
+    assert!(tree.on_process(&mut memory));
+    assert!(memory.mode);
 }
 
 #[test]
 fn test_send_sync() {
-    check_send_sync(&Blackboard::default());
-    check_send_sync(&DataTable::<()>::default());
+    check_send_sync::<Blackboard>();
+    check_send_sync::<DataTable<()>>();
+    check_send_sync::<Reasoner<()>>();
+    check_send_sync::<Machinery<()>>();
+    check_send_sync::<Planner<()>>();
+    check_send_sync::<Sequencer<()>>();
+    check_send_sync::<Selector<()>>();
+    check_send_sync::<Parallelizer<()>>();
+    check_send_sync::<Lod<()>>();
+    check_send_sync::<BehaviorTreeTask<()>>();
 }

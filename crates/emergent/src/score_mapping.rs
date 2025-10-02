@@ -46,7 +46,7 @@ pub trait ScoreMapping: Send + Sync {
 ///
 /// assert_eq!(0.5.remap(NoScoreMapping).score(&()), 0.5);
 /// ```
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone)]
 pub struct NoScoreMapping;
 
 impl ScoreMapping for NoScoreMapping {
@@ -95,6 +95,7 @@ impl std::fmt::Debug for ClosureScoreMapping {
 ///
 /// assert_eq!(0.0.remap(ReverseScoreMapping.chain(ReverseScoreMapping)).score(&()), 0.0);
 /// ```
+#[derive(Debug, Clone)]
 pub struct ChainedScoreMapping<A, B>
 where
     A: ScoreMapping,
@@ -124,19 +125,6 @@ where
     }
 }
 
-impl<A, B> std::fmt::Debug for ChainedScoreMapping<A, B>
-where
-    A: ScoreMapping + std::fmt::Debug,
-    B: ScoreMapping + std::fmt::Debug,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("ChainedScoreMapping")
-            .field("first", &self.first)
-            .field("second", &self.second)
-            .finish()
-    }
-}
-
 /// Remaps score from source range ([`Self::from`]) to target range ([`Self::to`]).
 ///
 /// # Example
@@ -145,6 +133,7 @@ where
 ///
 /// assert_eq!(5.0.remap(ScoreRemap::new(0.0..10.0, 0.0..1.0)).score(&()), 0.5);
 /// ```
+#[derive(Debug, Clone)]
 pub struct ScoreRemap {
     pub from: Range<Scalar>,
     pub to: Range<Scalar>,
@@ -163,15 +152,6 @@ impl ScoreMapping for ScoreRemap {
     }
 }
 
-impl std::fmt::Debug for ScoreRemap {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("ScoreRemap")
-            .field("from", &self.from)
-            .field("to", &self.to)
-            .finish()
-    }
-}
-
 /// Applies `1.0 - score`.
 ///
 /// # Example
@@ -180,17 +160,12 @@ impl std::fmt::Debug for ScoreRemap {
 ///
 /// assert_eq!(1.0.remap(ReverseScoreMapping).score(&()), 0.0);
 /// ```
+#[derive(Debug, Default, Copy, Clone)]
 pub struct ReverseScoreMapping;
 
 impl ScoreMapping for ReverseScoreMapping {
     fn remap(&self, score: Scalar) -> Scalar {
         1.0 - score
-    }
-}
-
-impl std::fmt::Debug for ReverseScoreMapping {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("ReverseScoreMapping").finish()
     }
 }
 
@@ -202,6 +177,7 @@ impl std::fmt::Debug for ReverseScoreMapping {
 ///
 /// assert_eq!(10.0.remap(InverseScoreMapping).score(&()), 0.1);
 /// ```
+#[derive(Debug, Default, Copy, Clone)]
 pub struct InverseScoreMapping;
 
 impl ScoreMapping for InverseScoreMapping {
@@ -210,14 +186,9 @@ impl ScoreMapping for InverseScoreMapping {
     }
 }
 
-impl std::fmt::Debug for InverseScoreMapping {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("InverseScoreMapping").finish()
-    }
-}
-
 /// Applies fast sigmoid function.
 /// See [WolframAlpha](https://www.wolframalpha.com/input/?i2d=true&i=f%5C%2840%29x%5C%2841%29%3D+Divide%5Bx%2C1+%2B+Abs%5Bx%5D%5D).
+#[derive(Debug, Default, Copy, Clone)]
 pub struct FastSigmoidScoreMapping;
 
 impl ScoreMapping for FastSigmoidScoreMapping {
@@ -226,14 +197,9 @@ impl ScoreMapping for FastSigmoidScoreMapping {
     }
 }
 
-impl std::fmt::Debug for FastSigmoidScoreMapping {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("FastSigmoidScoreMapping").finish()
-    }
-}
-
 /// Applies approximated sigmoid function.
 /// See [WolframAlpha](https://www.wolframalpha.com/input/?i2d=true&i=f%5C%2840%29x%5C%2841%29%3D+Divide%5Bx%2CSqrt%5B1+%2B+Power%5Bx%2C2%5D%5D%5D).
+#[derive(Debug, Default, Copy, Clone)]
 pub struct ApproxSigmoidScoreMapping;
 
 impl ScoreMapping for ApproxSigmoidScoreMapping {
@@ -242,8 +208,26 @@ impl ScoreMapping for ApproxSigmoidScoreMapping {
     }
 }
 
-impl std::fmt::Debug for ApproxSigmoidScoreMapping {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("ApproxSigmoidScoreMapping").finish()
+/// Applies ReLU (maximum between score and 0).
+#[derive(Debug, Default, Copy, Clone)]
+pub struct ReluScoreMapping;
+
+impl ScoreMapping for ReluScoreMapping {
+    fn remap(&self, score: Scalar) -> Scalar {
+        score.max(0.0)
+    }
+}
+
+/// Applies soft version of ReLU.
+#[derive(Debug, Default, Copy, Clone)]
+pub struct SoftplusScoreMapping;
+
+impl ScoreMapping for SoftplusScoreMapping {
+    fn remap(&self, score: Scalar) -> Scalar {
+        #[cfg(not(feature = "scalar64"))]
+        let base = std::f32::consts::E;
+        #[cfg(feature = "scalar64")]
+        let base = std::f64::consts::E;
+        (1.0 + score.exp()).log(base)
     }
 }

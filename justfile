@@ -1,13 +1,29 @@
-# List the just recipe list
+# List the recipe list
 list:
     just --list
 
+# Format entire code base
+format:
+    cargo fmt --all
+
+# Build entire workspace
+build:
+    cargo build --all --all-features
+
+# Test entire workspace
+test:
+    cargo test --all --all-features
+
+# Run Clippy on entire workspace
+clippy:
+    cargo clippy --all --all-features
+
 # Mandatory checks to run before pushing changes to repository
 checks:
-    cargo fmt
-    cargo build
-    cargo clippy
-    cargo test
+    just format
+    just build
+    just clippy
+    just test
 
 # Clean artifacts and intermediate state
 clean:
@@ -18,7 +34,19 @@ clean:
 remove-lockfiles:
     find . -name Cargo.lock -type f -exec rm {} +
 
-# Test and build the book
+# List outdated dependencies
+list-outdated:
+    cargo outdated -R -w
+
+# Update dependencies
+update:
+    cargo update --manifest-path ./crates/emergent/Cargo.toml --aggressive
+
+# Build and test the book
 book:
     mdbook build book
     mdbook test book -L ./target/debug/deps
+
+# Publish workspace
+publish:
+    cargo publish --no-verify --manifest-path ./crates/emergent/Cargo.toml

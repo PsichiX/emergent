@@ -25,7 +25,7 @@ pub mod score_mapping;
 pub mod task;
 
 #[cfg(test)]
-pub mod tests;
+mod tests;
 
 use crate::{decision_makers::DecisionMaker, task::Task};
 
