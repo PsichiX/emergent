@@ -1,6 +1,6 @@
 //! Machinery (a.k.a. Finite State Machine) decision maker.
 
-use crate::{condition::*, decision_makers::*, task::*, DefaultKey};
+use crate::{DefaultKey, condition::*, decision_makers::*, task::*};
 use std::{collections::HashMap, hash::Hash};
 
 /// Machinery error.
@@ -300,10 +300,10 @@ where
         if id == self.active_state {
             return Ok(false);
         }
-        if let Some(id) = &id {
-            if !self.states.contains_key(id) {
-                return Err(MachineryError::StateDoesNotExists(id.clone()));
-            }
+        if let Some(id) = &id
+            && !self.states.contains_key(id)
+        {
+            return Err(MachineryError::StateDoesNotExists(id.clone()));
         }
         if let Some(id) = &self.active_state {
             let state = self.states.get_mut(id).unwrap();
@@ -321,24 +321,24 @@ where
 
     /// Performs decision making.
     pub fn process(&mut self, memory: &mut M) -> bool {
-        if let Some(id) = &self.active_state {
-            if let Some(state) = self.states.get_mut(id) {
-                let id = state
-                    .changes
-                    .iter()
-                    .find_map(|c| {
-                        if c.validate(memory) {
-                            Some(&c.to)
-                        } else {
-                            None
-                        }
-                    })
-                    .cloned();
-                if let Some(id) = id {
-                    if let Ok(true) = self.change_active_state(Some(id), memory, false) {
-                        return true;
+        if let Some(id) = &self.active_state
+            && let Some(state) = self.states.get_mut(id)
+        {
+            let id = state
+                .changes
+                .iter()
+                .find_map(|c| {
+                    if c.validate(memory) {
+                        Some(&c.to)
+                    } else {
+                        None
                     }
-                }
+                })
+                .cloned();
+            if let Some(id) = id
+                && let Ok(true) = self.change_active_state(Some(id), memory, false)
+            {
+                return true;
             }
         }
         if let Some(id) = &self.active_state {
@@ -374,10 +374,10 @@ where
     K: Clone + Hash + Eq + Send + Sync,
 {
     fn is_locked(&self, memory: &M) -> bool {
-        if let Some(id) = &self.active_state {
-            if let Some(state) = self.states.get(id) {
-                return state.task.is_locked(memory);
-            }
+        if let Some(id) = &self.active_state
+            && let Some(state) = self.states.get(id)
+        {
+            return state.task.is_locked(memory);
         }
         false
     }

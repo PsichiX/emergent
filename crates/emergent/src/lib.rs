@@ -43,6 +43,7 @@ impl<T, M, K> DecisionMakingTask<M, K> for T where T: DecisionMaker<M, K> + Task
 #[doc(hidden)]
 pub mod prelude {
     pub use crate::{
+        DecisionMakingTask, DefaultKey, Scalar,
         builders::{behavior_tree::*, lod::*, *},
         combinators::{all::*, any::*, count::*, *},
         condition::*,
@@ -54,6 +55,5 @@ pub mod prelude {
         memory::{blackboard::*, datatable::*, *},
         score_mapping::*,
         task::*,
-        DecisionMakingTask, DefaultKey, Scalar,
     };
 }

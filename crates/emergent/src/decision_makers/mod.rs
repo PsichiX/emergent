@@ -75,7 +75,7 @@ pub mod reasoner;
 pub mod selector;
 pub mod sequencer;
 
-use crate::{task::Task, DefaultKey};
+use crate::{DefaultKey, task::Task};
 
 /// Iterface for all decision making engines.
 ///
@@ -172,11 +172,7 @@ where
 
     /// Returns active state ID.
     pub fn active_state(&self) -> Option<&K> {
-        if self.active {
-            Some(&self.id)
-        } else {
-            None
-        }
+        if self.active { Some(&self.id) } else { None }
     }
 }
 

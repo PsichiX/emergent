@@ -1,4 +1,5 @@
 use crate::{
+    DecisionMakingTask, Scalar,
     builders::{
         behavior_tree::{BehaviorTree, BehaviorTreeTask},
         lod::{Lod, LodMemory},
@@ -15,7 +16,6 @@ use crate::{
     },
     memory::{blackboard::Blackboard, datatable::DataTable},
     task::{ClosureTask, NoTask, Task},
-    DecisionMakingTask, Scalar,
 };
 use std::collections::{HashMap, HashSet};
 

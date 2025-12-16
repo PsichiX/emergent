@@ -169,10 +169,10 @@ where
 
 impl<M> Task<M> for Selector<M> {
     fn is_locked(&self, memory: &M) -> bool {
-        if let Some(index) = self.active_index {
-            if let Some(state) = self.states.get(index) {
-                return state.task.is_locked(memory);
-            }
+        if let Some(index) = self.active_index
+            && let Some(state) = self.states.get(index)
+        {
+            return state.task.is_locked(memory);
         }
         false
     }

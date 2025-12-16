@@ -1,6 +1,6 @@
 //! Reasoner (a.k.a. Utility) decision maker.
 
-use crate::{consideration::*, decision_makers::*, task::*, DefaultKey};
+use crate::{DefaultKey, Scalar, consideration::*, decision_makers::*, task::*};
 use std::{collections::HashMap, hash::Hash};
 
 /// Reasoner error.
@@ -80,6 +80,62 @@ impl<M> std::fmt::Debug for ReasonerState<M> {
     }
 }
 
+/// State selector for reasoner.
+///
+/// Defines how reasoner will pick state from scored states.
+pub trait ReasonerStateSelector<M, K>: Send + Sync
+where
+    K: Clone + Hash + Eq,
+{
+    /// Selects state from scored states.
+    fn select_state(&self, memory: &M, scored_states: &[(&K, Scalar)]) -> Option<K>;
+}
+
+/// Selects state with maximum score.
+pub struct MaxReasonerStateSelector;
+
+impl<M, K> ReasonerStateSelector<M, K> for MaxReasonerStateSelector
+where
+    K: Clone + Hash + Eq,
+{
+    fn select_state(&self, _memory: &M, scored_states: &[(&K, Scalar)]) -> Option<K> {
+        scored_states
+            .iter()
+            .max_by(|(_, a), (_, b)| a.partial_cmp(b).unwrap())
+            .map(|(k, _)| (*k).clone())
+    }
+}
+
+/// Selects state with minimum score.
+pub struct MinReasonerStateSelector;
+
+impl<M, K> ReasonerStateSelector<M, K> for MinReasonerStateSelector
+where
+    K: Clone + Hash + Eq,
+{
+    fn select_state(&self, _memory: &M, scored_states: &[(&K, Scalar)]) -> Option<K> {
+        scored_states
+            .iter()
+            .min_by(|(_, a), (_, b)| a.partial_cmp(b).unwrap())
+            .map(|(k, _)| (*k).clone())
+    }
+}
+
+/// Selects state with score closest to given value.
+pub struct ClosestToReasonerStateSelector(pub Scalar);
+
+impl<M, K> ReasonerStateSelector<M, K> for ClosestToReasonerStateSelector
+where
+    K: Clone + Hash + Eq,
+{
+    fn select_state(&self, _memory: &M, scored_states: &[(&K, Scalar)]) -> Option<K> {
+        scored_states
+            .iter()
+            .min_by(|(_, a), (_, b)| (a - self.0).abs().partial_cmp(&(b - self.0).abs()).unwrap())
+            .map(|(k, _)| (*k).clone())
+    }
+}
+
 /// Reasoner (a.k.a. Utility AI).
 ///
 /// Reasoner contains list of states with considerations that will score probability of given state
@@ -122,6 +178,7 @@ where
 {
     states: HashMap<K, ReasonerState<M>>,
     active_state: Option<K>,
+    state_selector: Box<dyn ReasonerStateSelector<M, K>>,
 }
 
 impl<M, K> Reasoner<M, K>
@@ -130,9 +187,18 @@ where
 {
     /// Construct new reasoner with states.
     pub fn new(states: HashMap<K, ReasonerState<M>>) -> Self {
+        Self::with_selector(states, MaxReasonerStateSelector)
+    }
+
+    /// Construct new reasoner with states and state selector.
+    pub fn with_selector<SS>(states: HashMap<K, ReasonerState<M>>, state_selector: SS) -> Self
+    where
+        SS: ReasonerStateSelector<M, K> + 'static,
+    {
         Self {
             states,
             active_state: None,
+            state_selector: Box::new(state_selector),
         }
     }
 
@@ -153,10 +219,10 @@ where
         if id == self.active_state {
             return Ok(false);
         }
-        if let Some(id) = &id {
-            if !self.states.contains_key(id) {
-                return Err(ReasonerError::StateDoesNotExists(id.clone()));
-            }
+        if let Some(id) = &id
+            && !self.states.contains_key(id)
+        {
+            return Err(ReasonerError::StateDoesNotExists(id.clone()));
         }
         if let Some(id) = &self.active_state {
             let state = self.states.get_mut(id).unwrap();
@@ -177,14 +243,14 @@ where
         if self.states.is_empty() {
             return false;
         }
-        let new_id = self
+        let scored_ids = self
             .states
             .iter()
             .map(|(id, state)| (id, state.consideration.score(memory)))
-            .max_by(|(_, a), (_, b)| a.partial_cmp(b).unwrap())
-            .unwrap()
-            .0
-            .clone();
+            .collect::<Vec<_>>();
+        let Some(new_id) = self.state_selector.select_state(memory, &scored_ids) else {
+            return false;
+        };
         if let Ok(true) = self.change_active_state(Some(new_id), memory, false) {
             return true;
         }
@@ -221,10 +287,10 @@ where
     K: Clone + Hash + Eq + Send + Sync,
 {
     fn is_locked(&self, memory: &M) -> bool {
-        if let Some(id) = &self.active_state {
-            if let Some(state) = self.states.get(id) {
-                return state.task.is_locked(memory);
-            }
+        if let Some(id) = &self.active_state
+            && let Some(state) = self.states.get(id)
+        {
+            return state.task.is_locked(memory);
         }
         false
     }

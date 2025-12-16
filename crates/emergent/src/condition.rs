@@ -4,7 +4,7 @@
 //!
 //! See [`crate::combinators`] for more info about combinators (operations on sets of conditions).
 
-use crate::{consideration::*, Scalar};
+use crate::{Scalar, consideration::*};
 
 /// Condition represent the simplest question about the state of the world via provided memory.
 ///

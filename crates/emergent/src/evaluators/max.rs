@@ -1,6 +1,6 @@
 //! Calculates maximum of sub-consideratiosn scores.
 
-use crate::{consideration::*, Scalar};
+use crate::{Scalar, consideration::*};
 
 /// Gives maximum of all considerations scores.
 ///

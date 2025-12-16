@@ -1,6 +1,6 @@
 //! Planner (a.k.a. Goal Oriented Action Planner) decision maker.
 
-use crate::{condition::*, consideration::*, decision_makers::*, task::*, DefaultKey, Scalar};
+use crate::{DefaultKey, Scalar, condition::*, consideration::*, decision_makers::*, task::*};
 use std::{
     collections::{HashMap, HashSet},
     hash::Hash,
@@ -392,12 +392,14 @@ where
     where
         DM: DecisionMaker<M, AK> + 'static,
     {
-        Self::new_unchecked_raw(
-            conditions,
-            actions,
-            Box::new(goal_selector),
-            exact_conditions_match,
-        )
+        unsafe {
+            Self::new_unchecked_raw(
+                conditions,
+                actions,
+                Box::new(goal_selector),
+                exact_conditions_match,
+            )
+        }
     }
 
     /// Constructs new planner with conditions, actions, goal selector and exact conditions match setting.
@@ -483,10 +485,11 @@ where
             return Ok(false);
         }
         let active_action = self.active_action().cloned();
-        if let Some(id) = &active_action {
-            if !forced && self.actions.get_mut(id).unwrap().task.is_locked(memory) {
-                return Ok(false);
-            }
+        if let Some(id) = &active_action
+            && !forced
+            && self.actions.get_mut(id).unwrap().task.is_locked(memory)
+        {
+            return Ok(false);
         }
         let goal_action = match goal_action {
             Some(id) => id,
@@ -654,10 +657,10 @@ where
     AK: Clone + Hash + Eq + Send + Sync,
 {
     fn is_locked(&self, memory: &M) -> bool {
-        if let Some(id) = self.active_action() {
-            if let Some(action) = self.actions.get(id) {
-                return action.task.is_locked(memory);
-            }
+        if let Some(id) = self.active_action()
+            && let Some(action) = self.actions.get(id)
+        {
+            return action.task.is_locked(memory);
         }
         false
     }

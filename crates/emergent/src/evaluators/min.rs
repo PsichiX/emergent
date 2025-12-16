@@ -1,6 +1,6 @@
 //! Calculates minimum of sub-consideratiosn scores.
 
-use crate::{consideration::*, Scalar};
+use crate::{Scalar, consideration::*};
 
 /// Gives minimum of all considerations scores.
 ///

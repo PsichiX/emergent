@@ -1,6 +1,6 @@
 //! Calculates product of sub-consideratiosn scores.
 
-use crate::{consideration::*, Scalar};
+use crate::{Scalar, consideration::*};
 
 /// Gives product of all considerations scores.
 ///

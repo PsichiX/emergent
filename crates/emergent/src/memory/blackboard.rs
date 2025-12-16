@@ -147,10 +147,10 @@ impl Blackboard {
         F: FnMut(&mut T) -> R,
         T: 'static,
     {
-        if let Some(value) = self.properties.get_mut(name) {
-            if let Some(value) = value.downcast_mut() {
-                return Some(f(value));
-            }
+        if let Some(value) = self.properties.get_mut(name)
+            && let Some(value) = value.downcast_mut()
+        {
+            return Some(f(value));
         }
         None
     }

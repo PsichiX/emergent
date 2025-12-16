@@ -4,7 +4,7 @@
 //!
 //! See [`crate::evaluators`] for more info about evaluators (operations on sets of considerations).
 
-use crate::{condition::*, score_mapping::*, Scalar};
+use crate::{Scalar, condition::*, score_mapping::*};
 
 /// Consideration represent the score (also called weight, possibility, likeliness) of certain fact
 /// about the state of the world.
