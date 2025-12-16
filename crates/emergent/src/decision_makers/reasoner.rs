@@ -353,6 +353,15 @@ where
     {
         Reasoner::new(self.0)
     }
+
+    /// Consume builder and build new reasoner with state selector.
+    pub fn build_with_state_selector<SS>(self, state_selector: SS) -> Reasoner<M, K>
+    where
+        K: Clone + Hash + Eq,
+        SS: ReasonerStateSelector<M, K> + 'static,
+    {
+        Reasoner::with_selector(self.0, state_selector)
+    }
 }
 
 impl<M, K> std::fmt::Debug for ReasonerBuilder<M, K>
