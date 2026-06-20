@@ -79,10 +79,14 @@ impl<M> Parallelizer<M> {
     ///
     /// By default states that are locked won't stop, but we can force stop them.
     pub fn reset(&mut self, memory: &mut M, forced: bool) -> bool {
+        self.reset_with_reason(memory, forced, TaskStopReason::Cancelled)
+    }
+
+    fn reset_with_reason(&mut self, memory: &mut M, forced: bool, reason: TaskStopReason) -> bool {
         let mut result = false;
         for (state, active) in &mut self.states {
             if *active && (forced || !state.task.is_locked(memory)) {
-                state.task.on_exit(memory);
+                state.task.on_stop(memory, reason);
                 *active = false;
                 result = true;
             }
@@ -100,7 +104,7 @@ impl<M> Parallelizer<M> {
                         result = true;
                     }
                 } else {
-                    state.task.on_exit(memory);
+                    state.task.on_stop(memory, TaskStopReason::Replaced);
                     *active = false;
                     result = true;
                 }
@@ -151,6 +155,10 @@ impl<M> Task<M> for Parallelizer<M> {
 
     fn on_exit(&mut self, memory: &mut M) {
         self.reset(memory, true);
+    }
+
+    fn on_stop(&mut self, memory: &mut M, reason: TaskStopReason) {
+        self.reset_with_reason(memory, true, reason);
     }
 
     fn on_update(&mut self, memory: &mut M) {

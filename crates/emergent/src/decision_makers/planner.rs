@@ -495,7 +495,11 @@ where
             Some(id) => id,
             None => {
                 if let Some(id) = &active_action {
-                    self.actions.get_mut(id).unwrap().task.on_exit(memory);
+                    self.actions
+                        .get_mut(id)
+                        .unwrap()
+                        .task
+                        .on_stop(memory, TaskStopReason::Cancelled);
                 }
                 self.plan = None;
                 self.goal_selector.change_mind(None, memory);
@@ -510,7 +514,11 @@ where
             None => return Ok(false),
         };
         if let Some(id) = &active_action {
-            self.actions.get_mut(id).unwrap().task.on_exit(memory);
+            self.actions
+                .get_mut(id)
+                .unwrap()
+                .task
+                .on_stop(memory, TaskStopReason::Cancelled);
             self.plan = None;
         }
         let mut scores = HashMap::with_capacity(self.actions.len());
@@ -592,7 +600,11 @@ where
                     if prev_passing && next_passing {
                         let prev = prev.clone();
                         let next = next.clone();
-                        self.actions.get_mut(&prev).unwrap().task.on_exit(memory);
+                        self.actions
+                            .get_mut(&prev)
+                            .unwrap()
+                            .task
+                            .on_stop(memory, TaskStopReason::Completed);
                         self.actions.get_mut(&next).unwrap().task.on_enter(memory);
                         self.plan.as_mut().unwrap().0 += 1;
                     }
@@ -605,7 +617,11 @@ where
                         .validate_postconditions(&self.conditions, memory);
                     if prev_passing {
                         let prev = prev.clone();
-                        self.actions.get_mut(&prev).unwrap().task.on_exit(memory);
+                        self.actions
+                            .get_mut(&prev)
+                            .unwrap()
+                            .task
+                            .on_stop(memory, TaskStopReason::Completed);
                         self.plan = None;
                     }
                 }
@@ -630,7 +646,15 @@ where
     fn find_start_action(&self, memory: &M) -> Option<AK> {
         self.actions
             .iter()
-            .map(|(id, action)| (id, action.score_preconditions(&self.conditions, memory)))
+            .map(|(id, action)| {
+                (
+                    id,
+                    (
+                        action.validate_preconditions(&self.conditions, memory),
+                        action.score_preconditions(&self.conditions, memory),
+                    ),
+                )
+            })
             .max_by(|a, b| a.1.cmp(&b.1))
             .map(|(id, _)| id.clone())
     }
@@ -671,6 +695,17 @@ where
     }
 
     fn on_exit(&mut self, memory: &mut M) {
+        let _ = self.find_plan(None, memory, true);
+    }
+
+    fn on_stop(&mut self, memory: &mut M, reason: TaskStopReason) {
+        if let Some(id) = self.active_action().cloned() {
+            self.actions
+                .get_mut(&id)
+                .unwrap()
+                .task
+                .on_stop(memory, reason);
+        }
         let _ = self.find_plan(None, memory, true);
     }
 

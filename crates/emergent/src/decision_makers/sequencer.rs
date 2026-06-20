@@ -105,18 +105,27 @@ impl<M> Sequencer<M> {
     ///
     /// By default state won't change if active state is locked, but we can force state change.
     pub fn reset(&mut self, memory: &mut M, forced: bool) -> bool {
+        self.reset_with_reason(memory, forced, TaskStopReason::Cancelled)
+    }
+
+    fn reset_with_reason(&mut self, memory: &mut M, forced: bool, reason: TaskStopReason) -> bool {
         if let Some(index) = self.active_index {
             let state = self.states.get_mut(index).unwrap();
             if !forced && state.task.is_locked(memory) {
                 return false;
             }
-            state.task.on_exit(memory);
+            state.task.on_stop(memory, reason);
             self.active_index = None;
         }
         true
     }
 
-    fn change_active_index(&mut self, index: Option<usize>, memory: &mut M) -> bool {
+    fn change_active_index(
+        &mut self,
+        index: Option<usize>,
+        memory: &mut M,
+        stop_reason: TaskStopReason,
+    ) -> bool {
         if index == self.active_index {
             return false;
         }
@@ -125,7 +134,7 @@ impl<M> Sequencer<M> {
             if state.task.is_locked(memory) {
                 return false;
             }
-            state.task.on_exit(memory);
+            state.task.on_stop(memory, stop_reason);
         }
         if let Some(index) = index {
             self.states.get_mut(index).unwrap().task.on_enter(memory);
@@ -196,7 +205,20 @@ impl<M> Sequencer<M> {
                 .iter()
                 .position(|state| state.condition.validate(memory))
         };
-        if self.change_active_index(index, memory) {
+        let stop_reason = if let Some(active_index) = self.active_index {
+            match index {
+                Some(index) if index != active_index => TaskStopReason::Completed,
+                None if !self.looped && active_index + 1 >= self.states.len() => {
+                    TaskStopReason::Completed
+                }
+                None => TaskStopReason::Cancelled,
+                _ => TaskStopReason::Replaced,
+            }
+        } else {
+            TaskStopReason::Replaced
+        };
+
+        if self.change_active_index(index, memory, stop_reason) {
             return true;
         }
         if let Some(index) = self.active_index {
@@ -243,7 +265,11 @@ impl<M> Task<M> for Sequencer<M> {
     }
 
     fn on_exit(&mut self, memory: &mut M) {
-        self.reset(memory, true);
+        self.reset_with_reason(memory, true, TaskStopReason::Cancelled);
+    }
+
+    fn on_stop(&mut self, memory: &mut M, reason: TaskStopReason) {
+        self.reset_with_reason(memory, true, reason);
     }
 
     fn on_update(&mut self, memory: &mut M) {

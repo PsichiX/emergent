@@ -1,6 +1,6 @@
 [package]
 name = "emergent"
-version = "1.8.2"
+version = "1.9.0"
 authors = ["Patryk 'PsichiX' Budzynski <psichix@gmail.com>"]
 edition = "2024"
 description = "Toolset for producing emergent gameplay for games written in Rust"

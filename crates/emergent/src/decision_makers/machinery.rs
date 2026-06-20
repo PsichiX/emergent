@@ -297,6 +297,16 @@ where
         memory: &mut M,
         forced: bool,
     ) -> Result<bool, MachineryError<K>> {
+        self.change_active_state_with_reason(id, memory, forced, TaskStopReason::Replaced)
+    }
+
+    fn change_active_state_with_reason(
+        &mut self,
+        id: Option<K>,
+        memory: &mut M,
+        forced: bool,
+        stop_reason: TaskStopReason,
+    ) -> Result<bool, MachineryError<K>> {
         if id == self.active_state {
             return Ok(false);
         }
@@ -310,7 +320,7 @@ where
             if !forced && state.task.is_locked(memory) {
                 return Ok(false);
             }
-            state.task.on_exit(memory);
+            state.task.on_stop(memory, stop_reason);
         }
         if let Some(id) = &id {
             self.states.get_mut(id).unwrap().task.on_enter(memory);

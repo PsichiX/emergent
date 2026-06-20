@@ -98,7 +98,7 @@ impl<M, K> ReasonerStateSelector<M, K> for MaxReasonerStateSelector
 where
     K: Clone + Hash + Eq,
 {
-    fn select_state(&self, _memory: &M, scored_states: &[(&K, Scalar)]) -> Option<K> {
+    fn select_state(&self, _: &M, scored_states: &[(&K, Scalar)]) -> Option<K> {
         scored_states
             .iter()
             .max_by(|(_, a), (_, b)| a.partial_cmp(b).unwrap())
@@ -113,7 +113,7 @@ impl<M, K> ReasonerStateSelector<M, K> for MinReasonerStateSelector
 where
     K: Clone + Hash + Eq,
 {
-    fn select_state(&self, _memory: &M, scored_states: &[(&K, Scalar)]) -> Option<K> {
+    fn select_state(&self, _: &M, scored_states: &[(&K, Scalar)]) -> Option<K> {
         scored_states
             .iter()
             .min_by(|(_, a), (_, b)| a.partial_cmp(b).unwrap())
@@ -128,7 +128,7 @@ impl<M, K> ReasonerStateSelector<M, K> for ClosestToReasonerStateSelector
 where
     K: Clone + Hash + Eq,
 {
-    fn select_state(&self, _memory: &M, scored_states: &[(&K, Scalar)]) -> Option<K> {
+    fn select_state(&self, _: &M, scored_states: &[(&K, Scalar)]) -> Option<K> {
         scored_states
             .iter()
             .min_by(|(_, a), (_, b)| (a - self.0).abs().partial_cmp(&(b - self.0).abs()).unwrap())
@@ -216,6 +216,16 @@ where
         memory: &mut M,
         forced: bool,
     ) -> Result<bool, ReasonerError<K>> {
+        self.change_active_state_with_reason(id, memory, forced, TaskStopReason::Replaced)
+    }
+
+    fn change_active_state_with_reason(
+        &mut self,
+        id: Option<K>,
+        memory: &mut M,
+        forced: bool,
+        stop_reason: TaskStopReason,
+    ) -> Result<bool, ReasonerError<K>> {
         if id == self.active_state {
             return Ok(false);
         }
@@ -229,7 +239,7 @@ where
             if !forced && state.task.is_locked(memory) {
                 return Ok(false);
             }
-            state.task.on_exit(memory);
+            state.task.on_stop(memory, stop_reason);
         }
         if let Some(id) = &id {
             self.states.get_mut(id).unwrap().task.on_enter(memory);

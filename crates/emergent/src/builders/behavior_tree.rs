@@ -225,6 +225,10 @@ pub enum BehaviorTree<M = ()> {
         condition: Box<dyn Condition<M>>,
         task: Box<dyn Task<M>>,
     },
+    /// Transaction wraps another tree node with transaction scope.
+    ///
+    /// Commits on full completion, rolls back on interruption/cancellation.
+    Transaction { node: Box<BehaviorTree<M>> },
 }
 
 impl<M> BehaviorTree<M> {
@@ -306,6 +310,16 @@ impl<M> BehaviorTree<M> {
         }
     }
 
+    /// Wraps tree node with transaction scope for commit/rollback semantics.
+    ///
+    /// When used with sequences, steps are committed on full sequence completion
+    /// and rolled back if the sequence is interrupted before completion.
+    pub fn transactional(node: BehaviorTree<M>) -> Self {
+        Self::Transaction {
+            node: Box::new(node),
+        }
+    }
+
     /// Adds child node to this branch (when called on state node it does nothing).
     pub fn node(mut self, node: BehaviorTree<M>) -> Self {
         match &mut self {
@@ -313,6 +327,7 @@ impl<M> BehaviorTree<M> {
             Self::Selector { nodes, .. } => nodes.push(node),
             Self::Parallel { nodes, .. } => nodes.push(node),
             Self::State { .. } => {}
+            Self::Transaction { .. } => {}
         }
         self
     }
@@ -325,7 +340,7 @@ impl<M> BehaviorTree<M> {
         BehaviorTreeTask(self.consume().1)
     }
 
-    /// Consumes this builder and returns its rot condition and root task.
+    /// Consumes this builder and returns its root condition and root task.
     pub fn consume(self) -> (Box<dyn Condition<M>>, Box<dyn Task<M>>)
     where
         M: 'static,
@@ -365,6 +380,11 @@ impl<M> BehaviorTree<M> {
                 (condition, Box::new(selector))
             }
             Self::State { condition, task } => (condition, task),
+            Self::Transaction { node } => {
+                let (condition, task) = node.consume();
+                let transaction_task = TransactionScopeTask::new_raw(task);
+                (condition, Box::new(transaction_task))
+            }
         }
     }
 }
@@ -382,6 +402,9 @@ impl<M> std::fmt::Debug for BehaviorTree<M> {
                 f.debug_struct("Parallel").field("nodes", &nodes).finish()
             }
             Self::State { .. } => f.debug_struct("State").finish(),
+            Self::Transaction { node } => {
+                f.debug_struct("Transaction").field("node", &node).finish()
+            }
         }
     }
 }

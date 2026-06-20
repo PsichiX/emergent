@@ -103,7 +103,7 @@ impl<M> Selector<M> {
             if !forced && state.task.is_locked(memory) {
                 return false;
             }
-            state.task.on_exit(memory);
+            state.task.on_stop(memory, TaskStopReason::Cancelled);
             self.active_index = None;
         }
         true
@@ -118,7 +118,7 @@ impl<M> Selector<M> {
             if state.task.is_locked(memory) {
                 return false;
             }
-            state.task.on_exit(memory);
+            state.task.on_stop(memory, TaskStopReason::Replaced);
         }
         if let Some(index) = index {
             self.states.get_mut(index).unwrap().task.on_enter(memory);
@@ -183,6 +183,11 @@ impl<M> Task<M> for Selector<M> {
     }
 
     fn on_exit(&mut self, memory: &mut M) {
+        self.reset(memory, true);
+    }
+
+    #[allow(unused_variables)]
+    fn on_stop(&mut self, memory: &mut M, reason: TaskStopReason) {
         self.reset(memory, true);
     }
 

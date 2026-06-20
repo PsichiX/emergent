@@ -15,13 +15,20 @@ use crate::{
         sequencer::{Sequencer, SequencerState},
     },
     memory::{blackboard::Blackboard, datatable::DataTable},
-    task::{ClosureTask, NoTask, Task},
+    task::{
+        ClosureTask, JournaledTransactionTask, NoTask, Task, TaskStopReason,
+        TransactionCommitPolicy, TransactionJournal, TransactionScopeTask, TransactionalMemory,
+    },
 };
-use std::collections::{HashMap, HashSet};
+use std::{
+    collections::{HashMap, HashSet},
+    sync::{Arc, Mutex},
+};
 
 macro_rules! map {
     ( $type:ty : $( $key:expr => $value:expr, )* ) => {
         {
+            #[allow(unused_mut)]
             let mut result = HashMap::<_, $type>::new();
             $(
                 result.insert($key, $value);
@@ -34,6 +41,7 @@ macro_rules! map {
 macro_rules! set {
     ( $( $value:expr, )* ) => {
         {
+            #[allow(unused_mut)]
             let mut result = HashSet::new();
             $(
                 result.insert($value);
@@ -625,6 +633,223 @@ fn test_behavior_tree() {
 
     assert!(tree.on_process(&mut memory));
     assert!(memory.mode);
+}
+
+#[test]
+fn test_transaction_scope_task() {
+    struct Memory {
+        value: i32,
+    }
+
+    let mut task = TransactionScopeTask::new(ClosureTask::default().enter(|m: &mut Memory| {
+        m.value += 1;
+    }))
+    .commit(|m: &mut Memory| {
+        m.value += 100;
+    })
+    .rollback(|m: &mut Memory| {
+        m.value -= 1;
+    });
+
+    let mut memory = Memory { value: 0 };
+    task.on_enter(&mut memory);
+    assert_eq!(memory.value, 1);
+    task.on_stop(&mut memory, TaskStopReason::Completed);
+    assert_eq!(memory.value, 101);
+
+    task.on_enter(&mut memory);
+    assert_eq!(memory.value, 102);
+    task.on_stop(&mut memory, TaskStopReason::Cancelled);
+    assert_eq!(memory.value, 101);
+}
+
+#[test]
+fn test_journaled_transaction_nested_isolated_commit() {
+    #[derive(Debug, Copy, Clone, PartialEq, Eq)]
+    enum Undo {
+        Outer(i32),
+        Inner(i32),
+    }
+
+    #[derive(Debug, Default)]
+    struct Memory {
+        outer: i32,
+        inner: i32,
+        journal: TransactionJournal<Undo>,
+    }
+
+    impl TransactionalMemory for Memory {
+        type Undo = Undo;
+
+        fn begin_transaction(&mut self) {
+            self.journal.begin();
+        }
+
+        fn commit_transaction(&mut self, policy: TransactionCommitPolicy) {
+            self.journal.commit(policy);
+        }
+
+        fn rollback_transaction(&mut self) {
+            for undo in self.journal.rollback() {
+                match undo {
+                    Undo::Outer(value) => self.outer = value,
+                    Undo::Inner(value) => self.inner = value,
+                }
+            }
+        }
+
+        fn record_undo(&mut self, undo: Self::Undo) {
+            self.journal.record(undo);
+        }
+    }
+
+    let inner_transaction =
+        JournaledTransactionTask::new(ClosureTask::default().enter(|m: &mut Memory| {
+            m.record_undo(Undo::Inner(m.inner));
+            m.inner += 10;
+        }));
+
+    let sequence = Sequencer::new(
+        vec![
+            SequencerState::new(
+                true,
+                ClosureTask::default().enter(|m: &mut Memory| {
+                    m.record_undo(Undo::Outer(m.outer));
+                    m.outer += 1;
+                }),
+            ),
+            SequencerState::new(true, inner_transaction),
+        ],
+        false,
+        false,
+    );
+
+    let mut transaction = JournaledTransactionTask::new(sequence);
+    let mut memory = Memory::default();
+
+    transaction.on_enter(&mut memory);
+    assert_eq!(memory.outer, 1);
+    assert_eq!(memory.inner, 0);
+    assert_eq!(memory.journal.depth(), 1);
+
+    transaction.on_process(&mut memory);
+    assert_eq!(memory.outer, 1);
+    assert_eq!(memory.inner, 10);
+    assert_eq!(memory.journal.depth(), 2);
+
+    transaction.on_process(&mut memory);
+    assert_eq!(memory.outer, 1);
+    assert_eq!(memory.inner, 10);
+    assert_eq!(memory.journal.depth(), 1);
+
+    transaction.on_stop(&mut memory, TaskStopReason::Cancelled);
+    assert_eq!(memory.outer, 0);
+    assert_eq!(memory.inner, 10);
+    assert_eq!(memory.journal.depth(), 0);
+}
+
+#[test]
+fn test_sequencer_stop_reasons() {
+    struct RecorderTask {
+        reasons: Arc<Mutex<Vec<TaskStopReason>>>,
+    }
+
+    impl Task<()> for RecorderTask {
+        fn on_stop(&mut self, _: &mut (), reason: TaskStopReason) {
+            self.reasons.lock().unwrap().push(reason);
+        }
+    }
+
+    let completed_reasons = Arc::new(Mutex::new(Vec::new()));
+    let cancelled_reasons = Arc::new(Mutex::new(Vec::new()));
+
+    let mut completed = Sequencer::new(
+        vec![
+            SequencerState::new(
+                true,
+                RecorderTask {
+                    reasons: completed_reasons.clone(),
+                },
+            ),
+            SequencerState::new(
+                true,
+                RecorderTask {
+                    reasons: completed_reasons.clone(),
+                },
+            ),
+        ],
+        false,
+        false,
+    );
+
+    assert!(completed.process(&mut ()));
+    assert!(completed.process(&mut ()));
+    assert!(completed.process(&mut ()));
+
+    let completed_reasons = completed_reasons.lock().unwrap().clone();
+    assert_eq!(
+        completed_reasons,
+        vec![TaskStopReason::Completed, TaskStopReason::Completed]
+    );
+
+    let mut cancelled = Sequencer::new(
+        vec![
+            SequencerState::new(
+                true,
+                RecorderTask {
+                    reasons: cancelled_reasons.clone(),
+                },
+            ),
+            SequencerState::new(
+                false,
+                RecorderTask {
+                    reasons: cancelled_reasons.clone(),
+                },
+            ),
+        ],
+        false,
+        false,
+    );
+
+    assert!(cancelled.process(&mut ()));
+    assert!(cancelled.process(&mut ()));
+
+    let cancelled_reasons = cancelled_reasons.lock().unwrap().clone();
+    assert_eq!(cancelled_reasons, vec![TaskStopReason::Cancelled]);
+}
+
+#[test]
+fn test_transactional_behavior_tree() {
+    struct Memory {
+        value: i32,
+    }
+
+    // build a transactional sequence where each step increments value.
+    let mut tree = BehaviorTree::transactional(
+        BehaviorTree::sequence(true)
+            .node(BehaviorTree::state(
+                true,
+                ClosureTask::default().enter(|m: &mut Memory| m.value += 1),
+            ))
+            .node(BehaviorTree::state(
+                true,
+                ClosureTask::default().enter(|m: &mut Memory| m.value += 10),
+            )),
+    )
+    .build();
+
+    let mut memory = Memory { value: 0 };
+
+    // process through the sequence - first call enters transaction and runs step 1.
+    tree.on_process(&mut memory);
+    assert_eq!(memory.value, 1);
+
+    // second process continues sequence to step 2.
+    tree.on_process(&mut memory);
+    assert_eq!(memory.value, 11);
+
+    // the transaction scope wraps the sequencer, so the full completion
+    // of the sequence would trigger commit hooks (if they were set).
 }
 
 #[test]
